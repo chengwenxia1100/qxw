@@ -1,108 +1,132 @@
 <template>
-    <div class="home_container"> 
-        <div class="login_btn">
-          请先登录
-        </div>
-        <div class="login_mess">
-          <div class="left">
-            <div class="slide1">
-              <div><span>学生姓名：</span><span>网易云</span></div>
-              <div><span>性别：</span><span>男</span></div>
-            </div>
-            <div class="slide2">
-              <span>就读学校: </span><span>杭州高级中学</span>
-            </div>
-            <div class="slide3">
-              <div><span>就读年级：</span><span>初一</span></div>
-              <div><span>班级：</span><span>班</span></div>
-            </div>
+  <div class="home_container"> 
+      <div class="login_btn">
+        请先登录
+      </div>
+      <div class="login_mess">
+        <div class="left">
+          <div class="slide1">
+            <div><span>学生姓名：</span><span>网易云</span></div>
+            <div><span>性别：</span><span>男</span></div>
           </div>
-          <div class="right">
-            <div class="change">
-              <img src="/static/svg/icon_change.png" alt="">
-              切换学员
-            </div>
+          <div class="slide2">
+            <span>就读学校: </span><span>杭州高级中学</span>
+          </div>
+          <div class="slide3">
+            <div><span>就读年级：</span><span>初一</span></div>
+            <div><span>班级：</span><span>班</span></div>
           </div>
         </div>
-        <div class="bg"></div>
-        <div class="home_model">
-          <ul>
-            <li>
-              <div>
-                <img class="home-icon" src="/static/svg/home_icon1.png" />
-              </div>
-              <p>错题登记</p>
-            </li>
-            <li>
-              <div class="">
-                <img class="home-icon" src="/static/svg/home_icon2.png" />
-              </div>
-              <p>试卷分析</p>
-            </li>
-            <li>
-              <div class="">
-                <img class="home-icon" src="/static/svg/home_icon3.png" />
-              </div>
-              <p>错题查看</p>
-            </li>
-            <li>
-              <div>
-                <img class="home-icon" src="/static/svg/home_icon4.png" />
-              </div>
-              <p>错题归因</p>
-            </li>
-            <li>
-              <div class="">
-                <img class="home-icon" src="/static/svg/home_icon5.png" />
-              </div>
-              <p>每日一题</p>
-            </li>
-            <li>
-              <div class="">
-                <img class="home-icon" src="/static/svg/home_icon6.png" />
-              </div>
-              <p>记忆引擎</p>
-            </li>
-            <li>
-              <div>
-                <img class="home-icon" src="/static/svg/home_icon7.png" />
-              </div>
-              <p>导出记录</p>
-            </li>
-            <li>
-              <div class="">
-                <img class="home-icon" src="/static/svg/home_icon8.png" />
-              </div>
-              <p>勤学中心</p>
-            </li>
-          </ul>
+        <div class="right">
+          <div class="change">
+            <img src="/static/svg/icon_change.png" alt="">
+            切换学员
+          </div>
         </div>
-        <div class="curve">
-          <div class="curve_tit">成绩曲线</div>
-          <div class="curve_con">
-            <p><span>学科: </span><span>数学</span></p>
-            <div class="chart">
-              <div class="no_chart">
-                暂无数据
-              </div>
+      </div>
+      <div class="bg"></div>
+      <div class="home_model">
+        <ul>
+          <li>
+            <div>
+              <img class="home-icon" src="/static/svg/home_icon1.png" />
+            </div>
+            <p>错题登记</p>
+          </li>
+          <li>
+            <div class="">
+              <img class="home-icon" src="/static/svg/home_icon2.png" />
+            </div>
+            <p>试卷分析</p>
+          </li>
+          <li>
+            <div class="">
+              <img class="home-icon" src="/static/svg/home_icon3.png" />
+            </div>
+            <p>错题查看</p>
+          </li>
+          <li>
+            <div>
+              <img class="home-icon" src="/static/svg/home_icon4.png" />
+            </div>
+            <p>错题归因</p>
+          </li>
+          <li>
+            <div class="">
+              <img class="home-icon" src="/static/svg/home_icon5.png" />
+            </div>
+            <p>每日一题</p>
+          </li>
+          <li>
+            <div class="">
+              <img class="home-icon" src="/static/svg/home_icon6.png" />
+            </div>
+            <p>记忆引擎</p>
+          </li>
+          <li>
+            <div>
+              <img class="home-icon" src="/static/svg/home_icon7.png" />
+            </div>
+            <p>导出记录</p>
+          </li>
+          <li>
+            <div class="">
+              <img class="home-icon" src="/static/svg/home_icon7.png" />
+            </div>
+            <p>勤学中心</p>
+          </li>
+        </ul>
+      </div>
+      <div class="curve">
+        <div class="curve_tit">成绩曲线</div>
+        <div class="curve_con">
+          <p><span>学科: </span><span>数学</span></p>
+          <div class="chart">
+            <div class="no_chart">
+              暂无数据
             </div>
           </div>
         </div>
-        <div class="advice">
-          <div class="advice_tit">
-            通知公告
-          </div>
-          <div class="advice_con">
-            导出功能已更新,请及时查看
-          </div>
+      </div>
+      <div class="advice">
+        <div class="advice_tit">
+          通知公告
         </div>
-    </div>
+        <div class="advice_con">
+          导出功能已更新,请及时查看
+        </div>
+      </div>
+  </div>
 </template>
 
 <script>
+import { getOrderList } from './home.api'
+
 export default {
   data () {
     return {
+    }
+  },
+  mounted () {
+    wx.login({
+      success: (res) => {
+        if (res.code) {
+          this.getOrderListData()
+        } else {
+          console.log('登录失败！' + res.errMsg)
+        }
+      }
+    })
+  },
+  methods: {
+    async getOrderListData () {
+      const data = await getOrderList({
+        current: 1,
+        size: 12,
+        status: 3,
+        userId: 82
+      })
+      console.log(data)
     }
   }
 }

@@ -1,11 +1,12 @@
 {
   "pages": [
+    "pages/wrongTitle/main",
     "pages/home/main",
     "pages/user/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#f81b2d",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },
@@ -17,7 +18,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/home/main",
+      "pagePath": "pages/wrongTitle/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {
