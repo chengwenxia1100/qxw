@@ -1,6 +1,6 @@
 <template>
   <div class="home_container"> 
-      <div class="login_btn">
+      <div class="login_btn" @click="gotologin">
         请先登录
       </div>
       <div class="login_mess">
@@ -18,10 +18,18 @@
           </div>
         </div>
         <div class="right">
-          <div class="change">
+          <div class="change" @click="showPicker">
             <img src="/static/svg/icon_change.png" alt="">
             切换学员
           </div>
+          <mpvue-picker
+            ref="mpvuePicker"
+            :mode="mode"
+            :pickerValueDefault="pickerValueDefault"
+            @onChange="onChange"
+            @onConfirm="onConfirm"
+            @onCancel="onCancel"
+            :pickerValueArray="pickerValueArray" />
         </div>
       </div>
       <div class="bg"></div>
@@ -80,11 +88,14 @@
       <div class="curve">
         <div class="curve_tit">成绩曲线</div>
         <div class="curve_con">
-          <p><span>学科: </span><span>数学</span></p>
+          <!-- <p><span>学科: </span><span>数学</span></p> -->
           <div class="chart">
-            <div class="no_chart">
-              暂无数据
+            <div class="chart_con">
+              <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
             </div>
+            <!-- <div class="no_chart">
+              暂无数据
+            </div> -->
           </div>
         </div>
       </div>
@@ -100,11 +111,84 @@
 </template>
 
 <script>
-import { getOrderList } from './home.api'
+import { getOrderList } from './home.api';
+import echarts from 'echarts';
+import mpvueEcharts from 'mpvue-echarts';
+import mpvuePicker from "mpvue-picker";
+let chart = null;
+
+function initChart(canvas, width, height) {
+  chart = echarts.init(canvas, null, {
+    width: width,
+    height: height
+  });
+  canvas.setChart(chart);
+  var option = {
+    backgroundColor: '#fff',
+    color: ['#37A2DA', '#f0f', '#ddd'],
+    legend: {
+      data: ['数学', '英语', '科学']
+    },
+    grid: {
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['数学', '英语', '科学', '历史', '语文']
+    },
+    yAxis: {
+      x: 'center',
+      type: 'value',
+      splitLine: {
+        lineStyle: {
+          type: 'dashed'
+        }
+      }
+    },
+    series: [
+      {
+        name: 'A',
+        type: 'line',
+        smooth: true,
+        data: [57, 98, 80]
+      },
+      {
+        name: 'B',
+        type: 'line',
+        smooth: true,
+        data: [18, 95, 100]
+      },
+      {
+        name: 'C',
+        type: 'line',
+        smooth: true,
+        data: [90, 98, 100]
+      },
+    ]
+  }; // ECharts 配置项
+  chart.setOption(option);
+  return chart; // 返回 chart 后可以自动绑定触摸操作
+}
 
 export default {
+  components: {
+    mpvueEcharts,
+    mpvuePicker
+  },
   data () {
     return {
+      echarts,
+      onInit: initChart,
+      pickerValueArray: [
+        {
+          label: '用户二',
+          value: 1
+        },
+        {
+          label: '用户三',
+          value: 2
+        }
+      ],
     }
   },
   mounted () {
@@ -127,6 +211,24 @@ export default {
         userId: 82
       })
       console.log(data)
+    },
+    // 切换学员
+    showPicker () {
+      this.$refs.mpvuePicker.show()
+    },
+    onConfirm (e) {
+        console.log(e.label)
+    },
+    onChange (e) {
+        console.log(e)
+    },
+    onCancel (e) {
+        console.log(e)
+    },
+    // 跳转登录页面
+    gotologin () {
+      const url = '../bind/bindfirst/main';
+      wx.navigateTo({ url })
     }
   }
 }
@@ -243,6 +345,10 @@ export default {
         }
       }
       .chart {
+        .chart_con {
+          width:100%;
+          height:5rem;
+        }
         .no_chart {
           padding:0.5rem 0;
           font-size:0.32rem;

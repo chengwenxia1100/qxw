@@ -2,11 +2,14 @@
   "pages": [
     "pages/wrongTitle/main",
     "pages/home/main",
-    "pages/user/main"
+    "pages/user/main",
+    "pages/bind/vipbindnext/main",
+    "pages/bind/vipbind/main",
+    "pages/bind/bindfirst/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#f7536a",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },
