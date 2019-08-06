@@ -16,17 +16,51 @@
       <div class="tab_container">
         <div v-if="tab===1">
           <div class="tit_change">
-            <div class="change" @click="showPicker">
+            <div class="change" @click="mpvuePicker">
               <img src="/static/svg/icon_change.png" alt="">
               初一
             </div>
+            <mpvue-picker
+              ref="mpvuePicker"
+              :mode="mode"
+              :pickerValueDefault="pickerValueDefault"
+              @onChange="onChange"
+              @onConfirm="onConfirm"
+              @onCancel="onCancel"
+              :pickerValueArray="pickerValueArray" />
             <div class="select">
               选择章节
               <img src="/static/svg/icon_down.png" alt="">
             </div>
           </div>
+          <div class="title_box">
+            <div class="list">
+              <p>1/20</p>
+              <div class="tit" v-html="title"></div>
+              <div class="title_analyse" @click="analyseBtn">试题分析</div>
+            </div>
+            <div class="list">
+              <div class="tit" v-html="title"></div>
+              <div class="title_analyse">试题分析</div>
+            </div>
+          </div>
         </div>
-        <div v-else>初中科学</div>
+        <div v-else>dd
+        </div>
+      </div>
+    </div>
+    <!-- 点击试题分析 出现弹窗 -->
+    <div class="layer_box">
+      <div class="layer">
+        <div class="tit">题目详情</div>
+        <div class="con">
+          <ul>
+            <li><span>【答案】</span><span>A</span></li>
+            <li><span>【来源】</span><span>受精卵发育开始，到胎儿从母体内产出为止，</span></li>
+            <li><span>【难度】</span><span>1</span></li>
+            <li><span>【知识点】</span><span>受精卵发育开始，到胎儿从母体内产出为止，</span></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -34,11 +68,38 @@
 
 <script>
 // import { getOrderList } from './wrongtit.api'
+import mpvuePicker from "mpvue-picker";
 
 export default {
+  components: {
+    mpvuePicker
+  },
   data () {
     return {
-      tab: 1
+      tab: 1,
+      pickerValueDefault: [2],
+      pickerValueArray: [
+        {
+          label: '用户二',
+          value: 1
+        },
+        {
+          label: '用户三',
+          value: 2
+        }
+      ],
+      pickerValueArray2: [
+        {
+          label: '用户二',
+          value: 1
+        },
+        {
+          label: '用户三',
+          value: 2
+        }
+      ],
+      title: '<p><span style=";font-family:宋体;font-size:14px">1.<span style="font-family:宋体">从受精卵发育开始，到胎儿从母体内产出为止，所需的时间约为（</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px"><span style="font-family:宋体">）</span></span></p><p><span style=";font-family:宋体;font-size:14px">A.2<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">B.3<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">C.9<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">D.1<span style="font-family:宋体">年左右</span></span></p>',
+
     }
   },
   mounted () {
@@ -47,6 +108,24 @@ export default {
   methods: {
     changTab(index) {
       this.tab = index;
+    },
+    mpvuePicker () {
+        this.$refs.mpvuePicker.show()
+    },
+    onConfirm (e) {
+        console.log(e)
+    },
+    onChange (e) {
+        console.log(e)
+    },
+    onCancel (e) {
+        console.log(e)
+    },
+    init () {
+    },
+    // 点击试题分析
+    analyseBtn () {
+      console.log('122')
     }
     // async getOrderListData () {
     //   const data = await getOrderList({
@@ -63,6 +142,44 @@ export default {
 
 <style lang="less">
 .user_wrongTitle {
+  .layer_box {
+    width:100%;
+    height:100%;
+    background:rgba(100,100,100, 0.3);
+    position: fixed;
+    top:0;
+    left:0;
+    .layer {
+      margin:20% 0 0 10%;
+      width:80%;
+      background:#fff;
+      border-radius:0.04rem;
+      .tit {
+        font-size:0.32rem;
+        width:100%;
+        height:0.8rem;
+        text-align:center;
+        line-height:0.8rem;
+        background:rgb(180, 178, 178);
+        color:#fff;
+      }
+      .con {
+        padding:0.2rem;
+        ul {
+          li {
+            span:first-child {
+              font-weight:bold;
+              font-size:0.26rem;
+            }
+            span:last-child {
+              color:#333;
+              font-size:0.26rem;
+            }
+          }
+        }
+      }
+    }
+  }
   .tab {
     width: 100%;
     .nav {
@@ -116,7 +233,20 @@ export default {
         }
       }
     }
+    .title_box {
+      padding:0.2rem;
+      .title_analyse {
+        font-size:0.28rem;
+        width:1.8rem;
+        height:0.6rem;
+        line-height:0.6rem;
+        background:#f7536a;
+        color:#fff;
+        margin:0.4rem;
+        border-radius: 0.08rem;
+        text-align:center;
+      }
+    }
   }
 }
- 
 </style>
