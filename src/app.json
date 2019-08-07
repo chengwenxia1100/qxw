@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/paperAnaly/main",
+    "pages/errorRegister/main",
     "pages/wrongTitle/main",
     "pages/home/main",
     "pages/user/main",
@@ -9,7 +11,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#f7536a",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },
@@ -21,7 +23,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/wrongTitle/main",
+      "pagePath": "pages/paperAnaly/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {
