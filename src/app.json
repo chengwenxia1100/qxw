@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/user/switchStudent/main",
     "pages/paperAnaly/main",
     "pages/errorRegister/main",
     "pages/wrongTitle/main",
@@ -11,7 +12,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#e12a22",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },
@@ -23,7 +24,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/paperAnaly/main",
+      "pagePath": "pages/user/switchStudent/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {
@@ -32,7 +33,6 @@
       "iconPath": "static/tabs/orders.png",
       "selectedIconPath": "static/tabs/orders-active.png"
     }],
-
     "position": "bottom"
   }
 }
