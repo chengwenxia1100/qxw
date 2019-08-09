@@ -41,16 +41,18 @@
             </div>
             <div class="list">
               <div class="tit" v-html="title"></div>
-              <div class="title_analyse">试题分析</div>
+              <div class="title_analyse" @click="analyseBtn">试题分析</div>
             </div>
           </div>
         </div>
         <div v-else>dd
         </div>
       </div>
+      <!-- 分页 -->
+      <page-slide></page-slide>
     </div>
     <!-- 点击试题分析 出现弹窗 -->
-    <div class="layer_box">
+    <div class="layer_box" v-if="analyLayer">
       <div class="layer">
         <div class="tit">题目详情</div>
         <div class="con">
@@ -61,6 +63,7 @@
             <li><span>【知识点】</span><span>受精卵发育开始，到胎儿从母体内产出为止，</span></li>
           </ul>
         </div>
+        <fan-chart></fan-chart>
       </div>
     </div>
   </div>
@@ -69,10 +72,14 @@
 <script>
 // import { getOrderList } from './wrongtit.api'
 import mpvuePicker from "mpvue-picker";
+import pageSlide from '@/components/paging/pageSlide'
+import fanChart from '@/components/echart/fanChart'
 
 export default {
   components: {
-    mpvuePicker
+    mpvuePicker,
+    pageSlide,
+    fanChart
   },
   data () {
     return {
@@ -98,8 +105,9 @@ export default {
           value: 2
         }
       ],
+      // 返回的试题题目
       title: '<p><span style=";font-family:宋体;font-size:14px">1.<span style="font-family:宋体">从受精卵发育开始，到胎儿从母体内产出为止，所需的时间约为（</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px"><span style="font-family:宋体">）</span></span></p><p><span style=";font-family:宋体;font-size:14px">A.2<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">B.3<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">C.9<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">D.1<span style="font-family:宋体">年左右</span></span></p>',
-
+      analyLayer: false, // 点击试题分析弹窗
     }
   },
   mounted () {
@@ -125,7 +133,7 @@ export default {
     },
     // 点击试题分析
     analyseBtn () {
-      console.log('122')
+      this.analyLayer = true;
     }
     // async getOrderListData () {
     //   const data = await getOrderList({
