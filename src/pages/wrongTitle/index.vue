@@ -54,7 +54,7 @@
     <!-- 点击试题分析 出现弹窗 -->
     <div class="layer_box" v-if="analyLayer">
       <div class="layer">
-        <div class="tit">题目详情</div>
+        <div class="tit">题目详情<img src="/static/svg/close.png" @click="close"></div>
         <div class="con">
           <ul>
             <li><span>【答案】</span><span>A</span></li>
@@ -134,6 +134,9 @@ export default {
     // 点击试题分析
     analyseBtn () {
       this.analyLayer = true;
+    },
+    close () {
+      this.analyLayer = false;
     }
     // async getOrderListData () {
     //   const data = await getOrderList({
@@ -170,6 +173,13 @@ export default {
         line-height:0.8rem;
         background:rgb(180, 178, 178);
         color:#fff;
+        img {
+          width: 0.36rem;
+          height: 0.36rem;
+          float:right;
+          margin-right:0.3rem;
+          margin-top:0.3rem;
+        }
       }
       .con {
         padding:0.2rem;

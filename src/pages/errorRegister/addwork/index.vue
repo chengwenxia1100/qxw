@@ -1,8 +1,7 @@
 <template>
-  <div class="register_container">
+  <div class="addwork_container">
     <!-- 筛选框组件 -->
     <two-select></two-select>
-    <!-- 作业本列表 -->
     <div class="bookList_con">
       <div class="list">
         <img src="/static/images/user.png">
@@ -11,42 +10,50 @@
           <p>初二上册</p>
           <p>浙江教育出版社</p>
         </div>
-        <div class="show">
-          <gap-chart></gap-chart> 
-          <p>登记进度</p>
+        <div class="status">
+          <img src="/static/svg/icon_add.png">
         </div>
       </div>
-    </div>
-    <!-- 添加作业本按钮 -->
-    <div class="btn">
-      <img src="/static/svg/icon_add.png" alt="">
-      <div class="btn_con">添加作业本</div>
+      <div class="list">
+        <img src="/static/images/user.png" @click="add">
+        <div class="middle">
+          <p>作业本一</p>
+          <p>初二上册</p>
+          <p>浙江教育出版社</p>
+        </div>
+        <div class="status">
+          <img src="/static/svg/icon_add_r.png">
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import twoSelect from '@/components/select/twoSelect'
-import gapChart from '@/components/echart/gapChart'
 
 export default {
   components: {
-    twoSelect,
-    gapChart
+    twoSelect
   },
   data () {
     return {
+        
     }
   },
   mounted () {
   },
   methods: {
+    // 增加作业本
+    add () {
+       // 改变作业本状态
+    }
   }
 }
 </script>
 
 <style lang="less">
-.register_container {
+.addwork_container {
   .bookList_con {
     .list {
       padding:0.2rem 0.3rem;
@@ -54,13 +61,13 @@ export default {
       background:#fff;
       img {
         width:1.5rem;
-        height:2.5rem;
+        height:2rem;
       }
       .middle {
         flex:1;
         padding:0.1rem 0.2rem;
         p {
-          padding:0.2rem 0;
+          padding:0.1rem 0;
         }
         p:nth-child(2) {
           color:#666;
@@ -69,30 +76,17 @@ export default {
           color:#666;
         }
       }
-      .show {
+      .status {
         width:1.5rem;
         padding:0.1rem 0;
-        p {
-          color:#666;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            width:0.64rem;
+            height:0.64rem;
         }
       }
-    }
-  }
-  .btn {
-    background:#fff;
-    margin-top:0.2rem;
-    height:0.8rem;
-    padding:0.1rem 0.3rem;
-    display: flex;
-    align-items: center;
-    img {
-      width:0.32rem;
-      height:0.32rem;
-      margin-right:0.3rem;
-    }
-    .btn_con {
-      flex:1;
-      color:#1296db;
     }
   }
 }

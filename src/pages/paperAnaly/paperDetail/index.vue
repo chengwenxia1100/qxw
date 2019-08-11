@@ -18,10 +18,10 @@ function initChart(canvas, width, height) {
   });
   canvas.setChart(chart);
   var option = {
-    // title: {
-    //     text: '成绩',
-    //     x: 'left'
-    // },
+    title: {
+        text: '成绩',
+        x: 'left'
+    },
     tooltip: {
         trigger: 'item',
         formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -72,7 +72,7 @@ export default {
   .echart {
     // margin:0.2rem auto;
     width:80%;
-    height:4rem;
+    height:5rem;
   }
 
 </style>

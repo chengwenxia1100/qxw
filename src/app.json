@@ -1,12 +1,20 @@
 {
   "pages": [
+    "pages/paperAnaly/analy/main",
+    "pages/paperAnaly/paperDetail/main",
+    
+    "pages/paperAnaly/main",
+    "pages/errorRegister/main",
+    
     "pages/wrongTitle/main",
+    "pages/errorRegister/addwork/main",
+    
+    
     "pages/user/instruction/main",
     "pages/user/student/add/main",
     "pages/user/student/update/main",
     "pages/user/student/switchStudent/main",
-    "pages/paperAnaly/main",
-    "pages/errorRegister/main",
+    
     "pages/home/main",
     "pages/user/main",
     "pages/bind/vipbindnext/main",
@@ -15,7 +23,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#e12a22",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },
@@ -27,7 +35,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/wrongTitle/main",
+      "pagePath": "pages/paperAnaly/analy/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {
