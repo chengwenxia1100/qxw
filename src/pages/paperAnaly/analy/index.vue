@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="chart_con">     
+    <div class="chart_con">
         <div class="tab">
             <div class="btn">
                 得分情况
@@ -30,18 +30,31 @@
         </div>
     </div>
     <div class="potic">
-        <h2>重难点题型</h2>
-        <table style="width:100%">
-            <tr>
-                <td rowspan="4">1212</td>
-                <td>
-                    <tr>1</tr>
-                    <tr>1</tr>
-                    <tr>1</tr>
-                    <tr>1</tr>
-                </td>
-            </tr>
-        </table>
+      <h2>重难点题型</h2>
+      <div class="type">选择题</div>
+      <div class="box">
+        <div class="row"> 
+          <div class="cell">题号</div> 
+          <div class="cell">学生得分</div> 
+          <div class="cell">班级平均分</div>
+          <div class="cell">难度系数</div>
+          <div class="cell"></div>
+        </div>
+        <div class="row"> 
+          <div class="cell blue">2</div> 
+          <div class="cell">6</div> 
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+          <div class="cell blue">查看详情</div>
+        </div>
+        <div class="row"> 
+          <div class="cell blue">2</div> 
+          <div class="cell">6</div> 
+          <div class="cell">7</div>
+          <div class="cell">8</div>
+          <div class="cell blue">查看详情</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -149,7 +162,32 @@ export default {
   }
   .potic {
     h2 {
-        padding:0.1rem 0.2rem;
+      padding:0.1rem 0.2rem;
+    }
+    .type {
+      font-size:0.24rem;
+      padding:0.1rem 0.2rem;
+      background:#666;
+      color:#fff;
+    }
+    .box { 
+      display: table; 
+      font-size:0.24rem;
+      text-align:center;
+      width:100%;
+      background:#fff;
+    } 
+    .row { 
+      display: table-row; 
+    } 
+    .cell { 
+      display: table-cell; 
+      width: 20%;
+      border: 1px solid #f2f2f2;
+      padding:0.1rem 0;
+    }
+    .blue {
+      color:#1296db;
     }
   }
 }
