@@ -16,7 +16,7 @@
           </div>
           <div class="li">
             <div><span>就读班级：</span><span>高三（1）班</span></div>
-            <div><a>更新学员信息></a></div>
+            <div @click="update"><a>更新学员信息></a></div>
           </div>
         </div>
       </div>
@@ -57,8 +57,15 @@ export default {
     }
   },
   methods: {
+    // 增加学员
     add () {
-      
+      const url = '../add/main';
+      wx.navigateTo({ url })
+    },
+    // 更新学员信息
+    update () {
+      const url = '../update/main';
+      wx.navigateTo({ url })
     }
   }
 }

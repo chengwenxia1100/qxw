@@ -8,7 +8,7 @@
         <p><span>手机号码:</span><span>1876887878</span></p>
       </div>
     </div>
-    <div class="change_box">
+    <div class="change_box" @click="toChange">
       <img src="/static/svg/user_icon1.png" style="width:1.6rem;height:1.6rem;" />
       <div class="right">
         <p><span>当前学员： </span><span>网易云</span></p>
@@ -17,19 +17,19 @@
     </div>
     <div class="list">
       <ul>
-        <li>
+        <li @click="toVip">
           <img src="/static/svg/user_icon2.png" style="width:1.6rem;height:1.6rem;" />
           <p>会员</p>
         </li>
-        <li>
+        <li @click="toInstruction">
           <img src="/static/svg/user_icon3.png" style="width:1.6rem;height:1.6rem;" />
           <p>使用说明</p>
         </li>
         <li>
           <img src="/static/svg/user_icon4.png" style="width:1.6rem;height:1.6rem;" />
-          <p>在线客服</p>
+          <button open-type='contact' class='' session-from='weapp'>在线客服</button> 
         </li>
-        <li>
+        <li @click="toAbout">
           <img src="/static/svg/user_icon5.png" style="width:1.6rem;height:1.6rem;" />
           <p>关于勤学</p>
         </li>
@@ -44,6 +44,28 @@ export default {
   data () {
     return {
     }
+  },
+  methods: {
+    // 切换学员
+    toChange () {
+      const url = './student/switchStudent/main';
+      wx.navigateTo({ url })
+    },
+    // 会员
+    toVip () {
+      const url = './student/switchStudent/main';
+      wx.navigateTo({ url })
+    },
+    // 使用说明toAbout
+    toInstruction () {
+      const url = './instruction/main';
+      wx.navigateTo({ url })
+    },
+    // 关于勤学
+    toAbout () {
+      const url = './about/main';
+      wx.navigateTo({ url })
+    },
   }
 }
 </script>
@@ -116,6 +138,19 @@ page {
           flex:1;
           display:flex;
           align-items: center;
+        }
+        button {
+          background:#fff;
+          text-align:left;
+          flex:1;
+          display:flex;
+          align-items: center;
+          height:0.48rem;
+          font-size:0.28rem;
+          padding-left:0;
+        }
+        button::after{
+          border: none;
         }
       }
     }

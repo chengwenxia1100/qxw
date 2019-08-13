@@ -1,7 +1,7 @@
 <template>
   <div class="home_container"> 
-      <div class="login_btn" @click="gotologin">
-        请先登录
+      <div class="login_btn">
+        <button  open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">请先登录</button>
       </div>
       <div class="login_mess">
         <div class="left">
@@ -35,24 +35,25 @@
       <div class="bg"></div>
       <div class="home_model">
         <ul>
-          <li>
+          <li @click="gotoWrongTitle">
+            <div>
+              <img class="home-icon" src="/static/svg/home_icon3.png" />
+            </div>
+            <p>错题本</p>
+          </li>
+          <li @click="gotoErrorRegister">
             <div>
               <img class="home-icon" src="/static/svg/home_icon1.png" />
             </div>
             <p>错题登记</p>
           </li>
-          <li>
-            <div class="">
+          <li @click="gotoPaperAnaly">
+            <div>
               <img class="home-icon" src="/static/svg/home_icon2.png" />
             </div>
             <p>试卷分析</p>
           </li>
-          <li>
-            <div class="">
-              <img class="home-icon" src="/static/svg/home_icon3.png" />
-            </div>
-            <p>错题查看</p>
-          </li>
+          
           <li>
             <div>
               <img class="home-icon" src="/static/svg/home_icon4.png" />
@@ -60,13 +61,13 @@
             <p>错题归因</p>
           </li>
           <li>
-            <div class="">
+            <div>
               <img class="home-icon" src="/static/svg/home_icon5.png" />
             </div>
             <p>每日一题</p>
           </li>
           <li>
-            <div class="">
+            <div>
               <img class="home-icon" src="/static/svg/home_icon6.png" />
             </div>
             <p>记忆引擎</p>
@@ -78,7 +79,7 @@
             <p>导出记录</p>
           </li>
           <li>
-            <div class="">
+            <div>
               <img class="home-icon" src="/static/svg/home_icon7.png" />
             </div>
             <p>勤学中心</p>
@@ -88,14 +89,14 @@
       <div class="curve">
         <div class="curve_tit">成绩曲线</div>
         <div class="curve_con">
-          <!-- <p><span>学科: </span><span>数学</span></p> -->
+          <p><span>学科: </span><span>数学</span></p>
           <div class="chart">
             <div class="chart_con">
               <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
             </div>
-            <!-- <div class="no_chart">
+            <div class="no_chart">
               暂无数据
-            </div> -->
+            </div>
           </div>
         </div>
       </div>
@@ -111,7 +112,7 @@
 </template>
 
 <script>
-import { getOrderList } from './home.api';
+import { getToken } from './home.api';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
@@ -192,10 +193,30 @@ export default {
     }
   },
   mounted () {
+    // wx.getSetting({
+    //   success (res){
+    //     if (res.authSetting['scope.userInfo']) {
+    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+    //       wx.getUserInfo({
+    //         success: function(res) {
+    //           wx.login({
+    //             success: (res) => {
+    //               if (res.code) {
+    //                 this.getOrderListData()
+    //               } else {
+    //                 console.log('登录失败！' + res.errMsg)
+    //               }
+    //             }
+    //           })
+    //         }
+    //       })
+    //     }
+    //   }
+    // })
     wx.login({
       success: (res) => {
         if (res.code) {
-          this.getOrderListData()
+          this.getToken(res.code)
         } else {
           console.log('登录失败！' + res.errMsg)
         }
@@ -203,14 +224,15 @@ export default {
     })
   },
   methods: {
-    async getOrderListData () {
-      const data = await getOrderList({
-        current: 1,
-        size: 12,
-        status: 3,
-        userId: 82
+    async getToken (code) {
+      const data = await getToken({
+        code: code
       })
       console.log(data)
+    },
+    // 授权
+    bindGetUserInfo (e) {
+      console.log(e.detail.userInfo)
     },
     // 切换学员
     showPicker () {
@@ -228,6 +250,21 @@ export default {
     // 跳转登录页面
     gotologin () {
       const url = '../bind/bindfirst/main';
+      wx.navigateTo({ url })
+    },
+    // 跳转错题本页面
+    gotoWrongTitle () {
+      const url = '../wrongTitle/main';
+      wx.navigateTo({ url })
+    },
+    // 跳转错题登记页面
+    gotoErrorRegister () {
+      const url = '../errorRegister/main';
+      wx.navigateTo({ url })
+    },
+    // 跳转试卷分析页面
+    gotoPaperAnaly () {
+      const url = '../paperAnaly/main';
       wx.navigateTo({ url })
     }
   }
@@ -249,16 +286,20 @@ export default {
     padding:0.1rem 0;
   }
   .login_btn {
-    width:80%;
-    height:0.8rem;
-    background:#f7536a;
     margin:0.2rem auto;
     border-radius:0.5rem;
-    color:#fff;
     font-size:0.32rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    button {
+      background:#fff!important;
+      width:80%;
+      height:0.8rem;
+      background:#fff;
+      border-radius:0.5rem;
+      border:0.02rem #f2f2f2 solid;
+    }
   }
   .login_mess {
     display: flex;
