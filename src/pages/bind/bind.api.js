@@ -1,8 +1,15 @@
 import request from '@/tools/request'
 
-export function getToken (data) {
+export function gainCode (data) {
   return request({
-    url: 'login/getToken',
+    url: 'login/getSmsCode',
+    data
+  })
+}
+
+export function bindMessSubmit (data) {
+  return request({
+    url: 'login/loginIn',
     data
   })
 }

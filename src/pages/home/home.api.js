@@ -6,3 +6,10 @@ export function getToken (data) {
     data
   })
 }
+
+export function getHome (data) {
+  return request({
+    url: 'home/index',
+    data
+  })
+}

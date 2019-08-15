@@ -1,11 +1,15 @@
 {
   "pages": [
-    "pages/user/main",
     "pages/home/main",
+    "pages/bind/bindfirst/main",
+    
+    
+    "pages/user/main",
+    
     
     "pages/bind/vipbindnext/main",
     "pages/bind/vipbind/main",
-    "pages/bind/bindfirst/main",
+    
     "pages/paperAnaly/analy/main",
     "pages/paperAnaly/paperDetail/main",
     

@@ -17,7 +17,12 @@
             <div><span>班级：</span><span>班</span></div>
           </div>
         </div>
-        <div class="right">
+        <div class="right" v-if="login_status === 1">
+          <div class="bind" @click="bind">
+            绑定/登录
+          </div>
+        </div>
+        <div class="right" v-else>
           <div class="change" @click="showPicker">
             <img src="/static/svg/icon_change.png" alt="">
             切换学员
@@ -91,10 +96,10 @@
         <div class="curve_con">
           <p><span>学科: </span><span>数学</span></p>
           <div class="chart">
-            <div class="chart_con">
+            <div class="chart_con" v-if="login_status !== 1">
               <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
             </div>
-            <div class="no_chart">
+            <div class="no_chart" v-else>
               暂无数据
             </div>
           </div>
@@ -112,7 +117,7 @@
 </template>
 
 <script>
-import { getToken } from './home.api';
+import { getToken, getHome } from './home.api';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
@@ -178,9 +183,9 @@ export default {
   },
   data () {
     return {
-      echarts,
-      onInit: initChart,
-      pickerValueArray: [
+      echarts, // 折线图
+      onInit: initChart, //折线图
+      pickerValueArray: [ //选择框
         {
           label: '用户二',
           value: 1
@@ -190,6 +195,9 @@ export default {
           value: 2
         }
       ],
+      token: '',
+      code: '',
+      login_status: 1, //用户的绑定状态 1为为无绑定学员
     }
   },
   mounted () {
@@ -216,7 +224,9 @@ export default {
     wx.login({
       success: (res) => {
         if (res.code) {
-          this.getToken(res.code)
+          console.log(res.code)
+          this.code = res.code;
+          this.getToken()
         } else {
           console.log('登录失败！' + res.errMsg)
         }
@@ -224,15 +234,30 @@ export default {
     })
   },
   methods: {
-    async getToken (code) {
+    // 授权接口
+    async getToken () {
       const data = await getToken({
-        code: code
+        code: this.code
       })
+      this.token = data.token;
+      this.getHome()
+    },
+    // 请求首页接口
+    async getHome () {
+      const data = await getHome({
+        token: this.token
+      })
+      this.login_status = data.login_status
       console.log(data)
     },
     // 授权
     bindGetUserInfo (e) {
       console.log(e.detail.userInfo)
+    },
+    // 绑定注册
+    bind () {
+      const url = '../bind/bindfirst/main';
+      wx.navigateTo({ url })
     },
     // 切换学员
     showPicker () {
@@ -303,7 +328,8 @@ export default {
   }
   .login_mess {
     display: flex;
-    font-size:0.28rem; 
+    font-size:0.28rem;
+    background: #fff;
     .left {
       flex:1;
       .slide_same {
@@ -331,6 +357,14 @@ export default {
     .right {
       width:2rem;
       padding:0.2rem 0;
+      .bind {
+        border:0.02rem #333 solid;
+        width:1.6rem;
+        height:0.8rem;
+        border-radius:0.18rem;
+        text-align: center;
+        line-height: 0.8rem;
+      }
       .change {
         text-align:center;
         display: flex;
@@ -344,6 +378,7 @@ export default {
     }
   }
   .home_model {
+    background: #fff;
     ul {
       clear:both;
       overflow:hidden;
@@ -378,7 +413,7 @@ export default {
       .tit
     }
     &_con {
-      padding:0.2rem;
+      padding:0.2rem 0;
       p {
         font-size:0.28rem;
         span:first-child {
@@ -386,6 +421,7 @@ export default {
         }
       }
       .chart {
+        background:#fff;
         .chart_con {
           width:100%;
           height:5rem;
