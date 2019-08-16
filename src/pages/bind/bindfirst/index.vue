@@ -21,9 +21,7 @@
           ref="mpvuePicker"
           :mode="mode"
           :pickerValueDefault="pickerValueDefault"
-          @onChange="onChange"
-          @onConfirm="onConfirm"
-          @onCancel="onCancel"
+          @onConfirm="ongradeConfirm"
           :pickerValueArray="pickerValueArray"
         />
       </div>
@@ -34,9 +32,7 @@
           ref="mpvuePickerschool"
           :mode="mode"
           :pickerValueDefault="pickerValueDefault"
-          @onChange="onChange"
-          @onConfirm="onConfirm"
-          @onCancel="onCancel"
+          @onConfirm="onschoolConfirm"
           :pickerValueArray="pickerValueArrayschool"
         />
       </div>
@@ -45,33 +41,12 @@
         <input type="text" placeholder="请输入班级代码" v-model="gradeNum"/>
       </div>
     </div>
-    <div class="parents_mess">
-      <div class="list">
-        <div class="tit">您的姓名</div>
-        <input type="text" placeholder="请输入您的姓名" v-model="parentsName" />
-      </div>
-      <div class="list">
-        <div class="tit">关系</div>
-        <radio-group class="radio-group" @change="radioChange_relation">
-          <label v-for="item in lists" :key="item.name">
-            <radio color="#EA5A49" :value="item.name" :checked="item.checked" />
-            {{item.value}}
-          </label>
-        </radio-group>
-      </div>
-      <div class="list">
-        <div class="tit">联系方式</div>
-        <!-- oninput ="value=value.replace(/[^\d]/g,'')" -->
-        <input type="text" placeholder="请输入手机号" v-model="phone" maxlength="11" />
-      </div>
-      <div class="list">
-        <div class="tit">验证码</div>
-        <div class="input">
-          <input type="text" placeholder="请输入验证码" v-model="code" />
-          <span @click="gainCode()" :style="'background:' + bgcolor">{{time}}</span>
-        </div>
-      </div>
-    </div>
+    <bind-parents 
+        @parentsName="parentsName" 
+        @relation="relation"
+        @phone="phone"
+        @code="code">
+    </bind-parents>
     <div class="btn">
       <div class="btn_con" @click="finished">完成</div>
     </div>
@@ -80,15 +55,18 @@
 </template>
 
 <script>
+import bindParents from '@/components/form/bindParents'
 import { gainCode, bindMessSubmit } from '../bind.api';
 import mpvuePicker from "mpvue-picker";
 
 export default {
     components: {
-        mpvuePicker
+        mpvuePicker,
+        bindParents
     },
     data () {
         return {
+            mode: 'selector', // 选择下拉框
             items: [
                 {name: '1', value: '男' , checked: 'true'},
                 {name: '2', value: '女'}
@@ -98,7 +76,6 @@ export default {
                 {name: '2', value: '母亲'},
                 {name: '0', value: '其他'},
             ],
-            mode: 'selector',
             pickerValueArray: [
                 {
                     label: '一年级',
@@ -123,20 +100,26 @@ export default {
             isClick: true,
             bgcolor: '#f7536a',
             time:'发送验证码',
-            grade: '一年级',
-            school: '开化中学',
-            phone:'',
-            parentsName: '',
-            code: ''
+            grade: '请输入就读年级',
+            school: '请输入就读学校'
+            // phone:'',
+            // parentsName: '',
+            // code: ''
         }
     },
     methods: {
-        // 单选框
-        radioChange (e) {
-            this.sex = e.mp.detail.value
+        // 接收子组件的传值
+        parentsName (val) {
+            this.parentsName = val
         },
-        radioChange_relation (e) {
-            this.relation = e.mp.detail.value
+        relation (val) {
+            this.relation = val
+        },
+        phone (val) {
+            this.phone = val
+        },
+        code (val) {
+            this.phone = val
         },
         // 获取验证码
         async gainCode () {
@@ -178,34 +161,33 @@ export default {
         },
         // 填完信息提交
         finished () {
-            console.log(this.name)
-            if (!this.name) {
-                console.log('请输入学生姓名')
-                return
-            } else if (!this.sex) {
-                console.log('请输入学生性别')
-                return
-            } else if (!this.grade) {
-                console.log('请输入年级')
-                return
-            } else if (!this.school) {
-                console.log('请输入学校')
-                return
-            } else if (!this.parentsName) {
-                console.log('请输入家长姓名')
-                return
-            } else if (!this.relation) {
-                console.log('请输入关系')
-                return
-            } else if (!this.phone) {
-                console.log('请输入手机号码')
-                return
-            }else if (!this.code) {
-                console.log('请输入验证码')
-                return
-            } else {
-                this.bindMessSubmitData()
-            }
+          if (!this.name) {
+              wx.showToast({ title: '请输入学生姓名', icon: 'none' })
+              return
+          } else if (!this.sex) {
+              wx.showToast({ title: '请输入学生性别', icon: 'none' })
+              return
+          } else if (!this.grade) {
+              wx.showToast({ title: '请输入年级', icon: 'none' })
+              return
+          } else if (!this.school) {
+              wx.showToast({ title: '请输入学校', icon: 'none' })
+              return
+          } else if (!this.parentsName) {
+              wx.showToast({ title: '请输入家长姓名', icon: 'none' })
+              return
+          } else if (!this.relation) {
+              wx.showToast({ title: '请输入关系', icon: 'none' })
+              return
+          } else if (!this.phone) {
+              wx.showToast({ title: '请输入手机号码', icon: 'none' })
+              return
+          }else if (!this.code) {
+              wx.showToast({ title: '请输入验证码', icon: 'none' })
+              return
+          } else {
+              this.bindMessSubmitData()
+          }
         },
         // 点击提交接口
         async bindMessSubmitData () {
@@ -227,27 +209,33 @@ export default {
             const url = '../../home/main'
             wx.reLaunch({url})
         },
+        // 单选框
+        radioChange (e) {
+            this.sex = e.mp.detail.value
+        },
+        radioChange_relation (e) {
+            this.relation = e.mp.detail.value
+        },
+        // 下拉框
         showPicker () {
             this.$refs.mpvuePicker.show()
         },
         showPickerschool () {
             this.$refs.mpvuePickerschool.show()
         },
-        onConfirm (e) {
-            console.log(e.label)
-            this.grade = e.label
+        // 下拉框确认
+        ongradeConfirm (e) {
+          this.grade = e.label
         },
-        onChange(e) {
-            console.log(e)
+        onschoolConfirm (e) {
+          this.school = e.label
         },
-        // onCancel (e) {
-        //     console.log(e)
-        // },
         init () {
         },
+        // 内部学员通道
         gotoVip () {
-            const url = '../vipbind/main';
-            wx.navigateTo({ url })
+          const url = '../vipbind/main';
+          wx.navigateTo({ url })
         }
     },
     computed: {
@@ -266,15 +254,12 @@ export default {
             return val
         }
     },
-    mounted () {
-        console.log(this.sex)
-    },
     // 前后台切换重置倒计时
     onshow() {
-        this.isClick = true;
-        let interval = this.interval;    // 保存定时器的id
-        clearInterval(interval);
-        this.time = '获取验证码';
+      this.isClick = true;
+      let interval = this.interval;    // 保存定时器的id
+      clearInterval(interval);
+      this.time = '获取验证码';
     }
 }
 </script>

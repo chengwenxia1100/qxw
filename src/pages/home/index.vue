@@ -31,9 +31,7 @@
             ref="mpvuePicker"
             :mode="mode"
             :pickerValueDefault="pickerValueDefault"
-            @onChange="onChange"
             @onConfirm="onConfirm"
-            @onCancel="onCancel"
             :pickerValueArray="pickerValueArray" />
         </div>
       </div>
@@ -121,6 +119,8 @@ import { getToken, getHome } from './home.api';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
+import store from '@/store'
+
 let chart = null;
 
 function initChart(canvas, width, height) {
@@ -233,6 +233,11 @@ export default {
       }
     })
   },
+  computed: {
+    token () {
+      return store.state.user.token // 获取缓存的 userInfo 有代表已授权过
+    }
+  },
   methods: {
     // 授权接口
     async getToken () {
@@ -240,6 +245,7 @@ export default {
         code: this.code
       })
       this.token = data.token;
+      store.commit('token', data.token)
       this.getHome()
     },
     // 请求首页接口
@@ -266,31 +272,25 @@ export default {
     onConfirm (e) {
         console.log(e.label)
     },
-    onChange (e) {
-        console.log(e)
-    },
-    onCancel (e) {
-        console.log(e)
-    },
     // 跳转登录页面
     gotologin () {
       const url = '../bind/bindfirst/main';
-      wx.navigateTo({ url })
+      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
     },
     // 跳转错题本页面
     gotoWrongTitle () {
       const url = '../wrongTitle/main';
-      wx.navigateTo({ url })
+      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
     },
     // 跳转错题登记页面
     gotoErrorRegister () {
       const url = '../errorRegister/main';
-      wx.navigateTo({ url })
+      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
     },
     // 跳转试卷分析页面
     gotoPaperAnaly () {
       const url = '../paperAnaly/main';
-      wx.navigateTo({ url })
+      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
     }
   }
 }

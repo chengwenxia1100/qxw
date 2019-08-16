@@ -3,11 +3,11 @@
     <div class="input_cox">
         <div class="slide">
             <div class="tit">学生学号</div>
-            <input type="text" placeholder="请输入您孩子在勤学的学号" v-bind:value="value">
+            <input type="text" placeholder="请输入您孩子在勤学的学号" v-model="studentNum">
         </div>
         <div class="slide">
             <div class="tit">学生姓名</div>
-            <input type="text" placeholder="请输入您孩子的姓名" v-bind:value="value">
+            <input type="text" placeholder="请输入您孩子的姓名" v-model="studentName">
         </div>
     </div>
     <div class="tip">
@@ -23,16 +23,35 @@
 </template>
 
 <script>
+import { bindMessSubmit } from '../bind.api';
 
 export default {
   data () {
     return {
+        studentNum: '',
+        studentName: ''
     }
-  },
-  mounted () {
   },
   methods: {
     gotonext () {
+        if (!this.studentNum) {
+            wx.showToast({ title: '请输入您孩子在勤学的学号', icon: 'none' })
+            return
+        } else if (!this.studentName) {
+            wx.showToast({ title: '请输入您孩子的姓名', icon: 'none' })
+            return
+        } else {
+            console.log();
+            // this.bindMessVIPSubmitData()
+        }
+    },
+    // vip学员绑定第一步
+    async bindMessVIPSubmitData () {
+        const data = await bindMessSubmit({
+            token: '996836448fdfcb7867397bf35bef8b7f',
+        })
+        console.log(data)
+        // 跳转到下一页
         const url = '../vipbindnext/main';
         wx.navigateTo({ url })
     }

@@ -1,15 +1,16 @@
 import request from '@/tools/request'
+import { sign } from '@/tools'
 
 export function gainCode (data) {
   return request({
-    url: 'login/getSmsCode',
+    url: sign('login/getSmsCode'),
     data
   })
 }
 
 export function bindMessSubmit (data) {
   return request({
-    url: 'login/loginIn',
+    url: sign('login/loginIn'),
     data
   })
 }

@@ -1,4 +1,5 @@
 import request from '@/tools/request'
+import { sign } from '@/tools'
 
 export function getToken (data) {
   return request({
@@ -9,7 +10,7 @@ export function getToken (data) {
 
 export function getHome (data) {
   return request({
-    url: 'home/index',
+    url: sign('home/index'),
     data
   })
 }

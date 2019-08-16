@@ -18,31 +18,12 @@
             </div>
         </div>
     </div>
-    <div class="parents_mess">
-        <div class="list">
-            <div class="tit">您的姓名</div>
-            <input type="text" placeholder="请输入您的姓名" v-bind:value="value">
-        </div>
-        <div class="list">
-            <div class="tit">关系</div>
-            <radio-group class="radio-group" @change="radioChange">
-                <label v-for="item in lists" :key="item.name">
-                    <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.value}}
-                </label>
-            </radio-group>
-        </div>
-        <div class="list">
-            <div class="tit">联系方式</div>
-            <input type="text" placeholder="请输入手机号">
-        </div>
-        <div class="list">
-            <div class="tit">验证码</div>
-            <div class="input">
-               <input type="text" placeholder="请输入验证码">
-               <span @tap="isClick && gainCode()" :style="'background:' + bgcolor">{{time}}</span>
-            </div>
-        </div>
-    </div>
+    <bind-parents 
+        @parentsName="parentsName" 
+        @relation="relation"
+        @phone="phone"
+        @code="code">
+    </bind-parents>
     <div class="btn">
         <div class="btn_con" @click="finished">完成</div>
     </div>
@@ -50,8 +31,13 @@
 </template>
 
 <script>
+import bindParents from '@/components/form/bindParents'
+import { bindMessSubmit } from '../bind.api';
 
 export default {
+    components: {
+        bindParents
+    },
     data () {
         return {
             lists: [
@@ -89,10 +75,56 @@ export default {
                 },1000)
             }, 1000);
         },
+        // 接收子组件的传值
+        parentsName (val) {
+            this.parentsName = val
+        },
+        relation (val) {
+            this.relation = val
+        },
+        phone (val) {
+            this.phone = val
+        },
+        code (val) {
+            this.phone = val
+        },
         finished () {
+            if (!this.parentsName) {
+                wx.showToast({ title: '请输入家长姓名', icon: 'none' })
+                return
+            } else if (!this.relation) {
+                wx.showToast({ title: '请输入关系', icon: 'none' })
+                return
+            } else if (!this.phone) {
+                wx.showToast({ title: '请输入手机号码', icon: 'none' })
+                return
+            }else if (!this.code) {
+                wx.showToast({ title: '请输入验证码', icon: 'none' })
+                return
+            } else {
+                this.vipBindFinish()
+            }
+        },
+        // 点击提交接口
+        async vipBindFinish () {
+            const data = await bindMessSubmit({
+                token: '996836448fdfcb7867397bf35bef8b7f',
+                sms_code: this.code,
+                p_realname: this.parentsName,
+                phone: this.phone,
+                s_realname: this.name,
+                s_sex: this.sex,
+                s_grade: this.grade,
+                s_school: this.school,
+                s_class: this.gradeNum,
+                relation_type: this.relation,
+                student_no: this.student_no
+            })
+            console.log(data)
+            // 跳转到下一页
             const url = '../../home/main'
-            wx.switchTab({url})
-        }
+            wx.reLaunch({url})
+        },
     }
 }
 </script>
@@ -124,7 +156,6 @@ page {
             align-items: center;
             input {
                 flex:1;
-
             }
             span {
                 width:1.4rem;
