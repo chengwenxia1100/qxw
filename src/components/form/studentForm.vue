@@ -3,7 +3,7 @@
     <div class="student_mess">
         <div class="list">
             <div class="tit">学生姓名</div>
-            <input type="text" placeholder="请输入您孩子的姓名" v-bind:value="value">
+            <input type="text" placeholder="请输入您孩子的姓名" v-model="s_name">
         </div>
         <div class="list">
             <div class="tit">性别</div>
@@ -15,7 +15,7 @@
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
-            <div class="input" @click="showPicker">请输入就读年级</div>
+            <div class="input" @click="showPicker" :grade="grade">请输入就读年级</div>
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
@@ -27,7 +27,7 @@
         </div>
         <div class="list">
             <div class="tit">就读学校</div>
-            <div class="input" @click="showPickerschool">请输入就读学校</div>
+            <div class="input" @click="showPickerschool" :school="school">请输入就读学校</div>
             <mpvue-picker
             ref="mpvuePickerschool"
             :mode="mode"
@@ -47,16 +47,22 @@
 
 <script>
 import mpvuePicker from "mpvue-picker";
+import { updataStudentPage } from './studentForm.api'
 
 export default {
     components: {
         mpvuePicker
     },
+    props: {
+        studentId: {
+            default: ''
+        }
+    },
     data () {
         return {
             items: [
-                {name: 'boy', value: '男' , checked: 'true'},
-                {name: 'girl', value: '女'}
+                {name: '0', value: '男' , checked: 'true'},
+                {name: '1', value: '女'}
             ],
             mode: 'selector',
             pickerValueArray: [
@@ -80,17 +86,44 @@ export default {
                 }
             ],
             pickerValueDefault: [3],
+            studentListData: {},
             isClick: true,
             bgcolor: '#f7536a',
-            time:'发送验证码'
+            time:'发送验证码',
+            s_name: '',
+            school: '',
+            sex: 0,
+            grade: '2',
+            class: ''
         }
     },
-    computed: {
-        // categoryId () {
-        //   return this.$mp.query.id
-        // }
+    watch: {
+       s_name: {
+           handler (val) {
+               console.log(val)
+           }
+       },
+       grade: {
+           handler (val) {
+               console.log(val)
+           }
+       }
+    },
+    mounted () {
+        if (this.studentId) { this.updataStudentPage() }
     },
     methods: {
+        async updataStudentPage () {
+            const data = await updataStudentPage({
+                student_id: this.studentId
+            })
+            this.s_name = data.s_realname
+            this.sex = data.sex
+            this.school = data.school
+            this.grade = data.grade
+            this.class = data.class
+            this.studentListData = data
+        },
         // 单选框
         radioChange: e => {
             console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
@@ -112,8 +145,6 @@ export default {
         },
         init () {
         }
-    },
-    mounted () {
     },
     // 前后台切换重置倒计时
     onshow() {

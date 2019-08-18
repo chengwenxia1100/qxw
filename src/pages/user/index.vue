@@ -1,17 +1,27 @@
 <template>
   <div class="user_container">
     <div class="user_mess">
-      <img src="/static/images/user.png" />
+      <img :src="userdata.wx_avatar_url"  v-if="userdata.wx_avatar_url">
+      <img src="/static/images/user.png" v-else />
       <div class="mess">
-        <p><span>微信昵称:</span><span>点</span></p>
-        <p><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span><span>点</span></p>
-        <p><span>手机号码:</span><span>1876887878</span></p>
+        <p><span>微信昵称:</span>
+          <span v-if="userdata.wx_username">{{userdata.wx_username}}</span>
+          <span v-else>请先授权</span>
+        </p>
+        <p><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span>
+          <span v-if="userdata.parent_realename">{{userdata.parent_realename}}</span>
+          <span v-else>请绑定家长姓名</span>
+        </p>
+        <p><span>手机号码:</span>
+          <span v-if="userdata.parent_phone">{{userdata.parent_phone}}</span>
+           <span v-else>请绑定家长姓名</span>
+        </p>
       </div>
     </div>
-    <div class="change_box" @click="toChange">
+    <div class="change_box" @click="toChange" v-if="studentdata">
       <img src="/static/svg/user_icon1.png" style="width:1.6rem;height:1.6rem;" />
       <div class="right">
-        <p><span>当前学员： </span><span>网易云</span></p>
+        <p><span>当前学员： </span><span>{{studentdata.s_realname}}</span></p>
         <p>(点击可切换，添加学员，更新学员信息)</p>
       </div>
     </div>
@@ -39,13 +49,25 @@
 </template>
 
 <script>
+import { getUser } from './user.api'
 
 export default {
   data () {
     return {
+      userdata: {},
+      studentdata: {}
     }
   },
+  created () {
+    this.getUser()
+  },
   methods: {
+    async getUser () {
+        const data = await getUser({})
+        this.userdata = data
+        this.studentdata = data.student_info
+        console.log(data)
+    },
     // 切换学员
     toChange () {
       const url = './student/switchStudent/main';

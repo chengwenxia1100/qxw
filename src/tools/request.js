@@ -23,13 +23,13 @@ AxiosInstance.interceptors.request.use((config) => {
 
 AxiosInstance.interceptors.response.use((res) => {
   let data = res.data
-  if (data.code === 100) {
+  if (data.status === 1) {
     return data.data
   }
 
   wx.showModal({
     title: '错误提示',
-    content: data.message,
+    content: data.msg,
     showCancel: false
   })
   return Promise.reject(data)

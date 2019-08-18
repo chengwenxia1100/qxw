@@ -3,18 +3,20 @@
     <div class="login_mess">
         <div class="left">
             <div class="slide2">
-                <span>学生学号: </span><span>12323232323</span>
+                <span>学生学号: </span><span>{{studentData.student_no}}</span>
             </div>
             <div class="slide1">
-                <div><span>学生姓名：</span><span class="con">网易云</span></div>
-                <div><span>性别：</span><span class="con">男</span></div>
+                <div><span>学生姓名：</span><span class="con">{{studentData.student_realename}}</span></div>
+                <div><span>性别：</span>
+                <span class="con" v-if="studentData.student_sex === 1">女</span>
+                <span class="con" v-if="studentData.student_sex === 0">男</span></div>
             </div>
             <div class="slide2">
-                <span>就读学校: </span><span class="con">杭州高级中学</span>
+                <span>就读学校: </span><span class="con">{{studentData.student_school}}</span>
             </div>
             <div class="slide3">
-                <div><span>就读年级：</span><span class="con">初一</span></div>
-                <div><span>班级：</span><span class="con">班</span></div>
+                <div><span>就读年级：</span><span class="con">{{studentData.student_grade}}</span></div>
+                <div><span>班级：</span><span class="con">{{studentData.student_class}}</span></div>
             </div>
         </div>
     </div>
@@ -43,14 +45,31 @@ export default {
             lists: [
                 {name: 'father', value: '父亲 ', checked: 'true'},
                 {name: 'mother', value: '母亲'},
-                {name: 'other', value: '其他'},
+                {name: 'other', value: '其他'}, 
             ],
+            studentData: {},
             isClick: true,
             bgcolor: '#f7536a',
-            time:'发送验证码'
+            time:'发送验证码',
+            parentsNameVal: '',
+            relationVal: 1,
+            phoneVal: '',
+            codeVal: ''
         }
     },
     mounted () {
+        console.log(this.student_realname)
+        this.vipBindPage()
+        // this.student_no = this.$mp.query.student_no
+        // this.student_realname = this.$mp.query.student_realname
+    },
+    computed: {
+        student_no () {
+            return this.$mp.query.student_no
+        },
+        student_realname () {
+            return this.$mp.query.student_realname
+        }
     },
     methods: {
         gainCode:function() {
@@ -77,48 +96,55 @@ export default {
         },
         // 接收子组件的传值
         parentsName (val) {
-            this.parentsName = val
+            this.parentsNameVal = val
         },
         relation (val) {
-            this.relation = val
+            this.relationVal = val
         },
         phone (val) {
-            this.phone = val
+            this.phoneVal = val
         },
         code (val) {
-            this.phone = val
+            this.codeVal = val
         },
         finished () {
-            if (!this.parentsName) {
+            console.log(this.parentsNameVal)
+            if (!this.parentsNameVal) {
                 wx.showToast({ title: '请输入家长姓名', icon: 'none' })
                 return
-            } else if (!this.relation) {
+            } else if (!this.relationVal) {
                 wx.showToast({ title: '请输入关系', icon: 'none' })
                 return
-            } else if (!this.phone) {
+            } else if (!this.phoneVal) {
                 wx.showToast({ title: '请输入手机号码', icon: 'none' })
                 return
-            }else if (!this.code) {
+            }else if (!this.codeVal) {
                 wx.showToast({ title: '请输入验证码', icon: 'none' })
                 return
             } else {
                 this.vipBindFinish()
             }
         },
+        // 页面接口
+        async vipBindPage() {
+            const data = await bindMessSubmit({
+                token: '38c533200b8a205f7169de372195dfb0',
+                student_no: this.student_no,
+                student_realname: this.student_realname
+            })
+            this.studentData=data;
+            console.log(data)
+        },
         // 点击提交接口
         async vipBindFinish () {
             const data = await bindMessSubmit({
-                token: '996836448fdfcb7867397bf35bef8b7f',
-                sms_code: this.code,
-                p_realname: this.parentsName,
-                phone: this.phone,
-                s_realname: this.name,
-                s_sex: this.sex,
-                s_grade: this.grade,
-                s_school: this.school,
-                s_class: this.gradeNum,
-                relation_type: this.relation,
-                student_no: this.student_no
+                token: '38c533200b8a205f7169de372195dfb0',
+                sms_code: this.codeVal,
+                p_realname: this.parentsNameVal,
+                phone: this.phoneVal,
+                relation_type: this.relationVal,
+                student_no: this.student_no,
+                student_realname: this.student_realname
             })
             console.log(data)
             // 跳转到下一页

@@ -1,7 +1,7 @@
 // import md5 from 'js-md5'
 import { getToken } from './auth'
 
-const TOKEN = '123'
+const TOKEN = '38c533200b8a205f7169de372195dfb0'
 // const TOKEN = 'bcovu0okcdgirltgvj4qcooo6mrktbol'
 
 // const SALT = 'sgzzzz'

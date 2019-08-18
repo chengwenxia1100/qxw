@@ -6,23 +6,23 @@
       <div class="login_mess">
         <div class="left">
           <div class="slide1">
-            <div><span>学生姓名：</span><span>网易云</span></div>
-            <div><span>性别：</span><span>男</span></div>
+            <div><span>学生姓名：</span><span v-if="studentData.s_realname">{{studentData.s_realname}}</span></div>
+            <div><span>性别：</span><span v-if="studentData.sex === 1">女</span><span v-if="studentData.sex === 0">男</span></div>
           </div>
           <div class="slide2">
-            <span>就读学校: </span><span>杭州高级中学</span>
+            <span>就读学校: </span><span v-if="studentData.school">{{studentData.school}}</span>
           </div>
           <div class="slide3">
-            <div><span>就读年级：</span><span>初一</span></div>
-            <div><span>班级：</span><span>班</span></div>
+            <div><span>就读年级：</span><span v-if="studentData.grade">{{studentData.grade}}</span></div>
+            <div><span>班级：</span><span v-if="studentData.class_id">{{studentData.class_id}}</span></div>
           </div>
         </div>
-        <div class="right" v-if="login_status === 1">
+        <div class="right" v-if="studentData.student_status === 0">
           <div class="bind" @click="bind">
             绑定/登录
           </div>
         </div>
-        <div class="right" v-else>
+        <div class="right" v-if="studentData.student_status === 1">
           <div class="change" @click="showPicker">
             <img src="/static/svg/icon_change.png" alt="">
             切换学员
@@ -92,9 +92,9 @@
       <div class="curve">
         <div class="curve_tit">成绩曲线</div>
         <div class="curve_con">
-          <p><span>学科: </span><span>数学</span></p>
+          <p><span>学科: </span><span v-if="studentData.subject">{{studentData.subject}}</span></p>
           <div class="chart">
-            <div class="chart_con" v-if="login_status !== 1">
+            <div class="chart_con" v-if="studentData.student_status === 1">
               <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
             </div>
             <div class="no_chart" v-else>
@@ -107,15 +107,15 @@
         <div class="advice_tit">
           通知公告
         </div>
-        <div class="advice_con">
-          导出功能已更新,请及时查看
+        <div class="advice_con" v-if="studentData.notice">
+          {{studentData.notice}}
         </div>
       </div>
   </div>
 </template>
 
 <script>
-import { getToken, getHome } from './home.api';
+import { getToken, getHome, getStudentList } from './home.api';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
@@ -185,19 +185,12 @@ export default {
     return {
       echarts, // 折线图
       onInit: initChart, //折线图
-      pickerValueArray: [ //选择框
-        {
-          label: '用户二',
-          value: 1
-        },
-        {
-          label: '用户三',
-          value: 2
-        }
+      pickerValueArray: [ //切换学员选择框
+        
       ],
       token: '',
       code: '',
-      login_status: 1, //用户的绑定状态 1为为无绑定学员
+      studentData: {}
     }
   },
   mounted () {
@@ -234,9 +227,9 @@ export default {
     })
   },
   computed: {
-    token () {
-      return store.state.user.token // 获取缓存的 userInfo 有代表已授权过
-    }
+    // token () {
+    //   return store.state.user.token // 获取缓存的 userInfo 有代表已授权过
+    // }
   },
   methods: {
     // 授权接口
@@ -245,16 +238,27 @@ export default {
         code: this.code
       })
       this.token = data.token;
-      store.commit('token', data.token)
       this.getHome()
+      // store.commit('token', data.token)
     },
     // 请求首页接口
     async getHome () {
       const data = await getHome({
         token: this.token
       })
-      this.login_status = data.login_status
-      console.log(data)
+      this.studentData = data.student_info
+      if(data.student_info.student_status === 1) { this.getStudentList() }
+    },
+    // 获取学员列表
+    async getStudentList () {
+      const data = await getStudentList({
+        token: this.token
+      })
+      
+      for (let item of data) {
+        item.label = item.s_realname
+      }
+      this.pickerValueArray = data;
     },
     // 授权
     bindGetUserInfo (e) {
@@ -270,7 +274,7 @@ export default {
       this.$refs.mpvuePicker.show()
     },
     onConfirm (e) {
-        console.log(e.label)
+        console.log(e)
     },
     // 跳转登录页面
     gotologin () {
@@ -444,6 +448,9 @@ export default {
       font-size:0.32rem;
       text-align:center;
       padding:0.2rem 0;
+    }
+    .advice_con {
+      background:#fff;
     }
   }
 }

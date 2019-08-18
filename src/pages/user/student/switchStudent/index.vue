@@ -1,41 +1,22 @@
 <template>
   <div class="switch_container">
     <div class="slide_con">
-      <div class="slide">
+      <div class="slide" v-for="list in studentListData" :key="list">
         <div class="icon">
           <img src="/static/svg/radio_select.png" alt="">
         </div>
         <div class="mess">
           <div class="li">
-            <div><span>学员姓名：</span><span>小虾米</span></div>
-            <div><span>性别：</span><span>男</span></div>
+            <div><span>学员姓名：</span><span>{{list.s_realname}}</span></div>
+            <div><span>性别：</span><span v-if="list.sex === 1">女</span><span v-if="list.sex === 0">男</span></div>
           </div>
           <div class="li">
-            <div><span>就读学校:</span><span>德高</span></div>
-            <div><span>年级：</span><span>高三</span></div>
+            <div><span>就读学校:</span><span>{{list.school}}</span></div>
+            <div><span>年级：</span><span>{{list.grade}}</span></div>
           </div>
           <div class="li">
-            <div><span>就读班级：</span><span>高三（1）班</span></div>
+            <div><span>就读班级：</span><span v-if="list.class_id">{{list.class_id}}</span><span v-else>--</span></div>
             <div @click="update"><a>更新学员信息></a></div>
-          </div>
-        </div>
-      </div>
-      <div class="slide">
-        <div class="icon">
-          <img src="/static/svg/radio_select.png" alt="">
-        </div>
-        <div class="mess">
-          <div class="li">
-            <div><span>学员姓名：</span><span>小虾米</span></div>
-            <div><span>性别：</span><span>男</span></div>
-          </div>
-          <div class="li">
-            <div><span>就读学校:</span><span>德高</span></div>
-            <div><span>年级：</span><span>高三</span></div>
-          </div>
-          <div class="li">
-            <div><span>就读班级：</span><span>高三（1）班</span></div>
-            <div><a>更新学员信息></a></div>
           </div>
         </div>
       </div>
@@ -50,13 +31,29 @@
 </template>
 
 <script>
+import { getStudentList, getchange } from '../../user.api'
 
 export default {
   data () {
     return {
+      studentListData: {},
+      student_id: '',
+      bind_id: ''
     }
   },
+  created () {
+    this.getStudentListData()
+  },
   methods: {
+    async getStudentListData () {
+        const data = await getStudentList({})
+        this.student_id = data[0].student_id
+        this.bind_id = data[0].bind_id
+        this.studentListData = data
+    },
+    async getchangeData () {
+        const data = await getchange({})
+    },
     // 增加学员
     add () {
       const url = '../add/main';
@@ -64,7 +61,7 @@ export default {
     },
     // 更新学员信息
     update () {
-      const url = '../update/main';
+      const url = '../update/main?student_id=' + this.student_id + '&bind_id=' + this.bind_id;
       wx.navigateTo({ url })
     }
   }

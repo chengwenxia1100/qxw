@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { gainCode } from '@/pages/bind/bind.api';
+
 export default {
     data () {
         return {
@@ -40,7 +42,10 @@ export default {
             isClick: true,
             bgcolor: '#f7536a',
             time:'发送验证码',
-            parentsName: ''
+            parentsName: '',
+            relation: 1,
+            phone: '',
+            code: ''
         }
     },
     computed: {
@@ -52,7 +57,6 @@ export default {
         parentsName: {
             handler (val) {
                 this.$emit('parentsName', val)
-                console.log(val)
             }
         },
         relation: {

@@ -56,7 +56,7 @@
 
 <script>
 import bindParents from '@/components/form/bindParents'
-import { gainCode, bindMessSubmit } from '../bind.api';
+import { gainCode, bindMessSubmit, getSchoolList } from '../bind.api';
 import mpvuePicker from "mpvue-picker";
 
 export default {
@@ -78,86 +78,62 @@ export default {
             ],
             pickerValueArray: [
                 {
-                    label: '一年级',
-                    value: 1
+                    label: '初一',
+                    value: 7
                 },
                 {
-                    label: '二年级',
-                    value: 2
+                    label: '初二',
+                    value: 8
+                },
+                {
+                    label: '初三',
+                    value: 9
+                },
+                {
+                    label: '高一',
+                    value: 10
+                },
+                {
+                    label: '高二',
+                    value: 11
+                },
+                {
+                    label: '高三',
+                    value: 12
                 }
             ],
             pickerValueArrayschool: [
-                {
-                    label: '开化中学',
-                    value: 1
-                },
-                {
-                    label: '华埠中学',
-                    value: 2
-                }
+                
             ],
             pickerValueDefault: [3],
             isClick: true,
             bgcolor: '#f7536a',
             time:'发送验证码',
             grade: '请输入就读年级',
-            school: '请输入就读学校'
-            // phone:'',
-            // parentsName: '',
-            // code: ''
+            school: '请输入就读学校',
+            parentsNameVal: '',
+            relationVal: 1,
+            phoneVal: '',
+            codeVal: ''
         }
+    },
+    mounted () {
+      this.getSchoolListData()
     },
     methods: {
         // 接收子组件的传值
+        // 接收子组件的传值
         parentsName (val) {
-            this.parentsName = val
+            this.parentsNameVal = val
         },
         relation (val) {
-            this.relation = val
+            this.relationVal = val
         },
         phone (val) {
-            this.phone = val
+            this.phoneVal = val
         },
         code (val) {
-            this.phone = val
-        },
-        // 获取验证码
-        async gainCode () {
-            if(!this.phone){
-                console.log('请输入手机号码')
-                return
-            }
-            setTimeout(() => {
-                this.isClick = false;
-                this.bgcolor = '#ddd';
-                let times = 60; // 用于倒计时
-                this.time = times+'s';
-                this.interval = setInterval(() =>{
-                    times--;
-                    this.time = times+'s';
-                    if(times < 0){
-                        this.time = '重新获取';
-                        this.isClick = true;
-                        this.bgcolor = '#f7536a';
-                        clearInterval(this.interval);
-                    }
-                },1000)
-            }, 1000);
-            const data = await gainCode({
-                phone: this.phone
-            })
-            this.isClick = false;
-            let times = 60; // 用于倒计时
-            this.time = times+'s';
-            this.interval = setInterval(() =>{
-                times--;
-                this.time = times+'s';
-                if(times < 0){
-                this.time = '重新获取';
-                this.isClick = true;
-                clearInterval(this.interval);
-                }
-            },1000)
+            this.codeVal = val
         },
         // 填完信息提交
         finished () {
@@ -173,16 +149,16 @@ export default {
           } else if (!this.school) {
               wx.showToast({ title: '请输入学校', icon: 'none' })
               return
-          } else if (!this.parentsName) {
+          } else if (!this.parentsNameVal) {
               wx.showToast({ title: '请输入家长姓名', icon: 'none' })
               return
-          } else if (!this.relation) {
+          } else if (!this.relationVal) {
               wx.showToast({ title: '请输入关系', icon: 'none' })
               return
-          } else if (!this.phone) {
+          } else if (!this.phoneVal) {
               wx.showToast({ title: '请输入手机号码', icon: 'none' })
               return
-          }else if (!this.code) {
+          }else if (!this.codeVal) {
               wx.showToast({ title: '请输入验证码', icon: 'none' })
               return
           } else {
@@ -192,22 +168,28 @@ export default {
         // 点击提交接口
         async bindMessSubmitData () {
             const data = await bindMessSubmit({
-                token: '996836448fdfcb7867397bf35bef8b7f',
-                sms_code: this.code,
-                p_realname: this.parentsName,
-                phone: this.phone,
+                sms_code: this.codeVal,
+                p_realname: this.parentsNameVal,
+                phone: this.phoneVal,
                 s_realname: this.name,
                 s_sex: this.sex,
                 s_grade: this.grade,
                 s_school: this.school,
                 s_class: this.gradeNum,
-                relation_type: this.relation,
+                relation_type: this.relationVal,
                 student_no: this.student_no
             })
             console.log(data)
             // 跳转到下一页
             const url = '../../home/main'
             wx.reLaunch({url})
+        },
+        // 获取学校列表接口
+        async getSchoolListData () {
+          const data = await getSchoolList({
+          })
+          this.pickerValueArrayschool = data;
+          console.log(data)
         },
         // 单选框
         radioChange (e) {

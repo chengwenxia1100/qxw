@@ -41,18 +41,20 @@ export default {
             wx.showToast({ title: '请输入您孩子的姓名', icon: 'none' })
             return
         } else {
-            console.log();
-            // this.bindMessVIPSubmitData()
+            this.bindMessVIPSubmitData()
         }
     },
     // vip学员绑定第一步
     async bindMessVIPSubmitData () {
+        console.log(this.studentName)
         const data = await bindMessSubmit({
-            token: '996836448fdfcb7867397bf35bef8b7f',
+            token: '38c533200b8a205f7169de372195dfb0',
+            student_no: this.studentNum,
+            student_realname: this.studentName
         })
         console.log(data)
         // 跳转到下一页
-        const url = '../vipbindnext/main';
+        const url = '../vipbindnext/main?student_no=' + this.studentNum + '&student_realname=' + this.studentName;
         wx.navigateTo({ url })
     }
   }

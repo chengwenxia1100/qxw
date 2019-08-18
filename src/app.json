@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/bind/vipbindnext/main",
+    "pages/user/student/update/main",
     "pages/home/main",
     "pages/bind/bindfirst/main",
-    
+    "pages/bind/vipbindnext/main",
     
     "pages/user/main",
     
@@ -23,7 +23,7 @@
     "pages/user/about/main",
     "pages/user/instruction/main",
     "pages/user/student/add/main",
-    "pages/user/student/update/main",
+    
     "pages/user/student/switchStudent/main"
   ],
   "window": {
@@ -40,7 +40,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/bind/vipbindnext/main",
+      "pagePath": "pages/user/student/update/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {

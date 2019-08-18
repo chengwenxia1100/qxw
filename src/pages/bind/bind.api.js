@@ -14,3 +14,10 @@ export function bindMessSubmit (data) {
     data
   })
 }
+
+export function getSchoolList (data) {
+  return request({
+    url: sign('login/getSchoolList'),
+    data
+  })
+}

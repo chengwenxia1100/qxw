@@ -1,6 +1,6 @@
 <template>
   <div class="update_container">
-    <student-form></student-form>
+    <student-form :studentId=student_id></student-form>
     <parents-form></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
     <div class="btn">完成</div>
@@ -10,6 +10,7 @@
 <script>
 import studentForm from '@/components/form/studentForm'
 import parentsForm from '@/components/form/parentsSelect'
+import { updataStudent, removeBind } from '../../user.api'
 
 export default {
   components: {
@@ -18,9 +19,29 @@ export default {
   },
   data () {
     return {
+      updataStudentData: {}
+    }
+  },
+  computed: {
+    student_id () {
+      // return this.$mp.query.student_id
+      return 39
     }
   },
   methods: {
+    async updataStudentPage () {
+        const data = await updataStudent({
+          student_id: this.$mp.query.student_id
+        })
+        this.studentListData = data
+    },
+    // 解除绑定
+    async removeBind () {
+        const data = await removeBind({
+          bind_id: this.$mp.query.bind_id
+        })
+        this.studentListData = data
+    },
     // 单选框
     radioChange: e => {
         console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
@@ -34,12 +55,11 @@ export default {
         confirmColor: '#EA5A49',
         success: (res) => {
           if (res.confirm) {
-            // 请求确认收货接口
-            // const data = confirmReceiveData({
-            //   orderId: orderId
-            // })
-            // console.log(data)
-            // if (data) {
+            // 请求解除绑定接口
+            const data = removeBind({
+              bind_id: this.$mp.query.bind_id
+            })
+            if (data) {
               wx.showToast({
                 title: '成功',
                 duration: 1000
@@ -49,7 +69,7 @@ export default {
                   delta: 1
                 })
               }, 1000);
-            // }
+            }
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
