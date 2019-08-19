@@ -122,7 +122,6 @@ export default {
     },
     methods: {
         // 接收子组件的传值
-        // 接收子组件的传值
         parentsName (val) {
             this.parentsNameVal = val
         },

@@ -21,7 +21,7 @@ export function getStudentList (data) {
     data
   })
 }
-// 学员切换接口 
+// 学员切换接口
 export function getchange (data) {
   return request({
     url: sign('home/checkStudent'),

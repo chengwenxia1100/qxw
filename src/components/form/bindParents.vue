@@ -48,11 +48,6 @@ export default {
             code: ''
         }
     },
-    computed: {
-        relation () {
-            return 1
-        }
-    },
     watch: {
         parentsName: {
             handler (val) {

@@ -1,9 +1,17 @@
 <template>
   <div class="update_container">
-    <student-form :studentId=student_id></student-form>
+    <student-form 
+      :studentId=student_id 
+      @studentName="studentName"
+      @studentSex="studentSex"
+      @studentSchool="studentSchool"
+      @studentGrade="studentGrade"
+      @studentClass="studentClass"
+      @relative="relative"
+    ></student-form>
     <parents-form></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
-    <div class="btn">完成</div>
+    <div class="btn" @click="finished">完成</div>
   </div>
 </template>
 
@@ -19,7 +27,12 @@ export default {
   },
   data () {
     return {
-      updataStudentData: {}
+      relative: 1,
+      studentNameVal: '',
+      studentSexVal: 0,
+      studentSchoolVal: '请输入就读学校',
+      studentGradeVal: '请输入就读年级',
+      studentClassVal: '请输入班级代码'
     }
   },
   computed: {
@@ -29,23 +42,55 @@ export default {
     }
   },
   methods: {
-    async updataStudentPage () {
+    // 接收子组件的传值
+    relative (val) {
+      this.studentNameVal = val
+    },
+    studentName (val) {
+      this.studentNameVal = val
+    },
+    studentSex (val) {
+      this.studentSexVal = val
+    },
+    studentSchool (val) {
+      this.studentSchoolVal = val
+    },
+    studentGrade (val) {
+      this.studentGradeVal = val
+    },
+    studentClass (val) {
+      this.studentClassVal = val
+    },
+    // 点击完成
+    finished () {
+        if (!this.studentNameVal) {
+            wx.showToast({ title: '请输入学生姓名', icon: 'none' })
+            return
+        } else if (!this.studentSexVal) {
+            wx.showToast({ title: '请输入学生性别', icon: 'none' })
+            return
+        } else if (!this.studentSchoolVal) {
+            wx.showToast({ title: '请输入学生学校', icon: 'none' })
+            return
+        } else if (!this.studentGradeVal) {
+            wx.showToast({ title: '请输入学生年级', icon: 'none' })
+            return
+        } else {
+            this.updataStudent()
+        }
+    },
+    // 更新学员接口
+    async updataStudent () {
         const data = await updataStudent({
-          student_id: this.$mp.query.student_id
+            student_id: this.studentNameVal,
+            studentSexVal: this.studentSexVal,
+            studentSchoolVal: this.studentSchoolVal,
+            studentGradeVal: this.studentGradeVal,
+            studentClassVal: this.studentClassVal
         })
-        this.studentListData = data
+        wx.reLaunch({ url: '../../main' })
     },
     // 解除绑定
-    async removeBind () {
-        const data = await removeBind({
-          bind_id: this.$mp.query.bind_id
-        })
-        this.studentListData = data
-    },
-    // 单选框
-    radioChange: e => {
-        console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
-    },
     removeBind () {
       wx.showModal({
         title: '确认解除绑定',
@@ -65,9 +110,7 @@ export default {
                 duration: 1000
               })
               setTimeout(() => {
-                wx.navigateBack({
-                  delta: 1
-                })
+                wx.reLaunch({ url: '../../main' })
               }, 1000);
             }
           } else if (res.cancel) {

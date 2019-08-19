@@ -3,27 +3,18 @@
     "pages/user/student/update/main",
     "pages/home/main",
     "pages/bind/bindfirst/main",
-    "pages/bind/vipbindnext/main",
-    
+    "pages/bind/vipbindnext/main",  
     "pages/user/main",
-    
-    
-    
     "pages/bind/vipbind/main",
-    
     "pages/paperAnaly/analy/main",
     "pages/paperAnaly/paperDetail/main",
-    
     "pages/paperAnaly/main",
     "pages/errorRegister/main",
-    
     "pages/wrongTitle/main",
     "pages/errorRegister/addwork/main",
-    
     "pages/user/about/main",
     "pages/user/instruction/main",
     "pages/user/student/add/main",
-    
     "pages/user/student/switchStudent/main"
   ],
   "window": {

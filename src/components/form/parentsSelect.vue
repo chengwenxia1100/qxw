@@ -5,7 +5,7 @@
             <div class="tit">关系</div>
             <radio-group class="radio-group" @change="radioChange">
                 <label v-for="item in lists" :key="item.name">
-                    <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.value}}
+                    <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.name}}
                 </label>
             </radio-group>
         </div>
@@ -23,22 +23,30 @@ export default {
     data () {
         return {
             lists: [
-                {name: 'father', value: '父亲 ', checked: 'true'},
-                {name: 'mother', value: '母亲'},
-                {name: 'other', value: '其他'},
+                {name: '父亲', value: '1', checked: 'true'},
+                {name: '母亲', value: '2'},
+                {name: '其他', value: '0'},
             ],
-            mode: 'selector'
+            mode: 'selector',
+            relative: 1
         }
     },
     computed: {
     },
+    watch: {
+        relative: {
+            handler (val) {
+                 this.$emit('relative', val)
+            },
+            immediate: true
+        }
+    },
     methods: {
       // 单选框
       radioChange: e => {
+          this.relative =  e.mp.detail.value
           console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
       }
-    },
-    mounted () {
     }
 }
 </script>

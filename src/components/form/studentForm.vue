@@ -3,7 +3,7 @@
     <div class="student_mess">
         <div class="list">
             <div class="tit">学生姓名</div>
-            <input type="text" placeholder="请输入您孩子的姓名" v-model="s_name">
+            <input type="text" placeholder="请输入您孩子的姓名" v-model="sName">
         </div>
         <div class="list">
             <div class="tit">性别</div>
@@ -15,31 +15,27 @@
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
-            <div class="input" @click="showPicker" :grade="grade">请输入就读年级</div>
+            <div class="input" @click="showPicker">{{grade}}</div>
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
             :pickerValueDefault="pickerValueDefault"
-            @onChange="onChange"
             @onConfirm="onConfirm"
-            @onCancel="onCancel"
             :pickerValueArray="pickerValueArray" />
         </div>
         <div class="list">
             <div class="tit">就读学校</div>
-            <div class="input" @click="showPickerschool" :school="school">请输入就读学校</div>
+            <div class="input" @click="showPickerschool">{{school}}</div>
             <mpvue-picker
             ref="mpvuePickerschool"
             :mode="mode"
             :pickerValueDefault="pickerValueDefault"
-            @onChange="onChange"
             @onConfirm="onConfirm"
-            @onCancel="onCancel"
             :pickerValueArray="pickerValueArrayschool" />
         </div>
         <div class="list">
             <div class="tit">班级代码</div>
-            <input type="text" placeholder="请输入班级代码">
+            <input type="text" placeholder="请输入班级代码" v-model="classNum" >
         </div>
     </div>
   </div>
@@ -67,22 +63,22 @@ export default {
             mode: 'selector',
             pickerValueArray: [
                 {
-                label: '一年级',
-                value: 1
+                    label: '一年级',
+                    value: 1
                 },
                 {
-                label: '二年级',
-                value: 2
+                    label: '二年级',
+                    value: 2
                 }
             ],
             pickerValueArrayschool: [
                 {
-                label: '开化中学',
-                value: 1
+                    label: '开化中学',
+                    value: 1
                 },
                 {
-                label: '华埠中学',
-                value: 2
+                    label: '华埠中学',
+                    value: 2
                 }
             ],
             pickerValueDefault: [3],
@@ -90,23 +86,44 @@ export default {
             isClick: true,
             bgcolor: '#f7536a',
             time:'发送验证码',
-            s_name: '',
-            school: '',
+            // 表单信息
+            sName: '',
             sex: 0,
-            grade: '2',
-            class: ''
+            school: '请输入就读学校',
+            grade: '请输入就读年级',
+            classNum: '请输入班级代码'
         }
     },
     watch: {
-       s_name: {
-           handler (val) {
-               console.log(val)
-           }
+       sName: {
+            handler (val) {
+                this.$emit('studentName', val)
+            },
+            immediate: true
+       },
+       sex: {
+            handler (val) {
+                this.$emit('studentSex', val)
+            },
+            immediate: true
+       },
+       school: {
+            handler (val) {
+                this.$emit('studentSchool', val)
+            },
+            immediate: true
        },
        grade: {
+            handler (val) {
+                this.$emit('studentGrade', val)
+            },
+            immediate: true
+       },
+       class: {
            handler (val) {
-               console.log(val)
-           }
+               this.$emit('studentClass', val)
+           },
+           immediate: true
        }
     },
     mounted () {
@@ -117,7 +134,7 @@ export default {
             const data = await updataStudentPage({
                 student_id: this.studentId
             })
-            this.s_name = data.s_realname
+            this.sName = data.s_realname
             this.sex = data.sex
             this.school = data.school
             this.grade = data.grade
@@ -126,7 +143,7 @@ export default {
         },
         // 单选框
         radioChange: e => {
-            console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
+            console.log('radio发生change事件，携带value值为：', e.mp.detail.name)
         },
         showPicker () {
             this.$refs.mpvuePicker.show()
@@ -135,12 +152,6 @@ export default {
             this.$refs.mpvuePickerschool.show()
         },
         onConfirm (e) {
-            console.log(e)
-        },
-        onChange (e) {
-            console.log(e)
-        },
-        onCancel (e) {
             console.log(e)
         },
         init () {
