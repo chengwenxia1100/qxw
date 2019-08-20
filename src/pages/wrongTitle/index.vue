@@ -70,10 +70,10 @@
 </template>
 
 <script>
-// import { getOrderList } from './wrongtit.api'
 import mpvuePicker from "mpvue-picker";
 import pageSlide from '@/components/paging/pageSlide'
 import fanChart from '@/components/echart/fanChart'
+import { mistakeBook } from './wrongtit.api';
 
 export default {
   components: {
@@ -110,10 +110,23 @@ export default {
       analyLayer: false, // 点击试题分析弹窗
     }
   },
-  mounted () {
-    // this.getOrderListData()
+  onLoad () {
+    this.mistakeBook()
+  },
+  computed: {
+    grade () {
+      return 7
+    }
   },
   methods: {
+    async mistakeBook () {
+      const data = await mistakeBook({
+        grade: this.grade,
+        subject: 3,
+        page: 1
+      })
+      console.log(data)
+    },
     changTab(index) {
       this.tab = index;
     },

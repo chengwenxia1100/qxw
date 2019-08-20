@@ -45,7 +45,7 @@ export default {
       lengthMax: false
     }
   },
-  created () {
+  onLoad () {
     this.getStudentListData()
   },
   methods: {

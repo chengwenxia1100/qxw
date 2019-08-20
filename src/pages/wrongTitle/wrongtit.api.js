@@ -1,9 +1,9 @@
 import request from '@/tools/request'
 import { sign } from '@/tools'
 
-export function getOrderList (data) {
+export function mistakeBook (data) {
   return request({
-    url: sign('order/orderList'),
+    url: sign('book/mistakeBook'),
     data
   })
 }

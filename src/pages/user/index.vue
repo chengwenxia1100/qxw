@@ -1,24 +1,24 @@
 <template>
   <div class="user_container">
     <div class="user_mess">
-      <img :src="userdata.wx_avatar_url"  v-if="userdata.wx_avatar_url">
+      <img :src="userInfos.avatarUrl"  v-if="userInfos.avatarUrl">
       <img src="/static/images/user.png" v-else />
-      <div class="mess">
+      <div class="mess" @click="jump('login')">
         <p><span>微信昵称:</span>
-          <span v-if="userdata.wx_username">{{userdata.wx_username}}</span>
+          <span v-if="userInfos.nickName">{{userInfos.nickName}}</span>
           <span v-else>请先授权</span>
         </p>
         <p><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span>
           <span v-if="userdata.parent_realename">{{userdata.parent_realename}}</span>
           <span v-else>请绑定家长姓名</span>
         </p>
-        <p><span>手机号码:</span>
+        <p><span>手机号码:</span>   
           <span v-if="userdata.parent_phone">{{userdata.parent_phone}}</span>
            <span v-else>请绑定家长姓名</span>
         </p>
       </div>
     </div>
-    <div class="change_box" @click="toChange" v-if="studentdata">
+    <div class="change_box" v-if="studentdata" @click="jump('toChange')">
       <img src="/static/svg/user_icon1.png" style="width:1.6rem;height:1.6rem;" />
       <div class="right">
         <p><span>当前学员： </span><span>{{studentdata.s_realname}}</span></p>
@@ -50,16 +50,41 @@
 
 <script>
 import { getUser } from './user.api'
+import store from '@/store'
 
 export default {
   data () {
     return {
       userdata: {},
-      studentdata: {}
+      studentdata: {},
+      userInfos: {}
     }
   },
   onLoad () {
     this.getUser()
+  },
+  computed: {
+    userInfo () {
+      return store.state.user.authorize.userInfo // 获取缓存的 userInfo 有代表已授权过
+    }
+  },
+  watch: {
+    userInfo: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          wx.getUserInfo({
+            success: (res) => {
+              this.userInfos = JSON.parse(res.rawData)
+              console.log(this.userInfos)
+              setTimeout(() => {
+                this.getUser()
+              }, 1000)
+            }
+          })
+        }
+      }
+    }
   },
   methods: {
     async getUser () {
@@ -69,9 +94,19 @@ export default {
         console.log(data)
     },
     // 切换学员
-    toChange () {
-      const url = './student/switchStudent/main';
-      wx.navigateTo({ url })
+    jump(type) {
+      if (!this.userInfo) { // 如果用户信息不存在
+        this.userLogin()
+      } else {
+        switch (type) {
+          case 'login':
+            wx.navigateTo({ url: '/pages/auth/main' }) // 跳转到授权页面
+            break
+          case 'toChange':
+            wx.navigateTo({ url: './student/switchStudent/main' }) // 跳转到学员列表
+            break
+        }
+      }
     },
     // 会员
     toVip () {

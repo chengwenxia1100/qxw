@@ -3,7 +3,7 @@
       <div class="login_btn" @click="jump('login')">
         请先登录
       </div>
-      <!-- <div class="login_mess">
+      <div class="login_mess">
         <div class="left">
           <div class="slide1">
             <div><span>学生姓名：</span><span v-if="studentData.s_realname">{{studentData.s_realname}}</span></div>
@@ -110,12 +110,12 @@
         <div class="advice_con" v-if="studentData.notice">
           {{studentData.notice}}
         </div>
-      </div> -->
+      </div>
   </div>
 </template>
 
 <script>
-import { getToken, getHome, getStudentList } from './home.api';
+import { getHome, getStudentList } from './home.api';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
@@ -241,7 +241,7 @@ export default {
       if (!this.userInfo) { // 如果用户信息不存在
         this.userLogin()
       } else {
-        switch (val) {
+        switch (type) {
           case '1':
             wx.navigateTo({ url: '../wrongTitle/main' }) // 跳转到错题本页面
             break
