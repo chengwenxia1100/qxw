@@ -22,7 +22,10 @@
       </div>
     </div>
     <div class="btn">
-      <div class="btn_con" @click="add">
+      <div class="btn_con" @click="add" v-if="!lengthMax">
+        +添加
+      </div>
+      <div class="btn_con" style="background:#ddd" v-else>
         +添加
       </div>
       <p>*一个账号最多绑定3个学生</p>
@@ -38,7 +41,8 @@ export default {
     return {
       studentListData: {},
       student_id: '',
-      bind_id: ''
+      bind_id: '',
+      lengthMax: false
     }
   },
   created () {
@@ -50,6 +54,10 @@ export default {
         this.student_id = data[0].student_id
         this.bind_id = data[0].bind_id
         this.studentListData = data
+        console.log(data.length)
+        if (data.length >= 3) {
+          this.lengthMax = true
+        }
     },
     async getchangeData () {
         const data = await getchange({})

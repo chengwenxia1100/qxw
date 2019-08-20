@@ -8,6 +8,7 @@
       @studentGrade="studentGrade"
       @studentClass="studentClass"
       @relative="relative"
+      @studentNo="studentNo"
     ></student-form>
     <parents-form></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
@@ -32,13 +33,13 @@ export default {
       studentSexVal: 0,
       studentSchoolVal: '请输入就读学校',
       studentGradeVal: '请输入就读年级',
-      studentClassVal: '请输入班级代码'
+      studentClassVal: '',
+      student_no: 0
     }
   },
   computed: {
     student_id () {
-      // return this.$mp.query.student_id
-      return 39
+      return this.$mp.query.student_id
     }
   },
   methods: {
@@ -61,32 +62,19 @@ export default {
     studentClass (val) {
       this.studentClassVal = val
     },
+    studentNo (val) {
+      this.student_no = val
+    },
     // 点击完成
     finished () {
-        if (!this.studentNameVal) {
-            wx.showToast({ title: '请输入学生姓名', icon: 'none' })
-            return
-        } else if (!this.studentSexVal) {
-            wx.showToast({ title: '请输入学生性别', icon: 'none' })
-            return
-        } else if (!this.studentSchoolVal) {
-            wx.showToast({ title: '请输入学生学校', icon: 'none' })
-            return
-        } else if (!this.studentGradeVal) {
-            wx.showToast({ title: '请输入学生年级', icon: 'none' })
-            return
-        } else {
-            this.updataStudent()
-        }
+      this.updataStudent()
     },
     // 更新学员接口
     async updataStudent () {
         const data = await updataStudent({
-            student_id: this.studentNameVal,
-            studentSexVal: this.studentSexVal,
-            studentSchoolVal: this.studentSchoolVal,
-            studentGradeVal: this.studentGradeVal,
-            studentClassVal: this.studentClassVal
+            class_id: this.studentClassVal,
+            relation_type: this.relative,
+            student_id: this.student_no
         })
         wx.reLaunch({ url: '../../main' })
     },

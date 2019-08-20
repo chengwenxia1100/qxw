@@ -42,3 +42,10 @@ export function removeBind (data) {
     data
   })
 }
+// 添加学员接口
+export function addData (data) {
+  return request({
+    url: sign('home/studentAdd'),
+    data
+  })
+}

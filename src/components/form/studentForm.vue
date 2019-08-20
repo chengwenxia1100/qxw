@@ -15,12 +15,13 @@
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
-            <div class="input" @click="showPicker">{{grade}}</div>
+            <div class="input" v-if="studentId">{{grade}}</div>
+            <div class="input" v-else @click="showPicker">{{gradeval}}</div>
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
             :pickerValueDefault="pickerValueDefault"
-            @onConfirm="onConfirm"
+            @onConfirm="onGradeConfirm"
             :pickerValueArray="pickerValueArray" />
         </div>
         <div class="list">
@@ -30,7 +31,7 @@
             ref="mpvuePickerschool"
             :mode="mode"
             :pickerValueDefault="pickerValueDefault"
-            @onConfirm="onConfirm"
+            @onConfirm="onSchoolConfirm"
             :pickerValueArray="pickerValueArrayschool" />
         </div>
         <div class="list">
@@ -63,12 +64,28 @@ export default {
             mode: 'selector',
             pickerValueArray: [
                 {
-                    label: '一年级',
-                    value: 1
+                    label: '初一',
+                    value: 7
                 },
                 {
-                    label: '二年级',
-                    value: 2
+                    label: '初二',
+                    value: 8
+                },
+                {
+                    label: '初三',
+                    value: 9
+                },
+                {
+                    label: '高一',
+                    value: 10
+                },
+                {
+                    label: '高二',
+                    value: 11
+                },
+                {
+                    label: '高三',
+                    value: 12
                 }
             ],
             pickerValueArrayschool: [
@@ -90,8 +107,9 @@ export default {
             sName: '',
             sex: 0,
             school: '请输入就读学校',
-            grade: '请输入就读年级',
-            classNum: '请输入班级代码'
+            grade: '',
+            gradeval: '请输入就读年级',
+            classNum: ''
         }
     },
     watch: {
@@ -109,6 +127,7 @@ export default {
        },
        school: {
             handler (val) {
+                console.log(val)
                 this.$emit('studentSchool', val)
             },
             immediate: true
@@ -119,7 +138,7 @@ export default {
             },
             immediate: true
        },
-       class: {
+       classNum: {
            handler (val) {
                this.$emit('studentClass', val)
            },
@@ -134,6 +153,7 @@ export default {
             const data = await updataStudentPage({
                 student_id: this.studentId
             })
+            this.$emit('studentNo', data.id)
             this.sName = data.s_realname
             this.sex = data.sex
             this.school = data.school
@@ -151,8 +171,13 @@ export default {
         showPickerschool () {
             this.$refs.mpvuePickerschool.show()
         },
-        onConfirm (e) {
-            console.log(e)
+        onGradeConfirm (e) {
+            this.gradeval = e.label
+            this.grade = e.value[0]
+            console.log(e.value[0])
+        },
+        onSchoolConfirm (e) {
+            this.school = e.label
         },
         init () {
         }
