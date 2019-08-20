@@ -1,7 +1,9 @@
 {
   "pages": [
-    "pages/user/student/update/main",
     "pages/home/main",
+    "pages/auth/main",
+    "pages/user/student/update/main",
+    
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
     "pages/user/main",
@@ -31,7 +33,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/user/student/update/main",
+      "pagePath": "pages/home/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {

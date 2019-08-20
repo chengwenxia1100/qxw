@@ -58,7 +58,7 @@ export default {
       studentdata: {}
     }
   },
-  created () {
+  onLoad () {
     this.getUser()
   },
   methods: {
