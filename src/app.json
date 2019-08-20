@@ -2,6 +2,7 @@
   "pages": [
     "pages/home/main",
     "pages/user/main",
+    "pages/auth/main",
     "pages/user/student/update/main",
     
     "pages/bind/bindfirst/main",

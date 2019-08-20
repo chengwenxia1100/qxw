@@ -1,9 +1,9 @@
 <template>
   <div class="home_container"> 
-      <div class="login_btn">
-        <button  open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">请先登录</button>
+      <div class="login_btn" @click="jump('login')">
+        请先登录
       </div>
-      <div class="login_mess">
+      <!-- <div class="login_mess">
         <div class="left">
           <div class="slide1">
             <div><span>学生姓名：</span><span v-if="studentData.s_realname">{{studentData.s_realname}}</span></div>
@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="right" v-if="studentData.student_status === 0">
-          <div class="bind" @click="bind">
+          <div class="bind" @click="jump('bind')">
             绑定/登录
           </div>
         </div>
@@ -38,19 +38,19 @@
       <div class="bg"></div>
       <div class="home_model">
         <ul>
-          <li @click="gotoWrongTitle">
+          <li @click="jump('1')">
             <div>
               <img class="home-icon" src="/static/svg/home_icon3.png" />
             </div>
             <p>错题本</p>
           </li>
-          <li @click="gotoErrorRegister">
+          <li @click="jump('2')">
             <div>
               <img class="home-icon" src="/static/svg/home_icon1.png" />
             </div>
             <p>错题登记</p>
           </li>
-          <li @click="gotoPaperAnaly">
+          <li @click="jump('3')">
             <div>
               <img class="home-icon" src="/static/svg/home_icon2.png" />
             </div>
@@ -110,7 +110,7 @@
         <div class="advice_con" v-if="studentData.notice">
           {{studentData.notice}}
         </div>
-      </div>
+      </div> -->
   </div>
 </template>
 
@@ -185,67 +185,36 @@ export default {
     return {
       echarts, // 折线图
       onInit: initChart, //折线图
-      pickerValueArray: [ //切换学员选择框
-        
-      ],
-      token: '',
-      code: '',
+      pickerValueArray: [],//切换学员选择框
       studentData: {}
     }
   },
-  mounted () {
-    // wx.getSetting({
-    //   success (res){
-    //     if (res.authSetting['scope.userInfo']) {
-    //       // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-    //       wx.getUserInfo({
-    //         success: function(res) {
-    //           wx.login({
-    //             success: (res) => {
-    //               if (res.code) {
-    //                 this.getOrderListData()
-    //               } else {
-    //                 console.log('登录失败！' + res.errMsg)
-    //               }
-    //             }
-    //           })
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
-    wx.login({
-      success: (res) => {
-        if (res.code) {
-          console.log(res.code)
-          this.code = res.code;
-          this.getToken()
-        } else {
-          console.log('登录失败！' + res.errMsg)
+  computed: {
+    userInfo () {
+      return store.state.user.authorize.userInfo // 获取缓存的 userInfo 有代表已授权过
+    }
+  },
+  watch: {
+    userInfo: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          wx.getUserInfo({
+            success: (res) => {
+              this.userInfos = JSON.parse(res.rawData)
+              setTimeout(() => {
+                this.getHome()
+              }, 1000)
+            }
+          })
         }
       }
-    })
-  },
-  computed: {
-    // token () {
-    //   return store.state.user.token // 获取缓存的 userInfo 有代表已授权过
-    // }
+    }
   },
   methods: {
-    // 授权接口
-    async getToken () {
-      const data = await getToken({
-        code: this.code
-      })
-      this.token = data.token;
-      this.getHome()
-      // store.commit('token', data.token)
-    },
     // 请求首页接口
     async getHome () {
-      const data = await getHome({
-        token: this.token
-      })
+      const data = await getHome({})
       this.studentData = data.student_info
       if(data.student_info.student_status === 1) { this.getStudentList() }
     },
@@ -260,15 +229,6 @@ export default {
       }
       this.pickerValueArray = data;
     },
-    // 授权
-    bindGetUserInfo (e) {
-      console.log(e.detail.userInfo)
-    },
-    // 绑定注册
-    bind () {
-      const url = '../bind/bindfirst/main';
-      wx.navigateTo({ url })
-    },
     // 切换学员
     showPicker () {
       this.$refs.mpvuePicker.show()
@@ -276,25 +236,29 @@ export default {
     onConfirm (e) {
         console.log(e)
     },
-    // 跳转登录页面
-    gotologin () {
-      const url = '../bind/bindfirst/main';
-      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
-    },
-    // 跳转错题本页面
-    gotoWrongTitle () {
-      const url = '../wrongTitle/main';
-      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
-    },
-    // 跳转错题登记页面
-    gotoErrorRegister () {
-      const url = '../errorRegister/main';
-      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
-    },
-    // 跳转试卷分析页面
-    gotoPaperAnaly () {
-      const url = '../paperAnaly/main';
-      if (this.token) { wx.navigateTo({ url }) } else {  wx.showToast({ title: '请先授权', icon: 'none' }) }
+    // 首页各种跳转
+    jump (type) {
+      if (!this.userInfo) { // 如果用户信息不存在
+        this.userLogin()
+      } else {
+        switch (val) {
+          case '1':
+            wx.navigateTo({ url: '../wrongTitle/main' }) // 跳转到错题本页面
+            break
+          case '2':
+            wx.navigateTo({ url: '../errorRegister/main' }) // 跳转到错题登记页面
+            break
+          case '3':
+            wx.navigateTo({ url: '../paperAnaly/main' }) // 跳转到错题分析页面
+            break
+          case 'login':
+            wx.navigateTo({ url: '../bind/bindfirst/main' }) // 跳转到绑定页面
+            break
+          case 'bind':
+            wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册
+            break
+        }
+      }
     }
   }
 }
