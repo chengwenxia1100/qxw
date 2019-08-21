@@ -1,8 +1,8 @@
 <template>
   <div class="home_container"> 
-      <div class="login_btn" @click="jump('login')">
-        请先登录
-      </div>
+      <page-loading v-model='loading'>
+        加载中...
+      </page-loading>
       <div class="login_mess">
         <div class="left">
           <div class="slide1">
@@ -115,11 +115,12 @@
 </template>
 
 <script>
-import { getHome, getStudentList } from './home.api';
+import { getchange, getStudentList, getHome } from '@/api/student';
 import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
-import store from '@/store'
+import store from '@/store';
+import { getToken } from '@/tools/auth';
 
 let chart = null;
 
@@ -186,27 +187,26 @@ export default {
       echarts, // 折线图
       onInit: initChart, //折线图
       pickerValueArray: [],//切换学员选择框
-      studentData: {}
+      studentData: {},
+      loading: false // 进入页面的弹窗
     }
   },
   computed: {
-    userInfo () {
-      return store.state.user.authorize.userInfo // 获取缓存的 userInfo 有代表已授权过
+    token () {
+      return getToken()
     }
   },
+  mounted (){
+    // console.log(this.token)
+  },
   watch: {
-    userInfo: {
+    token: {
       immediate: true,
       handler (val) {
         if (val) {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfos = JSON.parse(res.rawData)
-              setTimeout(() => {
-                this.getHome()
-              }, 1000)
-            }
-          })
+          setTimeout(() => {
+            this.getHome()
+          }, 1000)
         }
       }
     }
@@ -223,18 +223,27 @@ export default {
       const data = await getStudentList({
         token: this.token
       })
-      
-      for (let item of data) {
-        item.label = item.s_realname
-      }
       this.pickerValueArray = data;
+      this.pickerValueArray.map((item,index) => {
+        item.label = item.s_realname
+        item.value = item.student_id
+      })
     },
     // 切换学员
     showPicker () {
       this.$refs.mpvuePicker.show()
     },
     onConfirm (e) {
-        console.log(e)
+        console.log(e.value[0])
+        // 切换完成请求切换接口
+        this.getchangeData(e.value[0])
+    },
+    // 切换完成请求切换接口 
+    async getchangeData (id) {
+      const data = await getchange({
+        student_id: id
+      })
+      this.getHome()
     },
     // 首页各种跳转
     jump (type) {
@@ -250,9 +259,6 @@ export default {
             break
           case '3':
             wx.navigateTo({ url: '../paperAnaly/main' }) // 跳转到错题分析页面
-            break
-          case 'login':
-            wx.navigateTo({ url: '../bind/bindfirst/main' }) // 跳转到绑定页面
             break
           case 'bind':
             wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册

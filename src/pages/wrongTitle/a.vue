@@ -1,15 +1,40 @@
 <template>
   <div class="user_wrongTitle">
     <div class="tab">
-      <tab-slide @tab="tab"></tab-slide>
+      <div class="nav">
+        <div
+          :class="{'selected':tab === 1,'title':true}" class="default"
+          @click="changTab(1)"
+        >初中数学
+        </div>
+        <div
+          :class="{'selected':tab === 2,'title':true}" class="default"
+          @click="changTab(2)"
+        >初中科学
+        </div>
+      </div>
       <div class="tab_container">
-        <div>
+        <div v-if="tab===1">
           <div class="tit_change">
-            <grade-slide @grade="grade"></grade-slide>
-            <section-slide @section="section"></section-slide>
+            <div class="change" @click="mpvuePicker">
+              <img src="/static/svg/icon_change.png" alt="">
+              初一
+            </div>
+            <mpvue-picker
+              ref="mpvuePicker"
+              :mode="mode"
+              :pickerValueDefault="pickerValueDefault"
+              @onChange="onChange"
+              @onConfirm="onConfirm"
+              @onCancel="onCancel"
+              :pickerValueArray="pickerValueArray" />
+            <div class="select">
+              选择章节
+              <img src="/static/svg/icon_down.png" alt="">
+            </div>
           </div>
-          <div class="title_box"  v-if="tabVal===1">
-            <div class="list">
+          <div class="title_box">
+            <!-- <div class="list">
               <p>1/20</p>
               <div class="tit" v-html="title"></div>
               <div class="title_analyse" @click="analyseBtn">试题分析</div>
@@ -17,48 +42,69 @@
             <div class="list">
               <div class="tit" v-html="title"></div>
               <div class="title_analyse" @click="analyseBtn">试题分析</div>
-            </div>
+            </div> -->
           </div>
-          <div class="title_box" v-else>
-            <div class="list">
-              <p>1/20</p>
-              <div class="tit" v-html="title"></div>
-              <div class="title_analyse" @click="analyseBtn">试题分析</div>
-            </div>
-          </div>
+        </div>
+        <div v-else>dd
         </div>
       </div>
       <!-- 分页 -->
       <page-slide></page-slide>
     </div>
     <!-- 点击试题分析 出现弹窗 -->
-    <error-layer v-if="analyLayer" :analyLayer="analyLayer" @analyLayer="analyLayerFun"></error-layer>
+    <div class="layer_box" v-if="analyLayer">
+      <div class="layer">
+        <div class="tit">题目详情<img src="/static/svg/close.png" @click="close"></div>
+        <div class="con">
+          <ul>
+            <li><span>【答案】</span><span>A</span></li>
+            <li><span>【来源】</span><span>受精卵发育开始，到胎儿从母体内产出为止，</span></li>
+            <li><span>【难度】</span><span>1</span></li>
+            <li><span>【知识点】</span><span>受精卵发育开始，到胎儿从母体内产出为止，</span></li>
+          </ul>
+        </div>
+        <fan-chart></fan-chart>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import mpvuePicker from "mpvue-picker";
-import tabSlide from '@/components/paging/tabSlide'
-import gradeSlide from '@/components/paging/gradeSlide'
-import sectionSlide from '@/components/paging/sectionSlide'
 import pageSlide from '@/components/paging/pageSlide'
-import errorLayer from '@/components/layer/errorLayer'
+import fanChart from '@/components/echart/fanChart'
 import { mistakeBook } from './wrongtit.api';
 
 export default {
   components: {
     mpvuePicker,
     pageSlide,
-    tabSlide,
-    sectionSlide,
-    gradeSlide,
-    errorLayer
+    fanChart
   },
   data () {
     return {
-      tabVal: 1, // nav的科目
-      gradeVal: 7, // 年级
-      sectionVal: 1, // 章节
+      tab: 1,
+      pickerValueDefault: [2],
+      pickerValueArray: [
+        {
+          label: '用户二',
+          value: 1
+        },
+        {
+          label: '用户三',
+          value: 2
+        }
+      ],
+      pickerValueArray2: [
+        {
+          label: '用户二',
+          value: 1
+        },
+        {
+          label: '用户三',
+          value: 2
+        }
+      ],
       // 返回的试题题目
       title: '<p><span style=";font-family:宋体;font-size:14px">1.<span style="font-family:宋体">从受精卵发育开始，到胎儿从母体内产出为止，所需的时间约为（</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px"><span style="font-family:宋体">）</span></span></p><p><span style=";font-family:宋体;font-size:14px">A.2<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">B.3<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">C.9<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">D.1<span style="font-family:宋体">年左右</span></span></p>',
       analyLayer: false, // 点击试题分析弹窗
@@ -67,32 +113,43 @@ export default {
   onLoad () {
     this.mistakeBook()
   },
+  computed: {
+    grade () {
+      return 7
+    }
+  },
   methods: {
     async mistakeBook () {
       const data = await mistakeBook({
-        grade: this.gradeVal,
+        grade: this.grade,
         subject: 3,
         page: 1
       })
       console.log(data)
     },
-    // 接收子组件传值
-    tab (val) {
-      console.log(val);
-      this.tabVal = val
+    changTab(index) {
+      this.tab = index;
     },
-    grade (val) {
-      this.gradeVal = val
+    mpvuePicker () {
+        this.$refs.mpvuePicker.show()
     },
-    section (val) {
-      this.sectionVal = val
+    onConfirm (e) {
+        console.log(e)
     },
-    analyLayerFun (val) {
-      this.analyLayer = val
+    onChange (e) {
+        console.log(e)
+    },
+    onCancel (e) {
+        console.log(e)
+    },
+    init () {
     },
     // 点击试题分析
     analyseBtn () {
       this.analyLayer = true;
+    },
+    close () {
+      this.analyLayer = false;
     }
     // async getOrderListData () {
     //   const data = await getOrderList({
@@ -182,36 +239,28 @@ export default {
       padding:0.1rem 0.2rem;
       clear:both;
       overflow:hidden;
-      div {
-        .change {
-          background:#f2f2f2;
-          float:left;
-          margin-right:0.2rem;
-          padding:0.1rem 0.4rem;
-          display: flex;
-          align-items: center;
-          background:#ddd;
-          img {
-            width: 0.32rem;
-            height: 0.32rem;
-            margin-top: 0.1rem;
-            padding-right:0.1rem;
-          }
+      .change {
+        background:#f2f2f2;
+        float:left;
+        margin-right:0.2rem;
+        padding:0.1rem 0.4rem;
+        img {
+          width: 0.32rem;
+          height: 0.32rem;
+          padding-right:0.1rem;
         }
       }
-      div {
-        .select {
-          background:#f2f2f2;
-          float:left;
-          width:4rem;
-          display: flex;
-          align-items: center;
-          padding:0 0.4rem;
-          img {
-            width: 0.64rem;
-            height: 0.64rem;
-            padding-right:0.1rem;
-          }
+      .select {
+        background:#f2f2f2;
+        float:left;
+        width:4rem;
+        display: flex;
+        align-items: center;
+        padding:0 0.4rem;
+        img {
+          width: 0.64rem;
+          height: 0.64rem;
+          padding-right:0.1rem;
         }
       }
     }

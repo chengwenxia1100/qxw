@@ -9,7 +9,7 @@
       @studentNo="studentNo"
     ></student-form>
     <div class="btn" @click="addFinished">完成</div>
-     <div class="btn" v-if="lengthMax" style="background:#ddd">完成</div>
+    <div class="btn" v-if="lengthMax" style="background:#ddd">完成</div>
   </div>
 </template>
 

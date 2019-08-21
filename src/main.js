@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import App from './App'
 import store from '@/store'
-// import mixin from '@/mixins'
 import { hasUserInfo, userLogin } from '@/mixins/userInfo.js'
+import pageLoading from '@/components/loading/pageLoading.vue'
 
-// Vue.mixin(mixin)
+Vue.component('pageLoading', pageLoading)
 Vue.prototype.$store = store
 Vue.prototype.hasUserInfo = hasUserInfo
 Vue.prototype.userLogin = userLogin

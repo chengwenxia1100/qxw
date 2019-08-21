@@ -7,7 +7,6 @@ const TOKEN = '123'
 // const SALT = 'sgzzzz'
 
 export function sign (url, option) {
-  console.log(getToken())
   let token = getToken() || TOKEN
   if (option) {
     if (option.token) {
@@ -22,7 +21,6 @@ export function wxLogin () {
   return new Promise((resolve, reject) => {
     wx.login({
       success (code) {
-        console.log(code)
         resolve(code)
       },
       fail () {

@@ -49,8 +49,9 @@
 </template>
 
 <script>
-import { getUser } from './user.api'
+import { getHome } from '@/api/student';
 import store from '@/store'
+import { getToken } from '@/tools/auth'
 
 export default {
   data () {
@@ -64,19 +65,18 @@ export default {
     this.getUser()
   },
   computed: {
-    userInfo () {
-      return store.state.user.authorize.userInfo // 获取缓存的 userInfo 有代表已授权过
+    token () {
+      return getToken()
     }
   },
   watch: {
-    userInfo: {
+    token: {
       immediate: true,
       handler (val) {
         if (val) {
           wx.getUserInfo({
             success: (res) => {
               this.userInfos = JSON.parse(res.rawData)
-              console.log(this.userInfos)
               setTimeout(() => {
                 this.getUser()
               }, 1000)
@@ -88,10 +88,9 @@ export default {
   },
   methods: {
     async getUser () {
-        const data = await getUser({})
+        const data = await getHome({})
         this.userdata = data
         this.studentdata = data.student_info
-        console.log(data)
     },
     // 切换学员
     jump(type) {

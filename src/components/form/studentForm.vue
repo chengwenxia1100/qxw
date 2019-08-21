@@ -3,6 +3,7 @@
     <div class="student_mess">
         <div class="list">
             <div class="tit">学生姓名</div>
+            <div class="show" v-if="studentId">{{sName}}</div>
             <input type="text" placeholder="请输入您孩子的姓名" v-model="sName">
         </div>
         <div class="list">
@@ -15,7 +16,7 @@
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
-            <div class="input" v-if="studentId">{{grade}}</div>
+            <div class="show" v-if="studentId">{{grade}}</div>
             <div class="input" v-else @click="showPicker">{{gradeval}}</div>
             <mpvue-picker
             ref="mpvuePicker"
@@ -26,7 +27,8 @@
         </div>
         <div class="list">
             <div class="tit">就读学校</div>
-            <div class="input" @click="showPickerschool">{{school}}</div>
+            <div class="show" v-if="studentId">{{school}}</div>
+            <div class="input" @click="showPickerschool" v-else>{{school}}</div>
             <mpvue-picker
             ref="mpvuePickerschool"
             :mode="mode"
@@ -44,7 +46,7 @@
 
 <script>
 import mpvuePicker from "mpvue-picker";
-import { updataStudentPage } from './studentForm.api'
+import { updataStudentPage } from '@/api/student'
 
 export default {
     components: {
@@ -209,6 +211,9 @@ page {
             color:#333;
             margin-right:0.2rem;
             text-align:right;
+        }
+        .show {
+            flex:1;
         }
         input {
             flex:1;

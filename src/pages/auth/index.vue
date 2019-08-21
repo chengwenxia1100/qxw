@@ -38,7 +38,6 @@ export default {
      */
     async getuserinfo (e) {
       const userInfo = e.mp.detail.userInfo
-      console.log('userInfo=====', userInfo)
       if (userInfo) {
         wx.showLoading({
           title: '用户授权中',
@@ -101,7 +100,6 @@ export default {
     value: {
       handler (val) {
         if (val) {
-          console.log('do auth')
           this.actionContainerClass = 'auth-action-container'
         } else {
           this.actionContainerClass = 'auth-action-container auth-action-container--close'

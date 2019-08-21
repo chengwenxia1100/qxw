@@ -40,6 +40,9 @@ export default {
   computed: {
     student_id () {
       return this.$mp.query.student_id
+    },
+    bind_id () {
+      return this.$mp.query.bind_id
     }
   },
   methods: {
@@ -90,7 +93,7 @@ export default {
           if (res.confirm) {
             // 请求解除绑定接口
             const data = removeBind({
-              bind_id: this.$mp.query.bind_id
+              bind_id: this.bind_id
             })
             if (data) {
               wx.showToast({

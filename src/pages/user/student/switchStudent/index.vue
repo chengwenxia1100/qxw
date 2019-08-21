@@ -1,12 +1,16 @@
 <template>
   <div class="switch_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <div class="slide_con">
-      <div class="slide" v-for="list in studentListData" :key="list">
+      <div class="slide" v-for="(list, i) in studentListData" :key="i"  @click="switchSlide(list.student_id)">
         <div class="icon">
-          <img src="/static/svg/radio_select.png" alt="">
+          <img :src="selectIcon" v-if="list.checked">
+          <img :src="noselectIcon" v-else>
         </div>
-        <div class="mess">
-          <div class="li">
+        <div class="mess">ss
+          <!-- <div class="li">
             <div><span>学员姓名：</span><span>{{list.s_realname}}</span></div>
             <div><span>性别：</span><span v-if="list.sex === 1">女</span><span v-if="list.sex === 0">男</span></div>
           </div>
@@ -16,12 +20,12 @@
           </div>
           <div class="li">
             <div><span>就读班级：</span><span v-if="list.class_id">{{list.class_id}}</span><span v-else>--</span></div>
-            <div @click="update"><a>更新学员信息></a></div>
-          </div>
+            <div @click="update(list.student_id, list.bind_id)"><a>更新学员信息></a></div>
+          </div> -->
         </div>
       </div>
     </div>
-    <div class="btn">
+    <!-- <div class="btn">
       <div class="btn_con" @click="add" v-if="!lengthMax">
         +添加
       </div>
@@ -29,24 +33,33 @@
         +添加
       </div>
       <p>*一个账号最多绑定3个学生</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import { getStudentList, getchange } from '../../user.api'
+import { getchange, getStudentList } from '@/api/student';
 
 export default {
   data () {
     return {
       studentListData: {},
-      student_id: '',
       bind_id: '',
-      lengthMax: false
+      lengthMax: false,
+      loading: false
     }
   },
   onLoad () {
+    this.loading = true
     this.getStudentListData()
+  },
+  computed: {
+    selectIcon () {
+      return require('@/assets/icon/icon_select.png')
+    },
+    noselectIcon () {
+      return require('@/assets/icon/icon_no_select.png')
+    }
   },
   methods: {
     async getStudentListData () {
@@ -54,13 +67,28 @@ export default {
         this.student_id = data[0].student_id
         this.bind_id = data[0].bind_id
         this.studentListData = data
-        console.log(data.length)
+
+        this.loading = false
+
+        this.studentListData.map((item,index) => {
+          if (item.student_status === 1) { item.checked = true }
+        })
+
         if (data.length >= 3) {
           this.lengthMax = true
         }
     },
-    async getchangeData () {
-        const data = await getchange({})
+    // 点击切换事件
+    switchSlide (id) {
+      this.loading = true
+      this.getchangeData(id)
+    },
+    async getchangeData (id) {
+        console.log(id)
+        const data = await getchange({
+          student_id: id
+        })
+        this.getStudentListData()
     },
     // 增加学员
     add () {
@@ -68,8 +96,8 @@ export default {
       wx.navigateTo({ url })
     },
     // 更新学员信息
-    update () {
-      const url = '../update/main?student_id=' + this.student_id + '&bind_id=' + this.bind_id;
+    update (id, bindId) {
+      const url = '../update/main?student_id=' + id + '&bind_id=' + bindId;
       wx.navigateTo({ url })
     }
   }
@@ -109,7 +137,7 @@ page {
               color:#999;
             }
             a {
-              color:#e12a22;
+              color:#1296db;
               text-align:right;
             }
           }
@@ -124,7 +152,7 @@ page {
     text-align:center;
     .btn_con {
       color:#fff;
-      background:#e12a22;
+      background:#64af08;
       width:80%;
       height:0.8rem;
       text-align:center;

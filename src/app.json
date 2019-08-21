@@ -1,24 +1,22 @@
 {
   "pages": [
+    "pages/paperAnaly/main",
+    "pages/wrongTitle/main",
+    "pages/user/student/switchStudent/main",
     "pages/home/main",
     "pages/user/main",
     "pages/auth/main",
     "pages/user/student/update/main",
-    
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
-    
     "pages/bind/vipbind/main",
     "pages/paperAnaly/analy/main",
     "pages/paperAnaly/paperDetail/main",
-    "pages/paperAnaly/main",
     "pages/errorRegister/main",
-    "pages/wrongTitle/main",
     "pages/errorRegister/addwork/main",
     "pages/user/about/main",
     "pages/user/instruction/main",
-    "pages/user/student/add/main",
-    "pages/user/student/switchStudent/main"
+    "pages/user/student/add/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -34,7 +32,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/home/main",
+      "pagePath": "pages/paperAnaly/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {

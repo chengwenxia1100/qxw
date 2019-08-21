@@ -7,7 +7,6 @@ export default {
   state: {
     userInfo: undefined,
     authorize: {
-      // userInfo: true
       userInfo: false
     },
     verifiedAuthorize: false,
@@ -20,12 +19,11 @@ export default {
     token: state => state.userInfo.token
   },
   mutations: {
-    SET_USER_INFO (state, payload) {
-      state.userInfo = payload
+    SET_USER_INFO (state, val) {
+      state.userInfo = val
     },
-    SET_AUTHORIZE_USERINFO (state, payload) {
-      console.log(payload, 'SET_AUTHORIZE_USERINFO')
-      state.authorize.userInfo = payload
+    SET_AUTHORIZE_USERINFO (state, val) {
+      state.authorize.userInfo = val
     },
     SET_TOKEN (state, token) {
       state.token = token

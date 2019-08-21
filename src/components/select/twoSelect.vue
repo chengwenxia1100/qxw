@@ -14,7 +14,7 @@
         </li>
       </ul>
     </div>
-    <div class="con" v-if="!downStatus || !upStatus" :style="'top:2.6rem;left:' + left ">
+    <div class="con" v-if="!downStatus || !upStatus">
       <div class="slide_con">
         <ul>
           <li>初中数学</li>
@@ -33,7 +33,6 @@ export default {
     return {
       downStatus: true,
       upStatus: true,
-      left: '0rem'
     }
   },
   mounted () {
@@ -42,12 +41,10 @@ export default {
     slide1 () {
       this.downStatus = !this.downStatus;
       this.upStatus = true;
-      this.left = '0rem';
     },
     slide2 () {
       this.upStatus = !this.upStatus;
       this.downStatus = true;
-      this.left = '50%';
     }
   }
 }
@@ -81,13 +78,15 @@ export default {
   }
   .con {
     background:#c9c7c7;
-    width:50%;
+    width:100%;
     z-index:99;
     position: fixed;
+    top:2rem;
+    left:0;
     .slide_con {
       ul {
         li {
-          padding:0.1rem 0;
+          padding:0.2rem 0;
           text-align:center;
           border-bottom:0.02rem #fff solid;
         }
