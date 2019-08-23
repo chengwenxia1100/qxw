@@ -2,25 +2,29 @@
   <div class="main_box">
     <div class="navTab">
       <ul>
-        <li @click="slide1"> 
-          初中数学
+        <li @click="subjectTab"> 
+          {{subject}}
           <img src="/static/svg/icon_down.png" v-if="downStatus">
           <img src="/static/svg/icon_up.png" v-else>
         </li>
-        <li @click="slide2">
-          初二
+        <li @click="gradeTab">
+          {{grade}}
           <img src="/static/svg/icon_down.png" v-if="upStatus">
           <img src="/static/svg/icon_up.png" v-else>
         </li>
       </ul>
     </div>
-    <div class="con" v-if="!downStatus || !upStatus">
+    <div class="con" v-if="!downStatus">
       <div class="slide_con">
         <ul>
-          <li>初中数学</li>
-          <li>初中无力</li>
-          <li>初中语文</li>
-          <li>初中英语</li>
+          <li v-for="(item, i) in subjectList" :key="i" @click="selectSubject(item.label)" :class="subject == item.label ? 'bule' : ''">{{item.label}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="con" v-if="!upStatus">
+      <div class="slide_con">
+        <ul>
+          <li v-for="(item, i) in gradeList" :key="i"  @click="selectGrade(item.label)" :class="grade == item.label ? 'bule' : ''">{{item.label}}</li>
         </ul>
       </div>
     </div>
@@ -28,29 +32,67 @@
 </template>
 
 <script>
+import { getStudentGrade, getPaperSubject } from '@/api/analy'
+
 export default {
   data () {
     return {
       downStatus: true,
       upStatus: true,
+      gradeList: {},
+      subjectList: {}
     }
   },
-  mounted () {
+  onLoad () {
+    this.getStudentGrade()
+    this.getPaperSubject()
+  },
+  computed: {
+    // grade() {
+    //   return this.gradeList[0].label
+    // },
+    // subject () {
+    //   return this.subjectList[0].label
+    // }
   },
   methods: {
-    slide1 () {
+    // 获取年级
+    async getStudentGrade () {
+      const data = await getStudentGrade({})
+      this.gradeList = data
+      this.grade = data[0].label
+    },
+    // 获取科目
+    async getPaperSubject () {
+      const data = await getPaperSubject({})
+      this.subjectList = data
+      this.subject = data[0].label
+    },
+    subjectTab () {
       this.downStatus = !this.downStatus;
       this.upStatus = true;
     },
-    slide2 () {
+    gradeTab () {
       this.upStatus = !this.upStatus;
       this.downStatus = true;
+    },
+    // 点击切换时重新赋值
+    selectGrade (e) {
+      this.grade = e
+      this.$emit('grade', this.grade)
+    },
+    selectSubject (e) {
+      this.subject = e
+      this.$emit('subject', this.subject)
     }
   }
 }
 </script>
 
 <style lang="less">
+.bule {
+  color: #1296db
+}
 .main_box {
   .navTab {
     height:0.6rem;
@@ -81,7 +123,7 @@ export default {
     width:100%;
     z-index:99;
     position: fixed;
-    top:2rem;
+    top:0.8rem;
     left:0;
     .slide_con {
       ul {

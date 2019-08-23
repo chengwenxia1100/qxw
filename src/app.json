@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/paperAnaly/paperRegister/main",
     "pages/paperAnaly/main",
     "pages/wrongTitle/main",
     "pages/user/student/switchStudent/main",
@@ -32,7 +33,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/paperAnaly/main",
+      "pagePath": "pages/paperAnaly/paperRegister/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {

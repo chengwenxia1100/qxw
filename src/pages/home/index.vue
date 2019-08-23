@@ -188,7 +188,8 @@ export default {
       onInit: initChart, //折线图
       pickerValueArray: [],//切换学员选择框
       studentData: {},
-      loading: false // 进入页面的弹窗
+      loading: false, // 进入页面的弹窗
+      studentId: ''
     }
   },
   computed: {
@@ -201,7 +202,7 @@ export default {
   },
   watch: {
     token: {
-      immediate: true,
+      // immediate: true,
       handler (val) {
         if (val) {
           setTimeout(() => {
@@ -216,6 +217,7 @@ export default {
     async getHome () {
       const data = await getHome({})
       this.studentData = data.student_info
+      this.studentId = data.student_info.id
       if(data.student_info.student_status === 1) { this.getStudentList() }
     },
     // 获取学员列表
@@ -255,7 +257,7 @@ export default {
             wx.navigateTo({ url: '../wrongTitle/main' }) // 跳转到错题本页面
             break
           case '2':
-            wx.navigateTo({ url: '../errorRegister/main' }) // 跳转到错题登记页面
+            wx.navigateTo({ url: '../errorRegister/main?student_id=' + this.studentId }) // 跳转到错题登记页面
             break
           case '3':
             wx.navigateTo({ url: '../paperAnaly/main' }) // 跳转到错题分析页面

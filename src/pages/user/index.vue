@@ -71,7 +71,7 @@ export default {
   },
   watch: {
     token: {
-      immediate: true,
+      // immediate: true,
       handler (val) {
         if (val) {
           wx.getUserInfo({
