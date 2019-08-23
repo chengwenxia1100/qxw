@@ -31,3 +31,19 @@ export function sureMark (data) {
     data
   })
 }
+
+// 试卷登记接口
+export function getPaperChapterList (data) {
+  return request({
+    url: sign('paper/getPaperChapterList'),
+    data
+  })
+}
+
+// 试卷提交接口
+export function paperTopicRegister (data) {
+  return request({
+    url: sign('paper/paperTopicRegister'),
+    data
+  })
+}
