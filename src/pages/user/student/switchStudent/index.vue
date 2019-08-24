@@ -9,8 +9,8 @@
           <img :src="selectIcon" v-if="list.checked">
           <img :src="noselectIcon" v-else>
         </div>
-        <div class="mess">ss
-          <!-- <div class="li">
+        <div class="mess">
+          <div class="li">
             <div><span>学员姓名：</span><span>{{list.s_realname}}</span></div>
             <div><span>性别：</span><span v-if="list.sex === 1">女</span><span v-if="list.sex === 0">男</span></div>
           </div>
@@ -21,11 +21,11 @@
           <div class="li">
             <div><span>就读班级：</span><span v-if="list.class_id">{{list.class_id}}</span><span v-else>--</span></div>
             <div @click="update(list.student_id, list.bind_id)"><a>更新学员信息></a></div>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
-    <!-- <div class="btn">
+    <div class="btn">
       <div class="btn_con" @click="add" v-if="!lengthMax">
         +添加
       </div>
@@ -33,7 +33,7 @@
         +添加
       </div>
       <p>*一个账号最多绑定3个学生</p>
-    </div> -->
+    </div>
   </div>
 </template>
 

@@ -1,13 +1,6 @@
 import request from '@/tools/request'
 import { sign } from '@/tools'
 
-export function paperAnaly (data) {
-  return request({
-    url: sign('paper/PaperList'),
-    data
-  })
-}
-
 // 获取年级信息
 export function getStudentGrade (data) {
   return request({
@@ -20,6 +13,14 @@ export function getStudentGrade (data) {
 export function getPaperSubject (data) {
   return request({
     url: sign('paper/getPaperSubject'),
+    data
+  })
+}
+
+// 试卷分析列表
+export function PaperList (data) {
+  return request({
+    url: sign('paper/PaperList'),
     data
   })
 }
@@ -44,6 +45,22 @@ export function getPaperChapterList (data) {
 export function paperTopicRegister (data) {
   return request({
     url: sign('paper/paperTopicRegister'),
+    data
+  })
+}
+
+// 试卷详情接口
+export function PaperTopicInfo (data) {
+  return request({
+    url: sign('paper/PaperTopicInfo'),
+    data
+  })
+}
+
+// 试卷分析接口
+export function paperAnalysis (data) {
+  return request({
+    url: sign('paper/paperAnalysis'),
     data
   })
 }

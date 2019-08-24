@@ -1,88 +1,49 @@
 <template>
   <div class="addwork_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <!-- 筛选框组件 -->
     <two-select
       @subject="subjectFun"
       @grade="gradeFun"
     ></two-select>
-    <!-- <div class="paper_list">
-      <div class="list" @click="goRegister">
-        <img src="@/assets/img/bg.jpg">
+    <!-- 登记 list 内容 -->
+    <div class="paper_list" v-if="listStatus">
+      <div class="list" v-for="(item, i) in paperListData" :key="i" @click="goRegister(item.status, item.url, item.name, item.score, item.category, item.paper_id)">
+        <img :src="item.url">
         <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
-          <p>浙江教育出版社</p>
+          <p>{{item.name}}</p>
+          <p>总分:{{item.score}}</p>
+          <p>{{item.category}}</p>
         </div>
         <div class="status">
-          <p>未登记</p>
-          <img src="@/assets/svg/icon_right.png">
+          <p v-if="item.status === 0">未登记</p>
+          <p v-if="item.status === 1">继续登记</p>
+          <p class="mark" v-if="item.status === 2">{{item.student_score}}</p>
+          <img src="../../assets/svg/icon_right.png">
         </div>
       </div>
-      <div class="list">
-        <img src="@/assets/img/bg.jpg">
-        <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
-          <p>浙江教育出版社</p>
-        </div>
-        <div class="status">
-          <p class="mark">101</p>
-          <img src="@/assets/svg/icon_right.png">
-        </div>
-      </div>
-      <div class="list">
-        <img src="@/assets/img/bg.jpg">
-        <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
-          <p>浙江教育出版社</p>
-        </div>
-        <div class="status">
-          <p>继续登记</p>
-          <img src="@/assets/svg/icon_right.png">
-        </div>
-      </div>
-    </div> -->
+    </div>
+    <div v-else class="no_paper">暂无试卷</div>
     <!--  出现弹窗 -->
     <mack-layer 
       v-if="macklayerStatus" 
-      :paperData="paperData"
+      :img="paperImg"
+      :name="paperName"
+      :mask="paperMask"
+      :category="paperCategory"
+      :paper_id="paper_id"
       :macklayerStatus="macklayerStatus" 
       @macklayerStatus="macklayerStatusFun"
     ></mack-layer>
-    <!-- <div class="macklayer" v-if="macklayer">
-      <div class="layer">
-        <div class="tit">试卷登记<img src="@/assets/svg/close.png" @click="close"></div>
-        <div class="con">
-          <div class="list" @click="goRegister">
-            <img src="@/assets/img/bg.jpg">
-            <div class="middle">
-              <p>作业本一</p>
-              <p>初二上册</p>
-              <p>浙江教育出版社</p>
-            </div>
-          </div>
-          <div class="inout">
-            <span>试卷分值</span>
-            <input type="text" placeholder="请输入考试成绩" v-model="value">
-          </div>
-          <p class="red" v-if="tip">请输入考试成绩</p>
-          <div class="btn_con">
-            <div class="btn" @click="confirm">
-              确定
-            </div>
-          </div>
-        </div>
-        <fan-chart></fan-chart>
-      </div>
-    </div> -->
   </div>
 </template>
 
 <script>
 import twoSelect from '@/components/select/twoSelect'
 import mackLayer from '@/components/layer/macklayer'
-import { paperAnaly } from '@/api/analy';
+import { PaperList } from '@/api/analy'
 
 export default {
   components: {
@@ -91,37 +52,63 @@ export default {
   },
   data () {
     return {
+      listStatus: true,
       macklayerStatus: false, // 弹窗的显示与隐藏
+      loading: false,
       tip:false, // 弹窗中未输入考试成绩中的提示
       value: '', // 考试成绩的值
-      subject: '', // 学生科目
-      grade: '', // 学生年级
+      subjectVal: '',
+      gradeVal: '',
+      paperListData: {}
     }
   },
   onLoad () {
-    // this.paperAnaly()
+    // this.loading = true
+  },
+  watch: {
+    subjectVal (val) {
+      if (val && this.gradeVal) { this.PaperList() }
+    },
+    gradeVal (val) {
+      if (val && this.subjectVal) { this.PaperList() }
+    }
   },
   methods: {
-    async paperAnaly () {
-      const data = await paperAnaly({
-        subject: this.subject,
-        grade: this.grade
-      })
-      this.paperData = data
-    },
-    // 去登记
-    goRegister () {
-      this.macklayerStatus = true;
-    },
     // 接收弹窗的子组件传值
     macklayerStatusFun (val) {
       this.macklayerStatus = val
     },
     subjectFun (val) {
-      this.subject = val
+      this.subjectVal = val
     },
     gradeFun (val) {
-      this.grade = val
+      this.gradeVal = val
+    },
+    async PaperList () {
+      this.loading = true
+      const data = await PaperList({
+        subject_id: this.subjectVal,
+        grade: this.gradeVal
+      })
+      this.loading = false
+      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
+      console.log(data.length);
+      this.paperListData = data
+    },
+    // 去登记
+    goRegister (type, url, name, score, category, paper_id) {
+      if (type === 0) {
+        this.paperImg = url
+        this.paperName = name
+        this.paperMask = score
+        this.paperCategory= category
+        this.paper_id = paper_id
+        this.macklayerStatus = true
+      } else if (type === 1) {
+        wx.navigateTo({ url: '/pages/paperAnaly/paperRegister/main?paper_id=' + paper_id })
+      } else if (type === 2) {
+        wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
+      }
     }
   }
 }
@@ -175,6 +162,12 @@ export default {
           right:0;
       }
     }
+  }
+  .no_paper {
+    color:#666;
+    font-size:0.36rem;
+    margin:0.8rem auto;
+    text-align:center;
   }
   // .macklayer {
   //   width:100%;

@@ -17,14 +17,14 @@
     <div class="con" v-if="!downStatus">
       <div class="slide_con">
         <ul>
-          <li v-for="(item, i) in subjectList" :key="i" @click="selectSubject(item.label)" :class="subject == item.label ? 'bule' : ''">{{item.label}}</li>
+          <li v-for="(item, i) in subjectList" :key="i" @click="selectSubject(item.label, item.value)" :class="subject == item.label ? 'bule' : ''">{{item.label}}</li>
         </ul>
       </div>
     </div>
     <div class="con" v-if="!upStatus">
       <div class="slide_con">
         <ul>
-          <li v-for="(item, i) in gradeList" :key="i"  @click="selectGrade(item.label)" :class="grade == item.label ? 'bule' : ''">{{item.label}}</li>
+          <li v-for="(item, i) in gradeList" :key="i"  @click="selectGrade(item.label, item.value)" :class="grade == item.label ? 'bule' : ''">{{item.label}}</li>
         </ul>
       </div>
     </div>
@@ -40,20 +40,24 @@ export default {
       downStatus: true,
       upStatus: true,
       gradeList: {},
-      subjectList: {}
+      subjectList: {},
+      grade: '',
+      subject:'',
+      subjectValue: 0,
+      gradeValue: 0
     }
   },
   onLoad () {
     this.getStudentGrade()
     this.getPaperSubject()
   },
-  computed: {
-    // grade() {
-    //   return this.gradeList[0].label
-    // },
-    // subject () {
-    //   return this.subjectList[0].label
-    // }
+  watch: {
+    subjectValue (val) {
+        this.$emit('subject', val)
+    },
+    gradeValue (val) {
+        this.$emit('grade', val)
+    }
   },
   methods: {
     // 获取年级
@@ -61,12 +65,14 @@ export default {
       const data = await getStudentGrade({})
       this.gradeList = data
       this.grade = data[0].label
+      this.gradeValue = data[0].value
     },
     // 获取科目
     async getPaperSubject () {
       const data = await getPaperSubject({})
       this.subjectList = data
       this.subject = data[0].label
+      this.subjectValue = data[0].value
     },
     subjectTab () {
       this.downStatus = !this.downStatus;
@@ -77,13 +83,15 @@ export default {
       this.downStatus = true;
     },
     // 点击切换时重新赋值
-    selectGrade (e) {
+    selectGrade (e, f) {
       this.grade = e
-      this.$emit('grade', this.grade)
+      this.gradeValue = f
+      this.upStatus = !this.upStatus     
     },
-    selectSubject (e) {
+    selectSubject (e, f) {
       this.subject = e
-      this.$emit('subject', this.subject)
+      this.subjectValue = f
+      this.downStatus = !this.downStatus
     }
   }
 }

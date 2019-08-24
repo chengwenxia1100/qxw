@@ -1,7 +1,11 @@
 <template>
   <div class="addwork_container">
     <!-- 筛选框组件 -->
-    <two-select></two-select>
+    <two-select
+      @subject="subjectFun"
+      @grade="gradeFun"
+    ></two-select>
+    <!---->
     <div class="bookList_con">
       <div class="list">
         <img src="/static/images/user.png">
@@ -14,23 +18,13 @@
           <img src="/static/svg/icon_add.png">
         </div>
       </div>
-      <div class="list">
-        <img src="/static/images/user.png" @click="add">
-        <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
-          <p>浙江教育出版社</p>
-        </div>
-        <div class="status">
-          <img src="/static/svg/icon_add_r.png">
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import twoSelect from '@/components/select/twoSelect'
+import { addBookList, addBook } from '@/api/errorRegister'
 
 export default {
   components: {
@@ -38,16 +32,33 @@ export default {
   },
   data () {
     return {
-        
+      subjectVal: '',
+      gradeVal: '',
     }
   },
-  mounted () {
+  watch: {
+    subjectVal (val) {
+      if (val && this.gradeVal) { this.addBookList() }
+    },
+    gradeVal (val) {
+      if (val && this.subjectVal) { this.addBookList() }
+    }
   },
   methods: {
-    // 增加作业本
-    add () {
-       // 改变作业本状态
-    }
+    // 增加作业本所有列表
+    async addBookList () {
+      const data = await addBookList({
+        subject_id: this.subjectVal,
+        grade: this.gradeVal
+      })
+    },
+    // 接收科目 年级子组件传值
+    subjectFun (val) {
+      this.subjectVal = val
+    },
+    gradeFun (val) {
+      this.gradeVal = val
+    },
   }
 }
 </script>

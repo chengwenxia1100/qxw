@@ -1,8 +1,15 @@
 {
   "pages": [
-    "pages/paperAnaly/paperRegister/main",
-    "pages/paperAnaly/main",
+    "pages/errorRegister/registerDetail/main",
+    "pages/errorRegister/errorTitleRegister/main",
+    "pages/errorRegister/main",
     "pages/wrongTitle/main",
+    "pages/paperAnaly/analy/main",
+    "pages/paperAnaly/main",
+    
+    
+    "pages/paperAnaly/paperRegister/main",
+    
     "pages/user/student/switchStudent/main",
     "pages/home/main",
     "pages/user/main",
@@ -11,9 +18,9 @@
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
     "pages/bind/vipbind/main",
-    "pages/paperAnaly/analy/main",
+    
     "pages/paperAnaly/paperDetail/main",
-    "pages/errorRegister/main",
+    
     "pages/errorRegister/addwork/main",
     "pages/user/about/main",
     "pages/user/instruction/main",
@@ -33,7 +40,7 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/paperAnaly/paperRegister/main",
+      "pagePath": "pages/errorRegister/registerDetail/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {

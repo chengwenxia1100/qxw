@@ -1,58 +1,51 @@
 <template>
   <div class="analy_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
+    <!-- 试卷信息 -->
     <div class="paper_list">
       <div class="list">
-        <img src="/static/images/bg.jpg">
+        <img :src="paperMess.url">
         <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
-          <p>浙江教育出版社</p>
+          <p>{{paperMess.name}}</p>
+          <p>总分:{{paperMess.score}}</p>
+          <p>{{paperMess.category}}</p>
         </div>
         <div class="status">
-          <p class="mark">101</p>
+          <p class="mark">{{paperMess.student_score}}</p>
         </div>
       </div>
     </div>
+    <!--扇形图-->
     <div class="chart_con">
-        <div class="tab">
-            <div class="btn">
-                得分情况
-            </div>
-            <div class="btn">
-                失分情况
-            </div>
-            <div class="btn">
-                得分率
-            </div>
-        </div>
-        <div class="con">
-            <fan-chart></fan-chart>
-        </div>
+      <div class="tab">
+        <div class="btn">得分情况</div>
+        <div class="btn"> 失分情况</div>
+        <div class="btn">得分率</div>
+      </div>
+      <div class="con">
+        <fan-chart></fan-chart>
+      </div>
     </div>
+    <!--学生错题列表-->
     <div class="potic">
-      <h2>重难点题型</h2>
-      <div class="type">选择题</div>
-      <div class="box">
-        <div class="row"> 
-          <div class="cell">题号</div> 
-          <div class="cell">学生得分</div> 
-          <div class="cell">班级平均分</div>
-          <div class="cell">难度系数</div>
-          <div class="cell"></div>
-        </div>
-        <div class="row"> 
-          <div class="cell blue">2</div> 
-          <div class="cell">6</div> 
-          <div class="cell">7</div>
-          <div class="cell">8</div>
-          <div class="cell blue">查看详情</div>
-        </div>
-        <div class="row"> 
-          <div class="cell blue">2</div> 
-          <div class="cell">6</div> 
-          <div class="cell">7</div>
-          <div class="cell">8</div>
-          <div class="cell blue">查看详情</div>
+      <h2>学生错题</h2>
+      <div class="topic_list" v-for="(list, j) in paperAnalyData.wrong_topic" :key="j">
+        <div class="type">{{list.label}}</div>
+        <div class="box">
+          <div class="row"> 
+            <div class="cell">题号</div> 
+            <div class="cell">班级得分率</div> 
+            <div class="cell">知识点</div>
+            <div class="cell"></div>
+          </div>
+          <div class="row" v-for="(item, i) in paperAnalyData.wrong_topic[j].list" :key="i"> 
+            <div class="cell blue">{{item.topic_number}}</div> 
+            <div class="cell">{{item.true_rate}}</div> 
+            <div class="cell">{{item.point_name}}</div>
+            <div class="cell blue" @click="checkDetail(item.topic_id, item.id)">查看详情</div>
+          </div>
         </div>
       </div>
     </div>
@@ -61,6 +54,7 @@
 
 <script>
 import fanChart from '@/components/echart/fanChart'
+import { paperAnalysis } from '@/api/analy';
 
 export default {
   components: {
@@ -71,12 +65,43 @@ export default {
       macklayer: false, // 弹窗的显示与隐藏
       tip:false, // 弹窗中未输入考试成绩中的提示
       value: '', // 考试成绩的值
-      on: true
+      on: true,
+      loading: false,
+      paperAnalyData: {},
+      paperMess: {},
+      getInfo: {},
+      loseInfo: {},
+      getRate: {}
     }
   },
-  mounted () {
+  onLoad () {
+    this.loading = true
+    this.paperAnalysis()
+  },
+  computed: {
+    paper_id () {
+      return this.$root.$mp.query.paper_id
+    }
   },
   methods: {
+    async paperAnalysis () {
+      const data = await paperAnalysis({
+        paper_id: this.paper_id
+      })
+      setTimeout(() => {
+        this.loading = false
+      }, 500);
+      this.paperAnalyData = data
+      this.paperMess = data.paper_info
+      this.getInfo = data.paper_type.get_info
+      this.loseInfo = data.paper_type.lose_info
+      this.getRate = data.paper_type.get_rate
+    },
+    // 查看详情
+    checkDetail (topic_id, id) {
+      const url = '../paperDetail/main?topic_id=' + topic_id + '&id=' + id
+      wx.navigateTo({ url })
+    },
     // 去登记
     goRegister () {
       this.macklayer = true;
@@ -161,6 +186,7 @@ export default {
     }
   }
   .potic {
+    margin-bottom:0.4rem;
     h2 {
       padding:0.1rem 0.2rem;
     }

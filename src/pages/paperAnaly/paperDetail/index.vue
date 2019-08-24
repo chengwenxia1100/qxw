@@ -1,78 +1,77 @@
 <template>
-
-    <div class="echart">
-       <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
+  <div class="paper_detail_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
+    <div class="paper">
+      <div class="tit">试题内容</div>
+      <div class="con" v-html="paperConData.content"></div>
     </div>
-
+     <div class="paper">
+      <div class="tit">试题答案</div>
+      <div class="con">
+        <div class="con_list">{{paperConData.answer}}</div>
+      </div>
+    </div>
+     <div class="paper">
+      <div class="tit">知识考点</div>
+      <div class="con">
+        <div class="con_list" v-for="(item, i) in paperConData.topic_point" :key="i" v-show="item">{{item}}</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import echarts from 'echarts';
-import mpvueEcharts from 'mpvue-echarts';
-let chart = null;
-
-function initChart(canvas, width, height) {
-  chart = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  });
-  canvas.setChart(chart);
-  var option = {
-    title: {
-        text: '成绩',
-        x: 'left'
-    },
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    color: ['#CD5C5C', '#00CED1', '#9ACD32', '#FFC0CB'],
-    stillShowZeroSum: false,
-    series: [
-        {
-          name: 'bug分布',
-          type: 'pie',
-          radius: '80%',
-          center: ['60%', '60%'],
-          data: [
-              {value: 1, name: '数学'},
-              {value: 3, name: '语文'},
-              {value: 7, name: '科学'},
-              {value: 4, name: '英语'},
-          ],
-          itemStyle: {
-              emphasis: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(128, 128, 128, 0.5)'
-              }
-          }
-        }
-    ]
-  }; // ECharts 配置项
-  chart.setOption(option);
-  return chart; // 返回 chart 后可以自动绑定触摸操作
-}
+import { PaperTopicInfo } from '@/api/analy';
 
 export default {
-  components: {
-    mpvueEcharts,
-  },
   data () {
     return {
-      echarts,
-      onInit: initChart,
+      paperConData: {},
+      loading: false, // 进入页面的弹窗
+      id: ''
     }
+  },
+  computed: {
+    topicId () {
+      return this.$root.$mp.query.topic_id
+    },
+    id () {
+      if (this.$root.$mp.query.id) { return this.$root.$mp.query.id }
+    }
+  },
+  onLoad () {
+    this.loading = true;
+    this.PaperTopicInfo()
+  },
+  methods: {
+    async PaperTopicInfo () {
+      const data = await PaperTopicInfo({
+        topic_id: this.topicId,
+        id: this.id
+      })
+      this.loading = false
+      this.paperConData = data
+    },
   }
 }
 </script>
 
 <style lang="less">
-
-  .echart {
-    // margin:0.2rem auto;
-    width:80%;
-    height:5rem;
+.paper_detail_container {
+  font-size:0.26rem;
+  .paper {
+    .tit {
+      padding:0.2rem;
+      border-left:0.1rem #666 solid;
+    }
+    .con {
+      background:#fff;
+      .con_list {
+        padding:0.2rem;
+      }
+    }
   }
-
+}
 </style>

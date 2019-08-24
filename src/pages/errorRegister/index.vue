@@ -1,14 +1,17 @@
 <template>
   <div class="register_container">
     <!-- 筛选框组件 -->
-    <two-select></two-select>
+    <two-select
+      @subject="subjectFun"
+      @grade="gradeFun"
+    ></two-select>
     <!-- 作业本列表 -->
     <div class="bookList_con">
-      <div class="list">
-        <img src="/static/images/user.png">
+      <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
+        <img :src="item.url">
         <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
+          <p>{{item.name}}</p>
+          <!-- <p>c</p> -->
           <p>浙江教育出版社</p>
         </div>
         <div class="show">
@@ -18,7 +21,7 @@
       </div>
     </div>
     <!-- 添加作业本按钮 -->
-    <div class="btn">
+    <div class="btn" @click="addBook">
       <img src="/static/svg/icon_add.png" alt="">
       <div class="btn_con">添加作业本</div>
     </div>
@@ -28,6 +31,7 @@
 <script>
 import twoSelect from '@/components/select/twoSelect'
 import gapChart from '@/components/echart/gapChart'
+import { errorBookList } from '@/api/errorRegister'
 
 export default {
   components: {
@@ -36,11 +40,47 @@ export default {
   },
   data () {
     return {
+      subjectVal: '',
+      gradeVal: '',
+      loading: false,
+      listStatus: true, // 有无错题本列表
+      errorBookListData: {}
     }
   },
-  mounted () {
+  watch: {
+    subjectVal (val) {
+      if (val && this.gradeVal) { this.errorBookList() }
+    },
+    gradeVal (val) {
+      if (val && this.subjectVal) { this.errorBookList() }
+    }
   },
   methods: {
+    // 接收科目 年级子组件传值
+    subjectFun (val) {
+      this.subjectVal = val
+    },
+    gradeFun (val) {
+      this.gradeVal = val
+    },
+    async errorBookList () {
+      this.loading = true
+      const data = await errorBookList({
+        subject_id: this.subjectVal,
+        grade: this.gradeVal
+      })
+      this.loading = false
+      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
+      this.errorBookListData = data
+    },
+    // 添加作业本
+    addBook () {
+      wx.navigateTo({ url: '/pages/errorRegister/addwork/main?book_id=' + book_id })
+    },
+    // 跳转到错题登记
+    chapterList (book_id) {
+      wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id })
+    }
   }
 }
 </script>

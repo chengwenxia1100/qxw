@@ -5,16 +5,16 @@
         <div class="tit">试卷登记<img src="@/assets/svg/close.png" @click="close"></div>
         <div class="con">
           <div class="list">
-            <img src="@/assets/img/bg.jpg">
+            <img :src="img">
             <div class="middle">
-              <p>作业本一</p>
-              <p>初二上册</p>
-              <p>浙江教育出版社</p>
+              <p>{{name}}</p>
+              <p>总分:{{mask}}</p>
+              <p>{{category}}</p>
             </div>
           </div>
           <div class="inout">
             <span>试卷分值</span>
-            <input type="text" placeholder="请输入考试成绩" v-model="mark">
+            <input type="text" placeholder="请输入考试成绩" v-model="studentMark">
           </div>
           <p class="red" v-if="tip">请输入考试成绩</p>
           <div class="btn_con">
@@ -43,26 +43,37 @@ export default {
     macklayerStatus: {
       default: false
     },
-    paperData: {
-      default: {}
+    img: {
+      default: ''
+    },
+    name: {
+      default: '' 
+    },
+    mask: {
+      default: ''
+    },
+    category: {
+      default: ''
+    },
+    paper_id: {
+      default: ''
     }
   },
   watch: {
-    mark: {
+    studentMark: {
       immediate: true,
       handler (val) {
-        this.mark = val
-        this.$emit('mark', val)
+        this.studentMark = val
       }
     }
   },
   methods: {
     async sureMark () {
       const data = await sureMark({
-          paper_id: this.mark,
-          score: this.student_id
+          paper_id: this.paper_id,
+          score: this.studentMark
       })
-      const url = "@/pages/paperAnaly/wrongTitle/main"
+      const url = "@/pages/paperAnaly/paperRegister/main?paper_id=" + paper_id
       wx.navigateTo({ url })
     },
     close () {
