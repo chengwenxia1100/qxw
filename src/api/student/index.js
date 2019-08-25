@@ -32,3 +32,11 @@ export function updataStudentPage (data) {
     data
   })
 }
+
+// 选择班级
+export function getSchoolList (data) {
+  return request({
+    url: sign('login/getSchoolList'),
+    data
+  })
+}

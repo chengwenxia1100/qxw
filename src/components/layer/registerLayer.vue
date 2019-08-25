@@ -1,42 +1,20 @@
 <template>
   <div class="layer_box">
     <div class="layer">
-      <div class="tit">题目详情<img src="../../assets/svg/close.png" @click="close"></div>
+      <div class="tit">批量登记<img src="../../assets/svg/close.png" @click="close"></div>
       <div class="con">
-        <ul>
-          <li><span>【答案】</span><span v-html="topic_answer_content"></span></li>
-          <li><span>【来源】</span><span>{{from}}</span></li>
-          <li><span>【难度】</span><span>{{difficult_level}}</span></li>
-          <li><span>【知识点】</span><span>{{topic_point}}</span></li>
-        </ul>
+       是谁
       </div>
-      <!-- <fan-chart></fan-chart> -->
     </div>
   </div>
 </template>
 
 <script>
-import fanChart from '../echart/fanChart'
 
 export default {
-  components: {
-    fanChart
-  },
   props: {
     analyLayer: {
       default: false
-    },
-    topic_answer_content: {
-      default: ''
-    },
-    from: {
-      default: ''
-    },
-    difficult_level: {
-      default: ''
-    },
-    topic_point: {
-      default: ''
     }
   },
   data () {
@@ -47,7 +25,6 @@ export default {
   methods: {
     close () {
       this.analyLayer = false;
-      this.$emit('analyLayer', this.analyLayer)
     }
   }
 }

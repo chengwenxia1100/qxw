@@ -111,8 +111,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-
+<style lang="less">
+page {
+  background:#Fff;
+}
 .auth-action {
   position:absolute;
   top: 76px;
@@ -121,10 +123,10 @@ export default {
   box-sizing:border-box;
   padding:0 15px;
   &__bg__img {
-    margin-left:106px;
+    margin-left:136px;
     margin-bottom: 75px;
-    width: 149px;
-    height: 69px;
+    width: 93px;
+    height: 84px;
   }
 
   &__title {
@@ -146,7 +148,7 @@ export default {
     width: 100%;
     margin-top: 18px;
     font-size: 15px;
-    background-color: #08C261 !important;
+    background-color: #f25a57 !important;
 
     &__img {
       width: 27px;

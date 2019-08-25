@@ -1,5 +1,8 @@
 <template>
   <div class="errorTitle_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <div class="tip">*点击对应章节进行查看、登记</div>
     <div class="list_con" v-for="(list, i) in chapterListData" :key="i">
       <div class="tit">
@@ -9,10 +12,11 @@
       </div>
       <div class="con">
         <ul>
-          <li v-for="(item, j) in chapterListData[i].child" :key="j" @click="bookDetail()">
+          <li v-for="(item, j) in chapterListData[i].child" :key="j"
+          @click="gotodetail(item.book_list_id, list.book_list_name, item.book_list_name)">
             <span>{{item.book_list_name}}</span>
-            <span>30%</span>
-            <span>50%</span>
+            <span>{{item.register_rate}}%</span>
+            <span>{{item.right_rate}}%</span>
           </li>
         </ul>
       </div>
@@ -27,16 +31,27 @@ export default {
   data () {
     return {
       chapterListData: {},
-      book_id: 16
+      message: {},
+      // book_id: 16,
+      loading: false
     }
   },
-  onLoad () {
+  onLoad (option) {
+    this.message = option
+  },
+  onShow () {
     this.getChapterList()
   },
   computed: {
-    // book_id () {
-    //   return this.$root.$mp.query.book_id
-    // }
+    book_id () {
+      return this.message.book_id
+    },
+    grade () {
+      return this.message.grade
+    },
+    subject_id () {
+      return this.message.subject_id
+    }
   },
   methods: {
     async getChapterList () {
@@ -48,8 +63,9 @@ export default {
       this.chapterListData = data
     },
     // 跳转登记详情
-    bookDetail () {
-      wx.navigateTo({ url: '/pages/errorRegister/addwork/main?book_id=' + book_id })
+    gotodetail (book_list_id, book_list_name, book_name) {
+      console.log(book_list_id)
+      wx.navigateTo({ url: '/pages/errorRegister/registerDetail/main?book_list_id=' + book_list_id + '&book_list_name=' + book_list_name + '&book_name=' + book_name + '&book_id=' + this.book_id + '&grade=' + this.grade + '&subject_id=' + this.subject_id })
     }
   }
 }

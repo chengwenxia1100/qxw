@@ -71,7 +71,7 @@ export default {
           student_id: this.student_no
         })
         wx.reLaunch({ url: '../../main' })
-    },
+    }
   }
 }
 </script>
@@ -84,7 +84,7 @@ page {
 .update_container {
   .btn {
     color:#fff;
-    background:#EA5A49;
+    background:#64af08;
     width: 1.6rem;
     height: 0.6rem;
     line-height:0.6rem;

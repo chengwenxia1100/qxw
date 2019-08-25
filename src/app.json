@@ -1,9 +1,14 @@
 {
   "pages": [
+    "pages/home/main",
+    "pages/user/main",
+    "pages/auth/main",
+    "pages/wrongTitle/main",
+    "pages/errorRegister/main",
     "pages/errorRegister/registerDetail/main",
     "pages/errorRegister/errorTitleRegister/main",
-    "pages/errorRegister/main",
-    "pages/wrongTitle/main",
+    
+    
     "pages/paperAnaly/analy/main",
     "pages/paperAnaly/main",
     
@@ -11,9 +16,7 @@
     "pages/paperAnaly/paperRegister/main",
     
     "pages/user/student/switchStudent/main",
-    "pages/home/main",
-    "pages/user/main",
-    "pages/auth/main",
+    
     "pages/user/student/update/main",
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
@@ -28,7 +31,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "navigationBarBackgroundColor": "#f35957",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
   },
@@ -40,14 +43,14 @@
 
     "list": [{
       "text": "首页",
-      "pagePath": "pages/errorRegister/registerDetail/main",
+      "pagePath": "pages/home/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
     }, {
       "text": "我的",
       "pagePath": "pages/user/main",
-      "iconPath": "static/tabs/orders.png",
-      "selectedIconPath": "static/tabs/orders-active.png"
+      "iconPath": "static/tabs/user.png",
+      "selectedIconPath": "static/tabs/user-active.png"
     }],
     "position": "bottom"
   }

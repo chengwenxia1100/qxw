@@ -1,5 +1,8 @@
 <template>
   <div class="addwork_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <!-- 筛选框组件 -->
     <two-select
       @subject="subjectFun"
@@ -7,15 +10,16 @@
     ></two-select>
     <!---->
     <div class="bookList_con">
-      <div class="list">
-        <img src="/static/images/user.png">
+      <div class="list" v-for="(item, i) in worksData" :key="i">
+        <img :src="item.url">
         <div class="middle">
-          <p>作业本一</p>
-          <p>初二上册</p>
+          <p>{{item.name}}</p>
+          <p>{{item.semester}}</p>
           <p>浙江教育出版社</p>
         </div>
         <div class="status">
-          <img src="/static/svg/icon_add.png">
+          <img src="../../../assets/icon/icon_click.png" v-if="item.status === 0" @click="selectWork(item.book_id, i)">
+          <img src="../../../assets/icon/icon_clicked.png" v-if="item.status === 1">
         </div>
       </div>
     </div>
@@ -32,15 +36,22 @@ export default {
   },
   data () {
     return {
+      loading: false,
+      worksData: {},
       subjectVal: '',
       gradeVal: '',
     }
   },
+  onLoad () {
+    this.loading = true
+  },
   watch: {
     subjectVal (val) {
+      this.loading = true
       if (val && this.gradeVal) { this.addBookList() }
     },
     gradeVal (val) {
+      this.loading = true
       if (val && this.subjectVal) { this.addBookList() }
     }
   },
@@ -51,6 +62,14 @@ export default {
         subject_id: this.subjectVal,
         grade: this.gradeVal
       })
+      this.worksData = data
+      this.loading = false
+    },
+    // 添加
+    async addBook (book_id) {
+      const data = await addBook({
+        book_id: book_id
+      })
     },
     // 接收科目 年级子组件传值
     subjectFun (val) {
@@ -59,6 +78,14 @@ export default {
     gradeFun (val) {
       this.gradeVal = val
     },
+    selectWork (book_id, i) {
+      this.worksData.forEach((item,index,arr)=>{
+        if (index === i) {
+          item.status = 1
+        }
+			})
+      this.addBook(book_id)
+    }
   }
 }
 </script>

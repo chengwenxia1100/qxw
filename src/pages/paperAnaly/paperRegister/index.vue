@@ -54,17 +54,19 @@ export default {
     return {
       paper_id: 15,
       paperList: {},
+      message: {},
       studentScore: '1', // 孩子分数
       loading: false, // 进入页面的弹窗
     }
   },
-  onLoad () {
+  onLoad (option) {
     this.loading = true
+    this.message = option
     this.getPaperChapterList()
   },
   computed: {
     paper_id () {
-      return this.$root.$mp.query.paper_id
+      return this.message.paper_id
     }
   },
   watch: {
@@ -106,10 +108,10 @@ export default {
         wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
       } else if (status == 0) {
         wx.showToast({ title: '请选择做答情况～', icon: 'none' })
-      } else if (student_score !== topic_score && status == 1) {
+      } else if (student_score != topic_score && status == 1) {
         wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
       } else if (student_score == topic_score && status == 2) {
-        wx.showToast({ title: '题目答对应输入满分值～', icon: 'none' })
+        wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
       } else {
         this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
       }
@@ -130,7 +132,7 @@ export default {
         success: (res) => {
           if (res.confirm) {
             wx.navigateTo({ 
-              url: '/pages/paperAnaly/analy/main?topic_id=' + this.paper_id
+              url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
             })
           } else if (res.cancel) {
             console.log('用户点击取消')

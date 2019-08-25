@@ -24,7 +24,7 @@
         </div>
         <div class="right" v-if="studentData.student_status === 1">
           <div class="change" @click="showPicker">
-            <img src="/static/svg/icon_change.png" alt="">
+            <img src="../../assets/svg/icon_change.png" alt="">
             切换学员
           </div>
           <mpvue-picker
@@ -40,50 +40,50 @@
         <ul>
           <li @click="jump('1')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon3.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon3.png" />
             </div>
             <p>错题本</p>
           </li>
           <li @click="jump('2')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon1.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon1.png" />
             </div>
             <p>错题登记</p>
           </li>
           <li @click="jump('3')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon2.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon2.png" />
             </div>
             <p>试卷分析</p>
           </li>
           
-          <li>
+          <li @click="jump('4')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon4.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon4.png" />
             </div>
             <p>错题归因</p>
           </li>
-          <li>
+          <li @click="jump('5')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon5.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon5.png" />
             </div>
             <p>每日一题</p>
           </li>
-          <li>
+          <li @click="jump('6')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon6.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon6.png" />
             </div>
             <p>记忆引擎</p>
           </li>
-          <li>
+          <li @click="jump('7')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon7.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon7.png" />
             </div>
             <p>导出记录</p>
           </li>
-          <li>
+          <li @click="jump('8')">
             <div>
-              <img class="home-icon" src="/static/svg/home_icon7.png" />
+              <img class="home-icon" src="../../assets/svg/home_icon7.png" />
             </div>
             <p>勤学中心</p>
           </li>
@@ -94,10 +94,10 @@
         <div class="curve_con">
           <p><span>学科: </span><span v-if="studentData.subject">{{studentData.subject}}</span></p>
           <div class="chart">
-            <div class="chart_con" v-if="studentData.student_status === 1">
+            <!-- <div class="chart_con" v-if="studentData.student_status === 1">
               <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
-            </div>
-            <div class="no_chart" v-else>
+            </div> -->
+            <div class="no_chart">
               暂无数据
             </div>
           </div>
@@ -110,6 +110,9 @@
         <div class="advice_con" v-if="studentData.notice">
           {{studentData.notice}}
         </div>
+        <div class="advice_con" v-else>
+          暂无公告
+        </div>
       </div>
   </div>
 </template>
@@ -120,7 +123,7 @@ import echarts from 'echarts';
 import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
 import store from '@/store';
-import { getToken } from '@/tools/auth';
+import { getToken } from '../../tools/auth';
 
 let chart = null;
 
@@ -197,12 +200,13 @@ export default {
       return getToken()
     }
   },
-  mounted (){
-    // console.log(this.token)
+  onShow (){
+    this.loading = true
+    this.getHome()
   },
   watch: {
     token: {
-      // immediate: true,
+      immediate: true,
       handler (val) {
         if (val) {
           setTimeout(() => {
@@ -216,15 +220,14 @@ export default {
     // 请求首页接口
     async getHome () {
       const data = await getHome({})
+      this.loading = false
       this.studentData = data.student_info
       this.studentId = data.student_info.id
       if(data.student_info.student_status === 1) { this.getStudentList() }
     },
     // 获取学员列表
     async getStudentList () {
-      const data = await getStudentList({
-        token: this.token
-      })
+      const data = await getStudentList({})
       this.pickerValueArray = data;
       this.pickerValueArray.map((item,index) => {
         item.label = item.s_realname
@@ -249,7 +252,7 @@ export default {
     },
     // 首页各种跳转
     jump (type) {
-      if (!this.userInfo) { // 如果用户信息不存在
+      if (!this.studentData.student_status) { // 如果用户信息不存在
         this.userLogin()
       } else {
         switch (type) {
@@ -265,6 +268,9 @@ export default {
           case 'bind':
             wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册
             break
+        }
+        if ( type === '4' || type === '5' || type === '6' || type === '7'|| type === '8') {
+          wx.showToast({ title: '暂未开通', icon: 'none' })
         }
       }
     }

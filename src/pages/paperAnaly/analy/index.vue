@@ -20,9 +20,9 @@
     <!--扇形图-->
     <div class="chart_con">
       <div class="tab">
-        <div class="btn">得分情况</div>
-        <div class="btn"> 失分情况</div>
-        <div class="btn">得分率</div>
+        <div class="btn" @click="seleceTab(1)" :style="'background:' + bgcolor1 + ';color:' + fontColor1">得分情况</div>
+        <div class="btn" @click="seleceTab(2)" :style="'background:' + bgcolor2 + ';color:' + fontColor2"> 失分情况</div>
+        <div class="btn" @click="seleceTab(3)" :style="'background:' + bgcolor3 + ';color:' + fontColor3">得分率</div>
       </div>
       <div class="con">
         <fan-chart></fan-chart>
@@ -71,16 +71,24 @@ export default {
       paperMess: {},
       getInfo: {},
       loseInfo: {},
-      getRate: {}
+      getRate: {},
+      message: {},
+      bgcolor1: '#1296db',
+      fontColor1: '#fff',
+      bgcolor2: '',
+      fontColor2: '',
+      bgcolor3: '',
+      fontColor3: ''
     }
   },
-  onLoad () {
+  onLoad (option) {
     this.loading = true
+    this.message = option
     this.paperAnalysis()
   },
   computed: {
     paper_id () {
-      return this.$root.$mp.query.paper_id
+      return this.message.paper_id
     }
   },
   methods: {
@@ -115,6 +123,35 @@ export default {
         this.macklayer = false;
       } else {
         this.tip = true;
+      }
+    },
+    getMask () {
+      this.bgcolor = '#1296db'
+      this.fontColor = '#fff'
+    },
+    seleceTab (e) {
+      console.log(e)
+      if (e == 1) {
+        this.bgcolor1 = '#1296db'
+        this.fontColor1 = '#fff'
+        this.bgcolor2 = '#fff'
+        this.fontColor2 = '#1296db'
+        this.bgcolor3 = '#fff'
+        this.fontColor3 = '#1296db'
+      } else if (e== 2) {
+        this.bgcolor2 = '#1296db'
+        this.fontColor2 = '#fff'
+        this.bgcolor1 = '#fff'
+        this.fontColor1 = '#1296db'
+        this.bgcolor3 = '#fff'
+        this.fontColor3 = '#1296db'
+      } else {
+        this.bgcolor3 = '#1296db'
+        this.fontColor3 = '#fff'
+        this.bgcolor1 = '#fff'
+        this.fontColor1 = '#1296db'
+        this.bgcolor2 = '#fff'
+        this.fontColor2 = '#1296db'
       }
     }
   }
@@ -202,6 +239,7 @@ export default {
       text-align:center;
       width:100%;
       background:#fff;
+      padding-bottom:0.1rem;
     } 
     .row { 
       display: table-row; 

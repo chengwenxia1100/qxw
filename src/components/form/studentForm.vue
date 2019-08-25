@@ -4,7 +4,7 @@
         <div class="list">
             <div class="tit">学生姓名</div>
             <div class="show" v-if="studentId">{{sName}}</div>
-            <input type="text" placeholder="请输入您孩子的姓名" v-model="sName">
+            <input type="text" placeholder="请输入您孩子的姓名" v-model="sName" v-else>
         </div>
         <div class="list">
             <div class="tit">性别</div>
@@ -38,7 +38,7 @@
         </div>
         <div class="list">
             <div class="tit">班级代码</div>
-            <input type="text" placeholder="请输入班级代码" v-model="classNum" >
+            <input type="text" placeholder="请输入班级代码(选填)" v-model="classNum" >
         </div>
     </div>
   </div>
@@ -46,7 +46,7 @@
 
 <script>
 import mpvuePicker from "mpvue-picker";
-import { updataStudentPage } from '@/api/student'
+import { updataStudentPage, getSchoolList } from '@/api/student'
 
 export default {
     components: {
@@ -90,16 +90,7 @@ export default {
                     value: 12
                 }
             ],
-            pickerValueArrayschool: [
-                {
-                    label: '开化中学',
-                    value: 1
-                },
-                {
-                    label: '华埠中学',
-                    value: 2
-                }
-            ],
+            pickerValueArrayschool: [],
             pickerValueDefault: [3],
             studentListData: {},
             isClick: true,
@@ -108,9 +99,9 @@ export default {
             // 表单信息
             sName: '',
             sex: 0,
-            school: '请输入就读学校',
+            school: '请输入就读学校(必填)',
             grade: '',
-            gradeval: '请输入就读年级',
+            gradeval: '请输入就读年级(必填)',
             classNum: ''
         }
     },
@@ -147,8 +138,11 @@ export default {
            immediate: true
        }
     },
-    mounted () {
-        if (this.studentId) { this.updataStudentPage() }
+    onLoad () {
+        if (this.studentId) { 
+            this.updataStudentPage()  
+        }
+        this.getSchoolList() 
     },
     methods: {
         async updataStudentPage () {
@@ -162,6 +156,11 @@ export default {
             this.grade = data.grade
             this.class = data.class
             this.studentListData = data
+        },
+        // 添加学员接口
+        async getSchoolList () {
+            const data = await getSchoolList({})
+            this.pickerValueArrayschool = data
         },
         // 单选框
         radioChange: e => {

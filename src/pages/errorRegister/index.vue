@@ -1,5 +1,8 @@
 <template>
   <div class="register_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <!-- 筛选框组件 -->
     <two-select
       @subject="subjectFun"
@@ -8,16 +11,17 @@
     <!-- 作业本列表 -->
     <div class="bookList_con">
       <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
-        <img :src="item.url">
+        <img :src="item.url" v-if="item.url">
+        <img src="/static/images/user.png" v-else>
         <div class="middle">
           <p>{{item.name}}</p>
-          <!-- <p>c</p> -->
+          <p>{{item.semester}}</p>
           <p>浙江教育出版社</p>
         </div>
-        <div class="show">
+        <!-- <div class="show">
           <gap-chart></gap-chart> 
           <p>登记进度</p>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 添加作业本按钮 -->
@@ -40,12 +44,16 @@ export default {
   },
   data () {
     return {
+      loading: false,
       subjectVal: '',
       gradeVal: '',
       loading: false,
       listStatus: true, // 有无错题本列表
       errorBookListData: {}
     }
+  },
+  onLoad () {
+    this.loading = true
   },
   watch: {
     subjectVal (val) {
@@ -64,22 +72,21 @@ export default {
       this.gradeVal = val
     },
     async errorBookList () {
-      this.loading = true
       const data = await errorBookList({
         subject_id: this.subjectVal,
         grade: this.gradeVal
       })
-      this.loading = false
       if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
       this.errorBookListData = data
+      this.loading = false
     },
     // 添加作业本
     addBook () {
-      wx.navigateTo({ url: '/pages/errorRegister/addwork/main?book_id=' + book_id })
+      wx.navigateTo({ url: '/pages/errorRegister/addwork/main'})
     },
     // 跳转到错题登记
     chapterList (book_id) {
-      wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id })
+      wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id  + '&grade=' + this.gradeVal+ '&subject_id=' + this.subjectVal })
     }
   }
 }

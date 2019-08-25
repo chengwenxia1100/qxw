@@ -32,3 +32,19 @@ export function getChapterList (data) {
     data
   })
 }
+
+// 章节列表
+export function bookTopicList (data) {
+  return request({
+    url: sign('book/bookTopicList'),
+    data
+  })
+}
+
+// 
+export function bookTopicRegister (data) {
+  return request({
+    url: sign('book/bookTopicRegister'),
+    data
+  })
+}

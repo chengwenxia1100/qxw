@@ -1,7 +1,10 @@
 <template>
   <div class="user_wrongTitle">
-    <div class="tab">
-      <tab-slide @tab="tab"></tab-slide>
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
+    <!-- <div class="tab"> -->
+      <!-- <tab-slide @tab="tab"></tab-slide>
       <div class="tab_container">
         <div>
           <div class="tit_change">
@@ -27,12 +30,48 @@
             </div>
           </div>
         </div>
+      </div> -->
+      <!-- 筛选框组件 -->
+      <div class="tab">
+        <two-select
+          @subject="subjectFun"
+          @grade="gradeFun"
+        ></two-select>
+        <div class="chapter">
+          <div class="select_chapter" @click="selectChapter">章节： {{chapter}}</div>
+          <mpvue-picker
+            ref="mpvuePicker"
+            :mode="mode"
+            :pickerValueDefault="pickerValueDefault"
+            @onConfirm="onConfirm"
+            :pickerValueArray="pickerValueArray"
+          />
+        </div>
+      </div>
+      <div class="tab_container">
+        <div class="title_box">
+          <div class="list" v-for="(item, i) in topicList" :key="i"> 
+            <p>{{i+1}}/{{total}}</p>
+            <div class="tit" v-html="item.topic_content"></div>
+            <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
+            <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
+          </div>
+          
+        </div>
       </div>
       <!-- 分页 -->
-      <page-slide></page-slide>
-    </div>
+      <!-- <page-slide></page-slide> -->
+    <!-- </div> -->
     <!-- 点击试题分析 出现弹窗 -->
-    <error-layer v-if="analyLayer" :analyLayer="analyLayer" @analyLayer="analyLayerFun"></error-layer>
+    <error-layer 
+      v-if="analyLayer" 
+      :analyLayer="analyLayer" 
+      :topic_answer_content = "topic_answer_content"
+      :from = "from"
+      :difficult_level = "difficult_level"
+      :topic_point="topic_point"
+      @analyLayer="analyLayerFun"
+    ></error-layer>
   </div>
 </template>
 
@@ -44,6 +83,7 @@ import sectionSlide from '@/components/paging/sectionSlide'
 import pageSlide from '@/components/paging/pageSlide'
 import errorLayer from '@/components/layer/errorLayer'
 import { mistakeBook } from './wrongtit.api';
+import twoSelect from '@/components/select/twoSelect'
 
 export default {
   components: {
@@ -52,7 +92,8 @@ export default {
     tabSlide,
     sectionSlide,
     gradeSlide,
-    errorLayer
+    errorLayer,
+    twoSelect
   },
   data () {
     return {
@@ -60,21 +101,50 @@ export default {
       gradeVal: 7, // 年级
       sectionVal: 1, // 章节
       // 返回的试题题目
-      title: '<p><span style=";font-family:宋体;font-size:14px">1.<span style="font-family:宋体">从受精卵发育开始，到胎儿从母体内产出为止，所需的时间约为（</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px"><span style="font-family:宋体">）</span></span></p><p><span style=";font-family:宋体;font-size:14px">A.2<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">B.3<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">C.9<span style="font-family:宋体">个多月</span></span><span style=";font-family:宋体;font-size:14px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style=";font-family:宋体;font-size:14px">D.1<span style="font-family:宋体">年左右</span></span></p>',
+      title: '',
       analyLayer: false, // 点击试题分析弹窗
+      subjectVal: '',
+      gradeVal: '',
+      chapter: '请选择章节',
+      pickerValueArray: [],
+      pickerValueDefault: [1],
+      chapterList: {},
+      topicList: {},
+      loading: false,
+      total: '',
+      chapterValue: '',
+      page: 1,
+      topic_answer_content: '',
+      from:'',
+      difficult_level: ''
     }
   },
   onLoad () {
-    this.mistakeBook()
+    this.loading = true
+  },
+  watch: {
+    subjectVal (val) {
+      this.loading = true
+      if (val && this.gradeVal) { this.mistakeBook() }
+    },
+    gradeVal (val) {
+      this.loading = true
+      if (val && this.subjectVal) { this.mistakeBook() }
+    }
   },
   methods: {
     async mistakeBook () {
       const data = await mistakeBook({
         grade: this.gradeVal,
-        subject: 3,
-        page: 1
+        subject: this.gradeVal,
+        chapter: this.chapterValue,
+        page: this.page
       })
-      console.log(data)
+      this.loading = false
+      this.total = data.total
+      this.topicList = data.list.topic
+      // this.chapter = data.list.chapter_name_array[0].label
+      this.pickerValueArray = data.list.chapter_name_array
     },
     // 接收子组件传值
     tab (val) {
@@ -90,10 +160,35 @@ export default {
     analyLayerFun (val) {
       this.analyLayer = val
     },
+    // 接收科目 年级子组件传值
+    subjectFun (val) {
+      this.subjectVal = val
+    },
+    gradeFun (val) {
+      this.gradeVal = val
+    },
     // 点击试题分析
-    analyseBtn () {
+    analyseBtn (i) {
       this.analyLayer = true;
-    }
+      this.topicList.forEach((item,index,arr)=>{
+        if(index === i) {
+          this.topic_answer_content = item.topic_answer[0].topic_answer_content
+          this.from = item.from
+          this.difficult_level = item.difficult_level
+          this.topic_point = item.topic_point
+        }
+      })
+    },
+    // 
+    selectChapter () {
+      this.$refs.mpvuePicker.show()
+    },
+    onConfirm (e) {
+      this.loading = true
+      this.chapter = e.label
+      this.chapterValue = e.value[0]
+      this.mistakeBook()
+    },
     // async getOrderListData () {
     //   const data = await getOrderList({
     //     current: 1,
@@ -154,81 +249,124 @@ export default {
       }
     }
   }
+  .main_box {
+    .navTab {
+      background:#fff;
+    }
+  }
   .tab {
-    width: 100%;
-    .nav {
-      padding: 0 20rpx;
-      height: 80rpx;
-      color: #999;
-      display: flex;
-      .title {
-        flex: 1;
-        text-align: center;
-      }
-      .selected {
-        color: #333;
-        border-bottom:0.02rem #515151 solid;
-      }
-      // .default:first-child {
-      //   border-right: 1px solid #cdcdcd;
-      // }
-      .default{
-        margin: 0.2rem 0 0 0; 
-      }
+    width:100%;
+    position:fixed;
+    top:0;
+    left:0;
+  }
+  .chapter {
+    .select_chapter {
+      background:#ddd;
+      width:100%;
+      padding:0.2rem;
     }
   }
   .tab_container {
-    .tit_change {
-      padding:0.1rem 0.2rem;
-      clear:both;
-      overflow:hidden;
-      div {
-        .change {
-          background:#f2f2f2;
-          float:left;
-          margin-right:0.2rem;
-          padding:0.1rem 0.4rem;
-          display: flex;
-          align-items: center;
-          background:#ddd;
-          img {
-            width: 0.32rem;
-            height: 0.32rem;
-            margin-top: 0.1rem;
-            padding-right:0.1rem;
-          }
-        }
-      }
-      div {
-        .select {
-          background:#f2f2f2;
-          float:left;
-          width:4rem;
-          display: flex;
-          align-items: center;
-          padding:0 0.4rem;
-          img {
-            width: 0.64rem;
-            height: 0.64rem;
-            padding-right:0.1rem;
-          }
-        }
-      }
-    }
+    background:#fff;
+    padding:0.2rem;
+    margin-top:1.6rem;
+    margin-bottom:0.2rem;
     .title_box {
-      padding:0.2rem;
-      .title_analyse {
-        font-size:0.28rem;
-        width:1.8rem;
-        height:0.6rem;
-        line-height:0.6rem;
-        background:#515151;
-        color:#fff;
-        margin:0.4rem;
-        border-radius: 0.08rem;
-        text-align:center;
+      .list {
+        p {
+          text-align:center;
+          padding:0.2rem 0;
+        }
+        .title_analyse {
+          font-size:0.28rem;
+          width:1.8rem;
+          height:0.6rem;
+          line-height:0.6rem;
+          background:#515151;
+          color:#fff;
+          margin:0.4rem;
+          border-radius: 0.08rem;
+          text-align:center;
+        }
       }
     }
   }
+  // .tab {
+  //   width: 100%;
+  //   .nav {
+  //     padding: 0 20rpx;
+  //     height: 80rpx;
+  //     color: #999;
+  //     display: flex;
+  //     .title {
+  //       flex: 1;
+  //       text-align: center;
+  //     }
+  //     .selected {
+  //       color: #333;
+  //       border-bottom:0.02rem #515151 solid;
+  //     }
+  //     // .default:first-child {
+  //     //   border-right: 1px solid #cdcdcd;
+  //     // }
+  //     .default{
+  //       margin: 0.2rem 0 0 0; 
+  //     }
+  //   }
+  // }
+  // .tab_container {
+  //   .tit_change {
+  //     padding:0.1rem 0.2rem;
+  //     clear:both;
+  //     overflow:hidden;
+  //     div {
+  //       .change {
+  //         background:#f2f2f2;
+  //         float:left;
+  //         margin-right:0.2rem;
+  //         padding:0.1rem 0.4rem;
+  //         display: flex;
+  //         align-items: center;
+  //         background:#ddd;
+  //         img {
+  //           width: 0.32rem;
+  //           height: 0.32rem;
+  //           margin-top: 0.1rem;
+  //           padding-right:0.1rem;
+  //         }
+  //       }
+  //     }
+  //     div {
+  //       .select {
+  //         background:#f2f2f2;
+  //         float:left;
+  //         width:4rem;
+  //         display: flex;
+  //         align-items: center;
+  //         padding:0 0.4rem;
+  //         img {
+  //           width: 0.64rem;
+  //           height: 0.64rem;
+  //           padding-right:0.1rem;
+  //         }
+  //       }
+  //     }
+  //   }
+  //   .title_box {
+  //     padding:0.2rem;
+  //     .title_analyse {
+  //       font-size:0.28rem;
+  //       width:1.8rem;
+  //       height:0.6rem;
+  //       line-height:0.6rem;
+  //       background:#515151;
+  //       color:#fff;
+  //       margin:0.4rem;
+  //       border-radius: 0.08rem;
+  //       text-align:center;
+  //     }
+  //   }
+  // }
 }
 </style>

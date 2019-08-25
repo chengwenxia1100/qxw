@@ -2,7 +2,7 @@
   <div class="user_container">
     <div class="user_mess">
       <img :src="userInfos.avatarUrl"  v-if="userInfos.avatarUrl">
-      <img src="/static/images/user.png" v-else />
+      <img src="../../assets/pic.png"  v-else>
       <div class="mess" @click="jump('login')">
         <p><span>微信昵称:</span>
           <span v-if="userInfos.nickName">{{userInfos.nickName}}</span>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="change_box" v-if="studentdata" @click="jump('toChange')">
-      <img src="/static/svg/user_icon1.png" style="width:1.6rem;height:1.6rem;" />
+      <img src="../../assets/svg/user_icon1.png" style="width:1.6rem;height:1.6rem;" />
       <div class="right">
         <p><span>当前学员： </span><span>{{studentdata.s_realname}}</span></p>
         <p>(点击可切换，添加学员，更新学员信息)</p>
@@ -28,19 +28,19 @@
     <div class="list">
       <ul>
         <li @click="toVip">
-          <img src="/static/svg/user_icon2.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon2.png" style="width:1.6rem;height:1.6rem;" />
           <p>会员</p>
         </li>
         <li @click="toInstruction">
-          <img src="/static/svg/user_icon3.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon3.png" style="width:1.6rem;height:1.6rem;" />
           <p>使用说明</p>
         </li>
         <li>
-          <img src="/static/svg/user_icon4.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon4.png" style="width:1.6rem;height:1.6rem;" />
           <button open-type='contact' class='' session-from='weapp'>在线客服</button> 
         </li>
         <li @click="toAbout">
-          <img src="/static/svg/user_icon5.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon5.png" style="width:1.6rem;height:1.6rem;" />
           <p>关于勤学</p>
         </li>
       </ul>
@@ -61,7 +61,7 @@ export default {
       userInfos: {}
     }
   },
-  onLoad () {
+  onShow () {
     this.getUser()
   },
   computed: {
@@ -71,9 +71,10 @@ export default {
   },
   watch: {
     token: {
-      // immediate: true,
+      immediate: true,
       handler (val) {
         if (val) {
+          console.log(val)
           wx.getUserInfo({
             success: (res) => {
               this.userInfos = JSON.parse(res.rawData)
@@ -91,10 +92,17 @@ export default {
         const data = await getHome({})
         this.userdata = data
         this.studentdata = data.student_info
+        if (data.student_info.id) {
+          wx.getUserInfo({
+            success: (res) => {
+              this.userInfos = JSON.parse(res.rawData)
+            }
+          })
+        }
     },
     // 切换学员
     jump(type) {
-      if (!this.userInfo) { // 如果用户信息不存在
+      if (!this.studentdata.id) { // 如果用户信息不存在
         this.userLogin()
       } else {
         switch (type) {
@@ -109,8 +117,7 @@ export default {
     },
     // 会员
     toVip () {
-      const url = './student/switchStudent/main';
-      wx.navigateTo({ url })
+      wx.showToast({ title: '暂未开通', icon: 'none' })
     },
     // 使用说明toAbout
     toInstruction () {
@@ -119,8 +126,7 @@ export default {
     },
     // 关于勤学
     toAbout () {
-      const url = './about/main';
-      wx.navigateTo({ url })
+      wx.showToast({ title: '暂未开通', icon: 'none' })
     },
   }
 }

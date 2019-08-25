@@ -18,8 +18,8 @@
           <p>{{item.category}}</p>
         </div>
         <div class="status">
-          <p v-if="item.status === 0">未登记</p>
-          <p v-if="item.status === 1">继续登记</p>
+          <p v-if="item.status === 0">未登记 &nbsp; &nbsp;    </p>
+          <p v-if="item.status === 1">继续登记&nbsp; &nbsp;   </p>
           <p class="mark" v-if="item.status === 2">{{item.student_score}}</p>
           <img src="../../assets/svg/icon_right.png">
         </div>
@@ -147,9 +147,10 @@ export default {
       align-items: center;
       position:relative;
       p {
-        font-size:0.42rem;
+        font-size:0.38rem;
         color:#707070;
         font-weight:bold;
+        padding-right:0.2rem;
       }
       .mark {
         font-size:0.64rem;
@@ -159,7 +160,8 @@ export default {
           width:0.48rem;
           height:0.48rem;
           position:absolute;
-          right:0;
+          top: 43%;
+          right: 0;
       }
     }
   }
