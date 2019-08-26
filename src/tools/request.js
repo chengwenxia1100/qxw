@@ -26,11 +26,12 @@ AxiosInstance.interceptors.response.use((res) => {
   if (data.status === 1) {
     return data.data
   }
-  wx.showModal({
-    title: '友情提示',
-    content: data.msg,
-    showCancel: false
-  })
+  wx.showToast({ title: data.msg, icon: 'none' })
+  // wx.showModal({
+  //   title: '友情提示',
+  //   content: data.msg,
+  //   showCancel: false
+  // })
   return Promise.reject(data)
 })
 

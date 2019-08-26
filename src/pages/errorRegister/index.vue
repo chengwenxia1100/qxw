@@ -29,7 +29,7 @@
     </div>
     <!-- 添加作业本按钮 -->
     <div class="btn" @click="addBook">
-      <img src="/static/svg/icon_add.png" alt="">
+      <img src="../../assets/svg/icon_add.png" alt="">
       <div class="btn_con">添加作业本</div>
     </div>
   </div>
@@ -129,6 +129,7 @@ export default {
           color:#666;
         }
         img {
+          margin-top:0.6rem;
           width:0.36rem;
           height:0.36rem;
         }

@@ -4,13 +4,13 @@
       <ul>
         <li @click="subjectTab"> 
           {{subject}}
-          <img src="/static/svg/icon_down.png" v-if="downStatus && gradeListNo">
-          <img src="/static/svg/icon_up.png" v-if="!downStatus && gradeListNo">
+          <img src="../../assets/svg/icon_down.png" v-if="downStatus">
+          <img src="../../assets/svg/icon_up.png" v-if="!downStatus">
         </li>
         <li @click="gradeTab">
           {{grade}}
-          <img src="/static/svg/icon_down.png" v-if="upStatus">
-          <img src="/static/svg/icon_up.png" v-else>
+          <img src="../../assets/svg/icon_down.png" v-if="upStatus">
+          <img src="../../assets/svg/icon_up.png" v-else>
         </li>
       </ul>
     </div>

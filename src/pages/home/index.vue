@@ -6,15 +6,15 @@
       <div class="login_mess">
         <div class="left">
           <div class="slide1">
-            <div><span>学生姓名：</span><span v-if="studentData.s_realname">{{studentData.s_realname}}</span></div>
+            <div><span>学生姓名：</span><span>{{studentData.s_realname}}</span></div>
             <div><span>性别：</span><span v-if="studentData.sex === 1">女</span><span v-if="studentData.sex === 0">男</span></div>
           </div>
           <div class="slide2">
-            <span>就读学校: </span><span v-if="studentData.school">{{studentData.school}}</span>
+            <span>就读学校: </span><span>{{studentData.school}}</span>
           </div>
           <div class="slide3">
-            <div><span>就读年级：</span><span v-if="studentData.grade">{{studentData.grade}}</span></div>
-            <div><span>班级：</span><span v-if="studentData.class_id">{{studentData.class_id}}</span></div>
+            <div><span>就读年级：</span><span>{{studentData.grade}}</span></div>
+            <div><span>班级：</span><span>{{studentData.class_id}}</span></div>
           </div>
         </div>
         <div class="right" v-if="studentData.student_status === 0">
@@ -132,7 +132,8 @@ export default {
       pickerValueArray: [],//切换学员选择框
       studentData: {},
       loading: false, // 进入页面的弹窗
-      studentId: ''
+      studentId: '',
+      dataMess: false
     }
   },
   computed: {
@@ -172,7 +173,7 @@ export default {
       this.pickerValueArray.map((item,index) => {
         item.label = item.s_realname
         item.value = item.student_id
-      })
+      })   
     },
     // 切换学员
     showPicker () {
@@ -192,18 +193,21 @@ export default {
     },
     // 首页各种跳转
     jump (type) {
-      if (!this.studentData.student_status) { // 如果用户信息不存在
+      if (!this.token) { // 如果用户信息不存在
         this.userLogin()
       } else {
         switch (type) {
           case '1':
-            wx.navigateTo({ url: '../wrongTitle/main' }) // 跳转到错题本页面
+            if (this.studentData.student_status == 0) { wx.showToast({ title: '请先绑定学员', icon: 'none' }) }
+            else { wx.navigateTo({ url: '../wrongTitle/main' }) } // 跳转到错题本页面
             break
           case '2':
-            wx.navigateTo({ url: '../errorRegister/main?student_id=' + this.studentId }) // 跳转到错题登记页面
+            if (this.studentData.student_status == 0) { wx.showToast({ title: '请先绑定学员', icon: 'none' }) }
+            else { wx.navigateTo({ url: '../errorRegister/main?student_id=' + this.studentId }) } // 跳转到错题登记页面
             break
           case '3':
-            wx.navigateTo({ url: '../paperAnaly/main' }) // 跳转到错题分析页面
+            if (this.studentData.student_status == 0) { wx.showToast({ title: '请先绑定学员', icon: 'none' }) }
+            else { wx.navigateTo({ url: '../paperAnaly/main' }) } // 跳转到错题分析页面
             break
           case 'bind':
             wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册

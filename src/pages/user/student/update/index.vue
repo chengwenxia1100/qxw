@@ -34,15 +34,19 @@ export default {
       studentSchoolVal: '请输入就读学校',
       studentGradeVal: '请输入就读年级',
       studentClassVal: '',
-      student_no: 0
+      student_no: 0,
+      mess: {}
     }
+  },
+  onLoad(option) {
+    this.mess = option
   },
   computed: {
     student_id () {
-      return this.$mp.query.student_id
+      return this.mess.student_id
     },
     bind_id () {
-      return this.$mp.query.bind_id
+      return this.mess.bind_id
     }
   },
   methods: {

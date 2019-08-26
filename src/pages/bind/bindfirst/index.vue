@@ -7,7 +7,7 @@
       </div>
       <div class="list">
         <div class="tit">性别</div>
-        <radio-group class="radio-group" @change="radioChange">
+        <radio-group class="radio-group" v-model="sex">
           <label v-for="item in items" :key="item.name">
             <radio color="#EA5A49" :value="item.name" :checked="item.checked" />
             {{item.value}}

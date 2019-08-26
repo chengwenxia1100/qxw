@@ -6,8 +6,8 @@
     </div>
     <div class="list">
       <div class="tit">关系</div>
-      <radio-group class="radio-group" @change="radioChange_relation">
-        <label v-for="item in lists" :key="item.name">
+      <radio-group class="radio-group" v-model="relative">
+        <label v-for="item in relativelists" :key="item.name">
           <radio color="#EA5A49" :value="item.name" :checked="item.checked" />
           {{item.value}}
         </label>
@@ -34,10 +34,10 @@ import { gainCode } from '@/pages/bind/bind.api';
 export default {
     data () {
         return {
-            lists: [
-                {name: 'father', value: '父亲 ', checked: 'true'},
-                {name: 'mother', value: '母亲'},
-                {name: 'other', value: '其他'},
+            relativelists: [
+                {name: '1', value: '父亲 ', checked: 'true'},
+                {name: '2', value: '母亲'},
+                {name: '0', value: '其他'},
             ],
             isClick: true,
             bgcolor: '#f7536a',
@@ -110,7 +110,7 @@ export default {
             },1000)
         },
         radioChange_relation (e) {
-            this.relation = e.mp.detail.value
+            // this.relation = e.mp.detail.value
         },
     }
 }

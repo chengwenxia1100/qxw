@@ -50,13 +50,13 @@
       </div>
       <div class="tab_container">
         <div class="title_box">
-          <div class="list" v-for="(item, i) in topicList" :key="i" v-if="total"> 
+          <div class="list" v-for="(item, i) in topicList" :key="i" v-show='total'> 
             <p>{{i+1}}/{{total}}</p>
             <div class="tit" v-html="item.topic_content"></div>
             <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
             <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
           </div>
-          <div class="no_books"v-if="total == ''">该学员暂无错题本</div>
+          <div class="no_books" v-if="total == ''">该学员暂无错题本</div>
         </div>
       </div>
       <!-- 分页 -->

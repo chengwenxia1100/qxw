@@ -1,18 +1,18 @@
 <template>
   <div class="user_container">
     <div class="user_mess">
-      <img :src="userInfos.avatarUrl"  v-if="userInfos.avatarUrl">
-      <img src="../../assets/pic.png"  v-else>
-      <div class="mess" @click="jump('login')">
-        <p><span>微信昵称:</span>
+      <img :src="userInfos.avatarUrl"  v-if="userInfos.avatarUrl" @click="jump('login')">
+      <img src="../../assets/pic.png"  v-else >
+      <div class="mess">
+        <p @click="jump('login')"><span>微信昵称:</span>
           <span v-if="userInfos.nickName">{{userInfos.nickName}}</span>
           <span v-else>请先授权</span>
         </p>
-        <p><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span>
+        <p @click="jump('bind')"><span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:</span>
           <span v-if="userdata.parent_realename">{{userdata.parent_realename}}</span>
-          <span v-else>请绑定家长姓名</span>
+          <span v-else >请绑定家长姓名</span>
         </p>
-        <p><span>手机号码:</span>   
+        <p @click="jump('bind')"><span>手机号码:</span>   
           <span v-if="userdata.parent_phone">{{userdata.parent_phone}}</span>
            <span v-else>请绑定家长姓名</span>
         </p>
@@ -103,7 +103,7 @@ export default {
     },
     // 切换学员
     jump(type) {
-      if (!this.studentdata.id) { // 如果用户信息不存在
+      if (!this.token) { // 如果用户信息不存在
         this.userLogin()
       } else {
         switch (type) {
@@ -112,6 +112,9 @@ export default {
             break
           case 'toChange':
             wx.navigateTo({ url: './student/switchStudent/main' }) // 跳转到学员列表
+            break
+          case 'bind':
+            wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册
             break
         }
       }
@@ -148,6 +151,7 @@ page {
       width:1.6rem;
       height:1.6rem;
       border-radius: 50%;
+      margin-right:0.1rem;
     }
     div {
       flex:1;

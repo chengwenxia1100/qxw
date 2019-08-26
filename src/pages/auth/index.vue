@@ -65,11 +65,11 @@ export default {
         } catch (error) {
           store.commit('user/SET_AUTHORIZE_USERINFO', false)
           wx.showToast({ title: '授权失败', icon: 'none' })
-          setTimeout(() => {
-            wx.navigateBack({
-              delta: 1
-            })
-          }, 2000);
+          // setTimeout(() => {
+          //   wx.navigateBack({
+          //     delta: 1
+          //   })
+          // }, 2000);
         }
       } else {
         wx.showModal({
