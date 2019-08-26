@@ -63,42 +63,43 @@ export default {
   },
   onShow () {
     this.getUser()
+    setTimeout(() => {
+      if (this.token) {
+        wx.getUserInfo({
+          success: (res) => {
+            this.userInfos = JSON.parse(res.rawData)
+          }
+        })
+      }
+    }, 500);
   },
   computed: {
     token () {
-      return getToken()
+      return store.state.user.token 
     }
   },
-  watch: {
-    token: {
-      immediate: true,
-      handler (val) {
-        if (val) {
-          console.log(val)
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfos = JSON.parse(res.rawData)
-              setTimeout(() => {
-                this.getUser()
-              }, 1000)
-            }
-          })
-        }
-      }
-    }
-  },
+  // watch: {
+  //   token: {
+  //     immediate: true,
+  //     handler (val) {
+  //       if (val) {
+  //         wx.getUserInfo({
+  //           success: (res) => {
+  //             this.userInfos = JSON.parse(res.rawData)
+  //             setTimeout(() => {
+  //               this.getUser()
+  //             }, 1000)
+  //           }
+  //         })
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
     async getUser () {
         const data = await getHome({})
         this.userdata = data
         this.studentdata = data.student_info
-        if (data.student_info.id) {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfos = JSON.parse(res.rawData)
-            }
-          })
-        }
     },
     // 切换学员
     jump(type) {

@@ -49,6 +49,7 @@ export default {
       try {
         const body = await login(code, system, userInfo)
         commit('SET_TOKEN', body.token)
+        commit('SET_AUTHORIZE_USERINFO', true)
         commit('SET_USER_INFO', body)
       } catch (err) {
         return Promise.reject(err)

@@ -12,7 +12,6 @@
     <div class="bookList_con">
       <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
         <img :src="item.url" v-if="item.url">
-        <img src="/static/images/user.png" v-else>
         <div class="middle">
           <p>{{item.name}}</p>
           <p>{{item.semester}}</p>
@@ -22,6 +21,10 @@
           <gap-chart></gap-chart> 
           <p>登记进度</p>
         </div> -->
+        <div class="show">
+          <img src="../../assets/svg/icon_right.png" class="right">
+        </div>
+       
       </div>
     </div>
     <!-- 添加作业本按钮 -->
@@ -34,13 +37,13 @@
 
 <script>
 import twoSelect from '@/components/select/twoSelect'
-import gapChart from '@/components/echart/gapChart'
+// import gapChart from '@/components/echart/gapChart'
 import { errorBookList } from '@/api/errorRegister'
 
 export default {
   components: {
     twoSelect,
-    gapChart
+    // gapChart
   },
   data () {
     return {
@@ -57,9 +60,11 @@ export default {
   },
   watch: {
     subjectVal (val) {
+      this.loading = true
       if (val && this.gradeVal) { this.errorBookList() }
     },
     gradeVal (val) {
+      this.loading = true
       if (val && this.subjectVal) { this.errorBookList() }
     }
   },
@@ -119,8 +124,13 @@ export default {
       .show {
         width:1.5rem;
         padding:0.1rem 0;
+        text-align:right;
         p {
           color:#666;
+        }
+        img {
+          width:0.36rem;
+          height:0.36rem;
         }
       }
     }

@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import fanChart from '../echart/fanChart'
+// import fanChart from '../echart/fanChart'
 
 export default {
   components: {
-    fanChart
+    // fanChart
   },
   props: {
     analyLayer: {

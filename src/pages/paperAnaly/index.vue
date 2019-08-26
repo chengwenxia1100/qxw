@@ -28,7 +28,7 @@
     <div v-else class="no_paper">暂无试卷</div>
     <!--  出现弹窗 -->
     <mack-layer 
-      v-if="macklayerStatus" 
+      v-if="macklayerStatus"
       :img="paperImg"
       :name="paperName"
       :mask="paperMask"
@@ -36,6 +36,7 @@
       :paper_id="paper_id"
       :macklayerStatus="macklayerStatus" 
       @macklayerStatus="macklayerStatusFun"
+      @loadingFun="loadingFun"
     ></mack-layer>
   </div>
 </template>
@@ -77,6 +78,9 @@ export default {
     // 接收弹窗的子组件传值
     macklayerStatusFun (val) {
       this.macklayerStatus = val
+    },
+    loadingFun (val) {
+      this.loading = val
     },
     subjectFun (val) {
       this.subjectVal = val

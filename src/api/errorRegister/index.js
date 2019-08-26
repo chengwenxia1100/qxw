@@ -41,7 +41,7 @@ export function bookTopicList (data) {
   })
 }
 
-// 
+//
 export function bookTopicRegister (data) {
   return request({
     url: sign('book/bookTopicRegister'),

@@ -25,7 +25,7 @@
         <div class="btn" @click="seleceTab(3)" :style="'background:' + bgcolor3 + ';color:' + fontColor3">得分率</div>
       </div>
       <div class="con">
-        <fan-chart></fan-chart>
+        <!-- <fan-chart></fan-chart> -->
       </div>
     </div>
     <!--学生错题列表-->
@@ -53,12 +53,12 @@
 </template>
 
 <script>
-import fanChart from '@/components/echart/fanChart'
+// import fanChart from '@/components/echart/fanChart'
 import { paperAnalysis } from '@/api/analy';
 
 export default {
   components: {
-    fanChart
+    // fanChart
   },
   data () {
     return {

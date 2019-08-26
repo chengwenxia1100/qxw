@@ -2,7 +2,7 @@
   <div>
     <div class="macklayer">
       <div class="layer">
-        <div class="tit">试卷登记<img src="@/assets/svg/close.png" @click="close"></div>
+        <div class="tit">试卷登记<img src="../../assets/svg/close.png" @click="close"></div>
         <div class="con">
           <div class="list">
             <img :src="img">
@@ -16,14 +16,13 @@
             <span>试卷分值</span>
             <input type="text" placeholder="请输入考试成绩" v-model="studentMark">
           </div>
-          <p class="red" v-if="tip">请输入考试成绩</p>
           <div class="btn_con">
             <div class="btn" @click="confirm">
               确定
             </div>
           </div>
         </div>
-        <fan-chart></fan-chart>
+        <!-- <fan-chart></fan-chart> -->
       </div>
     </div>
   </div>
@@ -36,7 +35,9 @@ export default {
   data () {
     return {
       mark: '',
-      student_id: ''
+      studentMark: '',
+      student_id: '',
+      loading: false
     }
   },
   props: {
@@ -78,14 +79,21 @@ export default {
     },
     close () {
       this.macklayerStatus = false;
-      // this.$emit('macklayerStatus', this.macklayerStatus)
+      this.$emit('macklayerStatus', this.macklayerStatus)
     },
     confirm () {
-      if (this.mark) {
-        this.macklayerStatus = false;
-        this.sureMark()
+      console.log(this.studentMark);
+      if (this.studentMark) {
+        if (this.studentMark > this.mask){
+          wx.showToast({ title: '输入分数不能高于总分', icon: 'none' })
+        } else {
+          this.macklayerStatus = false;
+          this.loading = true
+          this.$emit('loadingFun', this.loading)
+          this.sureMark()
+        }
       } else {
-        this.tip = true;
+        wx.showToast({ title: '请输入考试成绩', icon: 'none' })
       }
     }
   }

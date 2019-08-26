@@ -26,9 +26,8 @@ AxiosInstance.interceptors.response.use((res) => {
   if (data.status === 1) {
     return data.data
   }
-
   wx.showModal({
-    title: '错误提示',
+    title: '友情提示',
     content: data.msg,
     showCancel: false
   })

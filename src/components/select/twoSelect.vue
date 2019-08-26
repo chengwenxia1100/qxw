@@ -4,8 +4,8 @@
       <ul>
         <li @click="subjectTab"> 
           {{subject}}
-          <img src="/static/svg/icon_down.png" v-if="downStatus">
-          <img src="/static/svg/icon_up.png" v-else>
+          <img src="/static/svg/icon_down.png" v-if="downStatus && gradeListNo">
+          <img src="/static/svg/icon_up.png" v-if="!downStatus && gradeListNo">
         </li>
         <li @click="gradeTab">
           {{grade}}
@@ -41,6 +41,8 @@ export default {
       upStatus: true,
       gradeList: {},
       subjectList: {},
+      gradeListNo: false,
+      subjectListNo: false,
       grade: '',
       subject:'',
       subjectValue: 0,
@@ -63,16 +65,30 @@ export default {
     // 获取年级
     async getStudentGrade () {
       const data = await getStudentGrade({})
-      this.gradeList = data
-      this.grade = data[0].label
-      this.gradeValue = data[0].value
+      if (data.length > 0) {
+        this.gradeListNo = true
+        this.gradeList = data
+        this.grade = data[0].label
+        this.gradeValue = data[0].value
+      } else {
+        this.grade = '暂无年级'
+        this.gradeValue = 0
+      }
+      
     },
     // 获取科目
     async getPaperSubject () {
       const data = await getPaperSubject({})
-      this.subjectList = data
-      this.subject = data[0].label
-      this.subjectValue = data[0].value
+      if (data.length > 0) {
+        this.subjectListNo = true
+        this.subjectList = data
+        this.subject = data[0].label
+        this.subjectValue = data[0].value
+      } else {
+        this.subject = '暂无科目'
+        this.subjectValue = 0
+      }
+      
     },
     subjectTab () {
       this.downStatus = !this.downStatus;

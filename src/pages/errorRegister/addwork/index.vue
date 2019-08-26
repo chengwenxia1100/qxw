@@ -79,12 +79,22 @@ export default {
       this.gradeVal = val
     },
     selectWork (book_id, i) {
+      this.loading = false
       this.worksData.forEach((item,index,arr)=>{
         if (index === i) {
-          item.status = 1
+          addBook({
+            data: { book_id: book_id }
+          }).then(res => {
+            this.loading = false
+             item.status = 1
+          }).catch(err => {
+            if (err.code === 1701) {
+              this.loading = false
+            }
+          })
         }
 			})
-      this.addBook(book_id)
+      // this.addBook(book_id)
     }
   }
 }

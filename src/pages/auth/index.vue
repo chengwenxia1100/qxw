@@ -46,7 +46,7 @@ export default {
         const { code } = await wxLogin()
         const { system } = await wxGetSystemInfo()
         try {
-          store.commit('user/SET_AUTHORIZE_USERINFO', true)
+          // store.commit('user/SET_AUTHORIZE_USERINFO', true)
           await this.$store.dispatch('user/LOGIN', { code, system, userInfo })
           wx.showToast({
             icon: 'success',
@@ -65,9 +65,11 @@ export default {
         } catch (error) {
           store.commit('user/SET_AUTHORIZE_USERINFO', false)
           wx.showToast({ title: '授权失败', icon: 'none' })
-          wx.navigateBack({
-            delta: 1
-          })
+          setTimeout(() => {
+            wx.navigateBack({
+              delta: 1
+            })
+          }, 2000);
         }
       } else {
         wx.showModal({

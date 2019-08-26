@@ -37,7 +37,7 @@
           @subject="subjectFun"
           @grade="gradeFun"
         ></two-select>
-        <div class="chapter">
+        <div class="chapter" v-if="total">
           <div class="select_chapter" @click="selectChapter">章节： {{chapter}}</div>
           <mpvue-picker
             ref="mpvuePicker"
@@ -50,13 +50,13 @@
       </div>
       <div class="tab_container">
         <div class="title_box">
-          <div class="list" v-for="(item, i) in topicList" :key="i"> 
+          <div class="list" v-for="(item, i) in topicList" :key="i" v-if="total"> 
             <p>{{i+1}}/{{total}}</p>
             <div class="tit" v-html="item.topic_content"></div>
             <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
             <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
           </div>
-          
+          <div class="no_books"v-if="total == ''">该学员暂无错题本</div>
         </div>
       </div>
       <!-- 分页 -->
@@ -289,6 +289,12 @@ export default {
           border-radius: 0.08rem;
           text-align:center;
         }
+      }
+      .no_books {
+        margin:0 auto;
+        font-size:0.32rem;
+        text-align:center;
+        padding:0.6rem;
       }
     }
   }

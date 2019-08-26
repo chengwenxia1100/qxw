@@ -119,76 +119,16 @@
 
 <script>
 import { getchange, getStudentList, getHome } from '@/api/student';
-import echarts from 'echarts';
-import mpvueEcharts from 'mpvue-echarts';
 import mpvuePicker from "mpvue-picker";
 import store from '@/store';
 import { getToken } from '../../tools/auth';
 
-let chart = null;
-
-function initChart(canvas, width, height) {
-  chart = echarts.init(canvas, null, {
-    width: width,
-    height: height
-  });
-  canvas.setChart(chart);
-  var option = {
-    backgroundColor: '#fff',
-    color: ['#37A2DA', '#f0f', '#ddd'],
-    legend: {
-      data: ['数学', '英语', '科学']
-    },
-    grid: {
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: ['数学', '英语', '科学', '历史', '语文']
-    },
-    yAxis: {
-      x: 'center',
-      type: 'value',
-      splitLine: {
-        lineStyle: {
-          type: 'dashed'
-        }
-      }
-    },
-    series: [
-      {
-        name: 'A',
-        type: 'line',
-        smooth: true,
-        data: [57, 98, 80]
-      },
-      {
-        name: 'B',
-        type: 'line',
-        smooth: true,
-        data: [18, 95, 100]
-      },
-      {
-        name: 'C',
-        type: 'line',
-        smooth: true,
-        data: [90, 98, 100]
-      },
-    ]
-  }; // ECharts 配置项
-  chart.setOption(option);
-  return chart; // 返回 chart 后可以自动绑定触摸操作
-}
-
 export default {
   components: {
-    mpvueEcharts,
     mpvuePicker
   },
   data () {
     return {
-      echarts, // 折线图
-      onInit: initChart, //折线图
       pickerValueArray: [],//切换学员选择框
       studentData: {},
       loading: false, // 进入页面的弹窗
@@ -197,25 +137,25 @@ export default {
   },
   computed: {
     token () {
-      return getToken()
+      return store.state.user.token 
     }
   },
   onShow (){
     this.loading = true
     this.getHome()
   },
-  watch: {
-    token: {
-      immediate: true,
-      handler (val) {
-        if (val) {
-          setTimeout(() => {
-            this.getHome()
-          }, 1000)
-        }
-      }
-    }
-  },
+  // watch: {
+  //   token: {
+  //     immediate: true,
+  //     handler (val) {
+  //       if (val) {
+  //         setTimeout(() => {
+  //           this.getHome()
+  //         }, 1000)
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
     // 请求首页接口
     async getHome () {
@@ -223,7 +163,7 @@ export default {
       this.loading = false
       this.studentData = data.student_info
       this.studentId = data.student_info.id
-      if(data.student_info.student_status === 1) { this.getStudentList() }
+      if (data.student_info.student_status === 1) { this.getStudentList() }
     },
     // 获取学员列表
     async getStudentList () {
@@ -239,8 +179,8 @@ export default {
       this.$refs.mpvuePicker.show()
     },
     onConfirm (e) {
-        console.log(e.value[0])
         // 切换完成请求切换接口
+        this.loading = true
         this.getchangeData(e.value[0])
     },
     // 切换完成请求切换接口 
