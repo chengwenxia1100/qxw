@@ -4,10 +4,10 @@
       加载中...
     </page-loading>
     <!-- 筛选框组件 -->
-    <two-select
+    <two-select-books
       @subject="subjectFun"
       @grade="gradeFun"
-    ></two-select>
+    ></two-select-books>
     <!---->
     <div class="bookList_con">
       <div class="list" v-for="(item, i) in worksData" :key="i">
@@ -27,12 +27,12 @@
 </template>
 
 <script>
-import twoSelect from '@/components/select/twoSelect'
+import twoSelectBooks from '@/components/select/twoSelectBooks'
 import { addBookList, addBook } from '@/api/errorRegister'
 
 export default {
   components: {
-    twoSelect
+    twoSelectBooks
   },
   data () {
     return {
@@ -48,6 +48,7 @@ export default {
   watch: {
     subjectVal (val) {
       this.loading = true
+      console.log(this.gradeVal)
       if (val && this.gradeVal) { this.addBookList() }
     },
     gradeVal (val) {

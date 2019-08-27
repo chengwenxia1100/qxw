@@ -4,10 +4,10 @@
       加载中...
     </page-loading>
     <!-- 筛选框组件 -->
-    <two-select
+    <two-select-books
       @subject="subjectFun"
       @grade="gradeFun"
-    ></two-select>
+    ></two-select-books>
     <!-- 作业本列表 -->
     <div class="bookList_con">
       <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
@@ -36,13 +36,13 @@
 </template>
 
 <script>
-import twoSelect from '@/components/select/twoSelect'
+import twoSelectBooks from '@/components/select/twoSelectBooks'
 // import gapChart from '@/components/echart/gapChart'
 import { errorBookList } from '@/api/errorRegister'
 
 export default {
   components: {
-    twoSelect,
+    twoSelectBooks,
     // gapChart
   },
   data () {
@@ -138,7 +138,7 @@ export default {
   }
   .btn {
     background:#fff;
-    margin-top:0.2rem;
+    margin-top:0.6rem;
     height:0.8rem;
     padding:0.1rem 0.3rem;
     display: flex;

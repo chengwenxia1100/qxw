@@ -9,10 +9,18 @@ export function getStudentGrade (data) {
   })
 }
 
-// 获取科目信息
+// 获取试卷科目信息
 export function getPaperSubject (data) {
   return request({
     url: sign('paper/getPaperSubject'),
+    data
+  })
+}
+
+// 获取所有科目信息
+export function getAllSubject (data) {
+  return request({
+    url: sign('home/getSubjectType'),
     data
   })
 }
