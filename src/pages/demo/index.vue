@@ -66,7 +66,7 @@
 
 <script>
 import bindParents from '@/components/form/bindParents'
-import { gainCode, bindMessSubmit, getSchoolList } from '../bind.api';
+import { gainCode, bindMessSubmit, getSchoolList } from '../bind/bind.api';
 import mpvuePicker from "mpvue-picker";
 
 export default {

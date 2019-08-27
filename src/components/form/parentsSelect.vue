@@ -3,7 +3,7 @@
     <div class="parents_mess">
         <div class="list">
             <div class="tit">关系</div>
-            <radio-group class="radio-group" @change="radioChange">
+            <radio-group class="radio-group" @change="radioRelativeChange">
                 <label v-for="item in lists" :key="item.name">
                     <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.name}}
                 </label>
@@ -78,7 +78,6 @@ page {
         align-items: center;
         input {
             flex:1;
-
         }
         span {
             width:1.4rem;

@@ -7,27 +7,20 @@
     "pages/errorRegister/main",
     "pages/errorRegister/registerDetail/main",
     "pages/errorRegister/errorTitleRegister/main",
-    
-    
-    "pages/paperAnaly/analy/main",
-    "pages/paperAnaly/main",
-    
-    
+    "pages/errorRegister/addwork/main",
     "pages/paperAnaly/paperRegister/main",
-    
-    "pages/user/student/switchStudent/main",
-    
+    "pages/paperAnaly/paperDetail/main",
+    "pages/paperAnaly/analy/main",
+    "pages/paperAnaly/main",   
+    "pages/user/student/switchStudent/main",   
     "pages/user/student/update/main",
+    "pages/user/about/main",
+    "pages/user/instruction/main",
+    "pages/user/student/add/main",
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
     "pages/bind/vipbind/main",
-    
-    "pages/paperAnaly/paperDetail/main",
-    
-    "pages/errorRegister/addwork/main",
-    "pages/user/about/main",
-    "pages/user/instruction/main",
-    "pages/user/student/add/main"
+    "pages/demo/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
