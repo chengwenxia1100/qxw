@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/demo/main",
     "pages/home/main",
     "pages/user/main",
     "pages/auth/main",
@@ -19,12 +20,11 @@
     "pages/user/student/add/main",
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
-    "pages/bind/vipbind/main",
-    "pages/demo/main"
+    "pages/bind/vipbind/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#f35957",
+    "navigationBarBackgroundColor": "#25A7F7",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },

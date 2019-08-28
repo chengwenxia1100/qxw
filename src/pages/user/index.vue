@@ -28,19 +28,19 @@
     <div class="list">
       <ul>
         <li @click="toVip">
-          <img src="../../assets/svg/user_icon2.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon2.png" />
           <p>会员</p>
         </li>
         <li @click="toInstruction">
-          <img src="../../assets/svg/user_icon3.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon3.png" />
           <p>使用说明</p>
         </li>
         <li>
-          <img src="../../assets/svg/user_icon4.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon4.png" />
           <button open-type='contact' class='' session-from='weapp'>在线客服</button> 
         </li>
         <li @click="toAbout">
-          <img src="../../assets/svg/user_icon5.png" style="width:1.6rem;height:1.6rem;" />
+          <img src="../../assets/svg/user_icon5.png" />
           <p>关于勤学</p>
         </li>
       </ul>
@@ -78,23 +78,6 @@ export default {
       return store.state.user.token 
     }
   },
-  // watch: {
-  //   token: {
-  //     immediate: true,
-  //     handler (val) {
-  //       if (val) {
-  //         wx.getUserInfo({
-  //           success: (res) => {
-  //             this.userInfos = JSON.parse(res.rawData)
-  //             setTimeout(() => {
-  //               this.getUser()
-  //             }, 1000)
-  //           }
-  //         })
-  //       }
-  //     }
-  //   }
-  // },
   methods: {
     async getUser () {
         const data = await getHome({})
@@ -200,6 +183,8 @@ page {
         padding:0.2rem;
         img {
           margin-right:0.4rem;
+          width: 0.32rem;
+          height: 0.32rem;
         }
         p {
           flex:1;
@@ -212,7 +197,7 @@ page {
           flex:1;
           display:flex;
           align-items: center;
-          height:0.48rem;
+          height:0.32rem;
           font-size:0.28rem;
           padding-left:0;
         }

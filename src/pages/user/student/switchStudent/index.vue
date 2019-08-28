@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     selectIcon () {
-      return require('@/assets/icon/icon_select.png')
+      return require('@/assets/icon/icon_clicked.png')
     },
     noselectIcon () {
       return require('@/assets/icon/icon_no_select.png')
@@ -152,7 +152,7 @@ page {
     text-align:center;
     .btn_con {
       color:#fff;
-      background:#64af08;
+      background:#25a7f7;
       width:80%;
       height:0.8rem;
       text-align:center;

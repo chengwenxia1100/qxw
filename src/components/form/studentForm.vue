@@ -1,5 +1,4 @@
 <template>
-  <div class="form_box">
     <div class="student_mess">
         <div class="list">
             <div class="tit">学生姓名</div>
@@ -8,16 +7,23 @@
         </div>
         <div class="list">
             <div class="tit">性别</div>
-            <radio-group class="radio-group" @change="radioChange">
-                <label v-for="item in items" :key="item.name">
-                    <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.value}}
-                </label>
-            </radio-group>
+            <div class="radio">
+                <div class="select_btn" @tap="!studentId && sexRadio(1)">
+                    <img :src="selectIcon" v-if="sex == 1">
+                    <img :src="noselectIcon" v-else>
+                    <span>男</span>
+                </div>
+                <div class="select_btn" @tap="!studentId && sexRadio(2)">
+                    <img :src="selectIcon" v-if="sex == 2">
+                    <img :src="noselectIcon" v-else>
+                    <span>女</span>
+                </div>
+            </div>
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
             <div class="show" v-if="studentId">{{grade}}</div>
-            <div class="input" v-else @click="showPicker">{{gradeval}}</div>
+            <div class="input" v-else @click="showPicker">{{grade}}</div>
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
@@ -41,7 +47,6 @@
             <input type="text" placeholder="请输入班级代码(选填)" v-model="classNum" >
         </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -98,10 +103,9 @@ export default {
             time:'发送验证码',
             // 表单信息
             sName: '',
-            sex: 0,
+            sex: 1,
             school: '请输入就读学校(必填)',
-            grade: '',
-            gradeval: '请输入就读年级(必填)',
+            grade: '请输入就读年级(必填)',
             classNum: ''
         }
     },
@@ -118,14 +122,13 @@ export default {
             },
             immediate: true
        },
-       school: {
+       schoolVal: {
             handler (val) {
-                console.log(val)
                 this.$emit('studentSchool', val)
             },
             immediate: true
        },
-       grade: {
+       gradeVal: {
             handler (val) {
                 this.$emit('studentGrade', val)
             },
@@ -137,6 +140,14 @@ export default {
            },
            immediate: true
        }
+    },
+    computed: {
+      selectIcon () {
+        return require('@/assets/svg/radio_select.png')
+      },
+      noselectIcon () {
+        return require('@/assets/svg/radio_noselect.png')
+      }
     },
     onLoad () {
         if (this.studentId) { 
@@ -162,9 +173,9 @@ export default {
             const data = await getSchoolList({})
             this.pickerValueArrayschool = data
         },
-        // 单选框
-        radioChange: e => {
-            console.log('radio发生change事件，携带value值为：', e.mp.detail.name)
+        // 单选框选择
+        sexRadio (value) {
+          this.sex = value
         },
         showPicker () {
             this.$refs.mpvuePicker.show()
@@ -173,22 +184,13 @@ export default {
             this.$refs.mpvuePickerschool.show()
         },
         onGradeConfirm (e) {
-            this.gradeval = e.label
-            this.grade = e.value[0]
-            console.log(e.value[0])
+            this.grade = e.label
+            this.gradeVal = e.value[0]
         },
         onSchoolConfirm (e) {
             this.school = e.label
-        },
-        init () {
+            this.schoolVal = e.value[0]
         }
-    },
-    // 前后台切换重置倒计时
-    onshow() {
-        this.isClick = true;
-        let interval = this.interval;    // 保存定时器的id
-        clearInterval(interval);
-        this.time = '获取验证码';
     }
 }
 </script>
@@ -197,50 +199,62 @@ export default {
 page {
     background:#f2f2f2;
 }
-.form_box {
-    font-size:0.28rem;
-    .list_same {
+.list_same {
+    display: flex;
+    align-items: center;
+    border-bottom: 0.02rem #f2f2f2 solid;
+    padding: 0.2rem;
+    color: #999;
+    .tit {
+        width: 1.4rem;
+        color: #333;
+        margin-right: 0.2rem;
+        text-align: right;
+    }
+    .radio {
+        flex:1;
+        clear: both;
+        overflow: hidden;
+        .select_btn {
+        margin-right:0.2rem;
+        float:left;
         display: flex;
         align-items: center;
-        border-bottom:0.02rem #f2f2f2 solid;
-        padding:0.2rem;
-        color:#999;
-        .tit {
-            width:1.4rem;
-            color:#333;
-            margin-right:0.2rem;
-            text-align:right;
+        img {
+            width:0.64rem;
+            height:0.64rem;
         }
-        .show {
-            flex:1;
+        span {
+            line-height:0.64rem;
         }
-        input {
-            flex:1;
-        }
-        .input {
-            flex:1;
-            display: flex;
-            align-items: center;
-            input {
-                flex:1;
-
-            }
-            span {
-                width:1.4rem;
-                text-align:center;
-                color:#fff;
-                padding:0.1rem;
-                border:0.02rem #ddd solid;
-                border-radius: 0.18rem;
-            }
         }
     }
-    .student_mess {
-        background:#fff;
-        padding:0.2rem 0;
-        .list {
-            .list_same
+
+    input {
+        flex: 1;
+    }
+    .input {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        input {
+        flex: 1;
         }
+        span {
+        width: 1.4rem;
+        text-align: center;
+        color: #fff;
+        padding: 0.1rem;
+        border: 0.02rem #ddd solid;
+        border-radius: 0.18rem;
+        }
+    }
+}
+.student_mess {
+    background: #fff;
+    padding: 0.2rem 0;
+    .list {
+        .list_same;
     }
 }
 </style>

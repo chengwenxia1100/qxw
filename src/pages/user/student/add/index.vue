@@ -1,5 +1,8 @@
 <template>
   <div class="update_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <student-form 
       @studentName="studentName"
       @studentSex="studentSex"
@@ -9,7 +12,6 @@
       @studentNo="studentNo"
     ></student-form>
     <div class="btn" @click="addFinished">完成</div>
-    <div class="btn" v-if="lengthMax" style="background:#ddd">完成</div>
   </div>
 </template>
 
@@ -29,10 +31,8 @@ export default {
       studentGradeVal: '请输入就读年级',
       studentClassVal: '',
       student_no: 0,
-      lengthMax: false
+      loading: false
     }
-  },
-  computed: {
   },
   methods: {
     // 接收子组件的传值
@@ -43,7 +43,6 @@ export default {
       this.studentSexVal = val
     },
     studentSchool (val) {
-      console.log(val)
       this.studentSchoolVal = val
     },
     studentGrade (val) {
@@ -52,11 +51,12 @@ export default {
     studentClass (val) {
       this.studentClassVal = val
     },
-    studentNo (val) {
+    studentNo (val) { // 不是内部学员没有这个值
       this.student_no = val
     },
     // 点击完成
     addFinished () {
+      this.loading = true
       this.addDataFun()
     },
     // 添加学员接口
@@ -67,10 +67,10 @@ export default {
           grade: this.studentGradeVal,
           school: this.studentSchoolVal,
           class_id: this.studentClassVal,
-          relation_type: this.relative,
           student_id: this.student_no
         })
-        wx.reLaunch({ url: '../../main' })
+        this.loading = false
+        wx.reLaunch({ url: '../switchStudent/main' })
     }
   }
 }
@@ -84,7 +84,7 @@ page {
 .update_container {
   .btn {
     color:#fff;
-    background:#64af08;
+    background:#25a7f7;
     width: 1.6rem;
     height: 0.6rem;
     line-height:0.6rem;

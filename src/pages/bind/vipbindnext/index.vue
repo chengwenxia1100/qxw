@@ -1,5 +1,8 @@
 <template>
   <div class="vipbindnext_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <div class="login_mess">
         <div class="left">
             <div class="slide2">
@@ -42,58 +45,29 @@ export default {
     },
     data () {
         return {
-            lists: [
-                {name: 'father', value: '父亲 ', checked: 'true'},
-                {name: 'mother', value: '母亲'},
-                {name: 'other', value: '其他'}, 
-            ],
             studentData: {},
-            isClick: true,
-            bgcolor: '#f7536a',
-            time:'发送验证码',
+            mess: {},
+            loading: false,
             parentsNameVal: '',
             relationVal: 1,
             phoneVal: '',
             codeVal: ''
         }
     },
-    mounted () {
-        console.log(this.student_realname)
+    onLoad (option) {
+        this.mess = option
+        this.loading = true
         this.vipBindPage()
-        // this.student_no = this.$mp.query.student_no
-        // this.student_realname = this.$mp.query.student_realname
     },
     computed: {
         student_no () {
-            return this.$mp.query.student_no
+            return this.mess.student_no
         },
         student_realname () {
-            return this.$mp.query.student_realname
+            return this.mess.student_realname
         }
     },
     methods: {
-        gainCode:function() {
-            console.log(this.isClick)
-            if(!this.isClick){
-                return;
-            }
-            setTimeout(() => {
-                this.isClick = false;
-                this.bgcolor = '#ddd';
-                let times = 60; // 用于倒计时
-                this.time = times+'s';
-                this.interval = setInterval(() =>{
-                    times--;
-                    this.time = times+'s';
-                    if(times < 0){
-                    this.time = '重新获取';
-                    this.isClick = true;
-                    this.bgcolor = '#f7536a';
-                    clearInterval(this.interval);
-                    }
-                },1000)
-            }, 1000);
-        },
         // 接收子组件的传值
         parentsName (val) {
             this.parentsNameVal = val
@@ -107,8 +81,8 @@ export default {
         code (val) {
             this.codeVal = val
         },
+        // 点击完成按钮操作
         finished () {
-            console.log(this.parentsNameVal)
             if (!this.parentsNameVal) {
                 wx.showToast({ title: '请输入家长姓名', icon: 'none' })
                 return
@@ -122,23 +96,22 @@ export default {
                 wx.showToast({ title: '请输入验证码', icon: 'none' })
                 return
             } else {
+                this.loading = true
                 this.vipBindFinish()
             }
         },
         // 页面接口
         async vipBindPage() {
             const data = await bindMessSubmit({
-                token: '38c533200b8a205f7169de372195dfb0',
                 student_no: this.student_no,
                 student_realname: this.student_realname
             })
-            this.studentData=data;
-            console.log(data)
+            this.loading = false
+            this.studentData = data;
         },
         // 点击提交接口
         async vipBindFinish () {
             const data = await bindMessSubmit({
-                token: '38c533200b8a205f7169de372195dfb0',
                 sms_code: this.codeVal,
                 p_realname: this.parentsNameVal,
                 phone: this.phoneVal,
@@ -146,10 +119,9 @@ export default {
                 student_no: this.student_no,
                 student_realname: this.student_realname
             })
-            console.log(data)
-            // 跳转到下一页
-            const url = '../../home/main'
-            wx.reLaunch({url})
+            this.loading = false
+            // 跳转到下一页 回到首页
+            wx.reLaunch({ url: '/pages/home/main' })
         },
     }
 }
@@ -236,7 +208,7 @@ page {
     .btn {
         margin:0.4rem 0;
         .btn_con {
-            background:#f7536a;
+            background:#25a7f7;
             color:#fff;
             width:3rem;
             height:0.8rem;

@@ -3,54 +3,16 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <div class="student_mess">
-      <div class="list">
-        <div class="tit">学生姓名</div>
-        <input type="text" placeholder="请输入您孩子的姓名" v-model="name" />
-      </div>
-      <div class="list">
-        <div class="tit">性别</div>
-        <div class="radio">
-            <div class="select_btn" @click="sexRadio(1)">
-              <img :src="selectIcon" v-if="sex == 1">
-              <img :src="noselectIcon" v-else>
-              <span>男</span>
-            </div>
-            <div class="select_btn" @click="sexRadio(2)">
-              <img :src="selectIcon" v-if="sex == 2">
-              <img :src="noselectIcon" v-else>
-              <span>女</span>
-            </div>
-        </div>
-       
-      </div>
-      <div class="list">
-        <div class="tit">就读年级</div>
-        <div class="input" @click="showPicker">{{grade}}</div>
-        <mpvue-picker
-          ref="mpvuePicker"
-          :mode="mode"
-          :pickerValueDefault="pickerValueDefault"
-          @onConfirm="ongradeConfirm"
-          :pickerValueArray="pickerValueArray"
-        />
-      </div>
-      <div class="list">
-        <div class="tit">就读学校</div>
-        <div class="input" @click="showPickerschool">{{school}}</div>
-        <mpvue-picker
-          ref="mpvuePickerschool"
-          :mode="mode"
-          :pickerValueDefault="pickerValueDefault"
-          @onConfirm="onschoolConfirm"
-          :pickerValueArray="pickerValueArrayschool"
-        />
-      </div>
-      <div class="list">
-        <div class="tit">班级代码</div>
-        <input type="text" placeholder="请输入班级代码" v-model="gradeNum"/>
-      </div>
-    </div>
+    <!-- 绑定学生信息 -->
+    <student-form 
+      @studentName="studentName"
+      @studentSex="studentSex"
+      @studentSchool="studentSchool"
+      @studentGrade="studentGrade"
+      @studentClass="studentClass"
+      @studentNo="studentNo"
+    ></student-form>
+    <!-- 绑定家长信息 -->
     <bind-parents 
         @parentsName="parentsName" 
         @relation="relation"
@@ -65,97 +27,39 @@
 </template>
 
 <script>
-import bindParents from '@/components/form/bindParents'
 import { gainCode, bindMessSubmit, getSchoolList } from '../bind/bind.api';
+import bindParents from '@/components/form/bindParents'
+import studentForm from '@/components/form/studentForm'
 import mpvuePicker from "mpvue-picker";
 
 export default {
     components: {
         mpvuePicker,
-        bindParents
+        bindParents,
+        studentForm
     },
     data () {
         return {
-            mode: 'selector', // 选择下拉框
-            items: [
-                {name: '1', value: '男' , checked: 'true'},
-                {name: '2', value: '女'}
-            ],
-            pickerValueArray: [
-                {
-                    label: '初一',
-                    value: 7
-                },
-                {
-                    label: '初二',
-                    value: 8
-                },
-                {
-                    label: '初三',
-                    value: 9
-                },
-                {
-                    label: '高一',
-                    value: 10
-                },
-                {
-                    label: '高二',
-                    value: 11
-                },
-                {
-                    label: '高三',
-                    value: 12
-                }
-            ],
-            pickerValueArrayschool: [],
-            pickerValueDefault: [2],
-            isClick: true,
-            bgcolor: '#f7536a',
-            time:'发送验证码',
-            grade: '请输入就读年级',
-            school: '请输入就读学校',
-            sex: 2,
-            relationVal: 1,
-            parentsNameVal: '',
-            phoneVal: '',
-            codeVal: '',
-            loading: false
+          studentNameVal: '',
+          studentSexVal: 0,
+          studentSchoolVal: '请输入就读学校',
+          studentGradeVal: '请输入就读年级',
+          studentClassVal: '',
+          student_no: 0,
+
+          grade: '请输入就读年级',
+          school: '请输入就读学校',
+          sex: 2,
+          relationVal: 1,
+          parentsNameVal: '',
+          phoneVal: '',
+          codeVal: '',
+          loading: false
         }
     },
     onLoad () {
-      this.getSchoolListData()
-    },
-    computed: {
-      selectIcon () {
-        return require('@/assets/svg/radio_select.png')
-      },
-      noselectIcon () {
-        return require('@/assets/svg/radio_noselect.png')
-      }
-    },
-    watch: {
-      sex(val) {
-        console.log(val)
-      }
     },
     methods: {
-        //
-        sexRadio (value) {
-          this.sex = value
-        },
-        // 接收子组件的传值
-        parentsName (val) {
-            this.parentsNameVal = val
-        },
-        relation (val) {
-            this.relationVal = val
-        },
-        phone (val) {
-            this.phoneVal = val
-        },
-        code (val) {
-            this.codeVal = val
-        },
         // 填完信息提交
         finished () {
           if (!this.name) {
@@ -190,58 +94,59 @@ export default {
         // 点击提交接口
         async bindMessSubmitData () {
           const data = await bindMessSubmit({
-              sms_code: this.codeVal,
+              s_realname: this.studentNameVal,
+              s_sex: this.studentSexVal,
+              s_grade: this.studentGradeVal,
+              s_school: this.studentSchoolVal,
+              s_class: this.studentClassVal,
+              student_no: this.student_no,
               p_realname: this.parentsNameVal,
+              sms_code: this.codeVal,
               phone: this.phoneVal,
-              s_realname: this.name,
-              s_sex: this.sex,
-              s_grade: this.grade,
-              s_school: this.school,
-              s_class: this.gradeNum,
-              relation_type: this.relationVal,
-              student_no: this.student_no
+              relation_type: this.relationVal
           })
           this.loading = false
           // 跳转到下一页
           const url = '../../home/main'
           wx.reLaunch({url})
         },
-        // 获取学校列表接口
-        async getSchoolListData () {
-          const data = await getSchoolList({
-          })
-          this.pickerValueArrayschool = data;
+        // 接收学生信息的子组件的传值
+        studentName (val) {
+          this.studentNameVal = val
         },
-        // 单选框
-        radioSexChange(e) {
-          this.sex = e.mp.detail.value
+        studentSex (val) {
+          this.studentSexVal = val
         },
-        // 下拉框
-        showPicker () {
-          this.$refs.mpvuePicker.show()
+        studentSchool (val) {
+          console.log(val)
+          this.studentSchoolVal = val
         },
-        showPickerschool () {
-          this.$refs.mpvuePickerschool.show()
+        studentGrade (val) {
+          this.studentGradeVal = val
         },
-        // 下拉框确认
-        ongradeConfirm (e) {
-          this.grade = e.label
+        studentClass (val) {
+          this.studentClassVal = val
         },
-        onschoolConfirm (e) {
-          this.school = e.label
+        studentNo (val) {
+          this.student_no = val
+        },
+        // 接收家长信息的子组件的传值
+        parentsName (val) {
+            this.parentsNameVal = val
+        },
+        relation (val) {
+            this.relationVal = val
+        },
+        phone (val) {
+            this.phoneVal = val
+        },
+        code (val) {
+            this.codeVal = val
         },
         // 内部学员通道
         gotoVip () {
-          const url = '../vipbind/main';
-          wx.navigateTo({ url })
+          wx.navigateTo({ url: '../vipbind/main' })
         }
-    },
-    // 前后台切换重置倒计时
-    onshow() {
-      this.isClick = true;
-      let interval = this.interval;    // 保存定时器的id
-      clearInterval(interval);
-      this.time = '获取验证码';
     }
 }
 </script>
@@ -303,24 +208,24 @@ page {
       }
     }
   }
-  .student_mess {
-    background: #fff;
-    padding: 0.2rem 0;
-    .list {
-      .list_same;
-    }
-  }
-  .parents_mess {
-    background: #fff;
-    margin-top: 0.2rem;
-    .list {
-      .list_same;
-    }
-  }
+  // .student_mess {
+  //   background: #fff;
+  //   padding: 0.2rem 0;
+  //   .list {
+  //     .list_same;
+  //   }
+  // }
+  // .parents_mess {
+  //   background: #fff;
+  //   margin-top: 0.2rem;
+  //   .list {
+  //     .list_same;
+  //   }
+  // }
   .btn {
     margin: 0.4rem 0;
     .btn_con {
-      background: #f7536a;
+      background: #25a7f7;
       color: #fff;
       width: 3rem;
       height: 0.8rem;
@@ -331,7 +236,7 @@ page {
     }
   }
   .tip {
-    color: #f7536a;
+    color: #25a7f7;
     text-align: right;
     margin-right: 0.3rem;
   }

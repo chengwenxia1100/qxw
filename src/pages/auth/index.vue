@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="auth-action">
-      <img :src="bgImg" class="auth-action__bg__img">
+      <!-- <img :src="bgImg" class="auth-action__bg__img"> -->
       <button
         type="primary"
         lang="zh_CN"
@@ -150,7 +150,7 @@ page {
     width: 100%;
     margin-top: 18px;
     font-size: 15px;
-    background-color: #f25a57 !important;
+    background-color: #25a7f7 !important;
 
     &__img {
       width: 27px;

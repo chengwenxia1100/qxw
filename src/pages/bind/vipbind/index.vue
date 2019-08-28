@@ -48,7 +48,6 @@ export default {
     async bindMessVIPSubmitData () {
         console.log(this.studentName)
         const data = await bindMessSubmit({
-            token: '38c533200b8a205f7169de372195dfb0',
             student_no: this.studentNum,
             student_realname: this.studentName
         })
@@ -100,7 +99,7 @@ page {
     .btn {
         margin:0.4rem 0;
         .btn_con {
-            background:#f7536a;
+            background:#25a7f7;
             color:#fff;
             width:3rem;
             height:0.8rem;

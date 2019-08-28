@@ -45,13 +45,8 @@ import { gainCode } from '@/pages/bind/bind.api';
 export default {
     data () {
         return {
-            // relativelists: [
-            //     {name: '1', value: '父亲 ', checked: 'true'},
-            //     {name: '2', value: '母亲'},
-            //     {name: '0', value: '其他'},
-            // ],
             isClick: true,
-            bgcolor: '#f7536a',
+            bgcolor: '#25a7f7',
             time:'发送验证码',
             relation: 1,
             parentsName: '',
@@ -155,33 +150,51 @@ page {
 .list_same {
     display: flex;
     align-items: center;
-    border-bottom:0.02rem #f2f2f2 solid;
-    padding:0.2rem;
-    color:#666;
+    border-bottom: 0.02rem #f2f2f2 solid;
+    padding: 0.2rem;
+    color: #999;
     .tit {
-        width:1.4rem;
-        color:#333;
-        margin-right:0.2rem;
-        text-align:right;
+        width: 1.4rem;
+        color: #333;
+        margin-right: 0.2rem;
+        text-align: right;
     }
-    input {
+    .radio {
         flex:1;
+        clear: both;
+        overflow: hidden;
+        .select_btn {
+        margin-right:0.2rem;
+        float:left;
+        display: flex;
+        align-items: center;
+        img {
+            width:0.64rem;
+            height:0.64rem;
+        }
+        span {
+            line-height:0.64rem;
+        }
+        }
+    }
+
+    input {
+        flex: 1;
     }
     .input {
-        flex:1;
+        flex: 1;
         display: flex;
         align-items: center;
         input {
-            flex:1;
-
+        flex: 1;
         }
         span {
-            width:1.4rem;
-            text-align:center;
-            color:#fff;
-            padding:0.1rem;
-            border:0.02rem #ddd solid;
-            border-radius: 0.18rem;
+        width: 1.4rem;
+        text-align: center;
+        color: #fff;
+        padding: 0.1rem;
+        border: 0.02rem #ddd solid;
+        border-radius: 0.18rem;
         }
     }
 }
