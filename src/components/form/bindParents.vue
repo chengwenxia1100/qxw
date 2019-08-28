@@ -121,7 +121,7 @@ export default {
                 this.time = times+'s';
                 if(times < 0){
                 this.time = '重新获取';
-                this.bgcolor = '#f7536a';
+                this.bgcolor = '#25a7f7';
                 this.isClick = true;
                 clearInterval(this.interval);
                 }

@@ -1,37 +1,42 @@
 <template>
-  <div class="user_wrongTitle">
     <div class="parents_mess">
         <div class="list">
             <div class="tit">关系</div>
-            <radio-group class="radio-group" @change="radioRelativeChange">
-                <label v-for="item in lists" :key="item.name">
-                    <radio color='#EA5A49' :value="item.name" :checked="item.checked"/>{{item.name}}
-                </label>
-            </radio-group>
+            <div class="radio">
+                <div class="select_btn" @click="relativeRadio(1)">
+                    <img :src="selectIcon" v-if="relation == 1">
+                    <img :src="noselectIcon" v-else>
+                    <span>父亲</span>
+                </div>
+                <div class="select_btn" @click="relativeRadio(2)">
+                    <img :src="selectIcon" v-if="relation == 2">
+                    <img :src="noselectIcon" v-else>
+                    <span>母亲</span>
+                </div>
+                <div class="select_btn" @click="relativeRadio(0)">
+                    <img :src="selectIcon" v-if="relation == 0">
+                    <img :src="noselectIcon" v-else>
+                    <span>其他</span>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
 </template>
 
 <script>
-import mpvuePicker from "mpvue-picker";
-
 export default {
-    components: {
-        mpvuePicker
-    },
     data () {
         return {
-            lists: [
-                {name: '父亲', value: '1', checked: 'true'},
-                {name: '母亲', value: '2'},
-                {name: '其他', value: '0'},
-            ],
-            mode: 'selector',
             relative: 1
         }
     },
     computed: {
+      selectIcon () {
+        return require('@/assets/svg/radio_select.png')
+      },
+      noselectIcon () {
+        return require('@/assets/svg/radio_noselect.png')
+      }
     },
     watch: {
         relative: {
@@ -42,11 +47,9 @@ export default {
         }
     },
     methods: {
-      // 单选框
-      radioChange: e => {
-          this.relative =  e.mp.detail.value
-          console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
-      }
+        relativeRadio (value) {
+            this.relation = value
+        },
     }
 }
 </script>

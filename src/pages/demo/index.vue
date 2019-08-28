@@ -1,244 +1,244 @@
 <template>
-  <div class="user_wrongTitle">
-    <page-loading v-model='loading'>
-      加载中...
-    </page-loading>
-    <!-- 绑定学生信息 -->
-    <student-form 
-      @studentName="studentName"
-      @studentSex="studentSex"
-      @studentSchool="studentSchool"
-      @studentGrade="studentGrade"
-      @studentClass="studentClass"
-      @studentNo="studentNo"
-    ></student-form>
-    <!-- 绑定家长信息 -->
-    <bind-parents 
-        @parentsName="parentsName" 
-        @relation="relation"
-        @phone="phone"
-        @code="code">
-    </bind-parents>
-    <div class="btn">
-      <div class="btn_con" @click="finished">完成</div>
+  <div class="home_container">
+    <div class="stundent_info">
+      <div class="student_bind">
+          <div class="left_mess">
+            <div class="name">名字</div>
+            <div class="grade"><span>中学</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>五年级二班</span></div>
+          </div>
+          <div class="right_btn">
+            <div class="con">切换</div>
+          </div>
+      </div>
     </div>
-    <div class="tip" @click="gotoVip">内部学员绑定通道></div>
+    <div class="model_list">
+      <ul>
+        <li>
+          <img src="../../assets/icon/home_icon1.png" />
+          <p>每日一题</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/home_icon2.png" />
+          <p>记忆引擎</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/home_icon3.png" />
+          <p>导出记录</p>
+        </li>
+        <li>
+          <img src="../../assets/icon/home_icon4.png" />
+          <p>勤学中心</p>
+        </li>
+      </ul>
+    </div>
+    <div class="model">
+      <h1>错题整理</h1>
+      <h2>每天记一记 分数涨一涨</h2>
+      <div class="list">
+        <div class="list_left">
+          <p class="tip">错题登记</p>
+          <p class="font">快速收集学习数据</p>
+          <img src="../../assets/img/home_img1.png">
+        </div>
+        <div class="list_right">
+          <div class="right_top">
+            <p class="tip">试卷分析</p>
+            <p class="font">快速了解学习动态</p>
+            <img src="../../assets/img/home_img2.png">
+          </div>
+          <div class="right_bottom">
+            <p class="tip">错题查看</p>
+            <p class="font">快速生成专属错题本</p>
+            <img src="../../assets/img/home_img3.png" >
+          </div>
+        </div>
+      </div>
+      <div class="list1">
+        <p class="tip">错题归因</p>
+        <p class="font">快速生成专属错题本</p>
+        <img src="../../assets/img/home_img4.png" >
+      </div>
+    </div>
+    <div class="mask">
+      <h1>成绩曲线</h1>
+      <h2>便利分析 直观成绩</h2>
+      <img src="../../assets/img/home_bg.jpg" alt="">
+    </div>
   </div>
 </template>
 
 <script>
-import { gainCode, bindMessSubmit, getSchoolList } from '../bind/bind.api';
-import bindParents from '@/components/form/bindParents'
-import studentForm from '@/components/form/studentForm'
-import mpvuePicker from "mpvue-picker";
-
 export default {
-    components: {
-        mpvuePicker,
-        bindParents,
-        studentForm
-    },
-    data () {
-        return {
-          studentNameVal: '',
-          studentSexVal: 0,
-          studentSchoolVal: '请输入就读学校',
-          studentGradeVal: '请输入就读年级',
-          studentClassVal: '',
-          student_no: 0,
+  data () {
+    return {
 
-          grade: '请输入就读年级',
-          school: '请输入就读学校',
-          sex: 2,
-          relationVal: 1,
-          parentsNameVal: '',
-          phoneVal: '',
-          codeVal: '',
-          loading: false
-        }
-    },
-    onLoad () {
-    },
-    methods: {
-        // 填完信息提交
-        finished () {
-          if (!this.name) {
-              wx.showToast({ title: '请输入学生姓名', icon: 'none' })
-              return
-          } else if (!this.sex) {
-              wx.showToast({ title: '请输入学生性别', icon: 'none' })
-              return
-          } else if (!this.grade) {
-              wx.showToast({ title: '请输入年级', icon: 'none' })
-              return
-          } else if (!this.school) {
-              wx.showToast({ title: '请输入学校', icon: 'none' })
-              return
-          } else if (!this.parentsNameVal) {
-              wx.showToast({ title: '请输入家长姓名', icon: 'none' })
-              return
-          } else if (!this.relationVal) {
-              wx.showToast({ title: '请输入关系', icon: 'none' })
-              return
-          } else if (!this.phoneVal) {
-              wx.showToast({ title: '请输入手机号码', icon: 'none' })
-              return
-          }else if (!this.codeVal) {
-              wx.showToast({ title: '请输入验证码', icon: 'none' })
-              return
-          } else {
-            this.loading = true
-            this.bindMessSubmitData()
-          }
-        },
-        // 点击提交接口
-        async bindMessSubmitData () {
-          const data = await bindMessSubmit({
-              s_realname: this.studentNameVal,
-              s_sex: this.studentSexVal,
-              s_grade: this.studentGradeVal,
-              s_school: this.studentSchoolVal,
-              s_class: this.studentClassVal,
-              student_no: this.student_no,
-              p_realname: this.parentsNameVal,
-              sms_code: this.codeVal,
-              phone: this.phoneVal,
-              relation_type: this.relationVal
-          })
-          this.loading = false
-          // 跳转到下一页
-          const url = '../../home/main'
-          wx.reLaunch({url})
-        },
-        // 接收学生信息的子组件的传值
-        studentName (val) {
-          this.studentNameVal = val
-        },
-        studentSex (val) {
-          this.studentSexVal = val
-        },
-        studentSchool (val) {
-          console.log(val)
-          this.studentSchoolVal = val
-        },
-        studentGrade (val) {
-          this.studentGradeVal = val
-        },
-        studentClass (val) {
-          this.studentClassVal = val
-        },
-        studentNo (val) {
-          this.student_no = val
-        },
-        // 接收家长信息的子组件的传值
-        parentsName (val) {
-            this.parentsNameVal = val
-        },
-        relation (val) {
-            this.relationVal = val
-        },
-        phone (val) {
-            this.phoneVal = val
-        },
-        code (val) {
-            this.codeVal = val
-        },
-        // 内部学员通道
-        gotoVip () {
-          wx.navigateTo({ url: '../vipbind/main' })
-        }
     }
+  }
 }
 </script>
 
-<style lang="less">
-page {
-  background: #f2f2f2;
-}
-.user_wrongTitle {
-  font-size: 0.28rem;
-  .list_same {
-    display: flex;
-    align-items: center;
-    border-bottom: 0.02rem #f2f2f2 solid;
-    padding: 0.2rem;
-    color: #999;
-    .tit {
-      width: 1.4rem;
-      color: #333;
-      margin-right: 0.2rem;
-      text-align: right;
+<style lang='less' scoped>
+.home_container {
+  .stundent_info{ 
+    background:#25A7F7;
+    color:#fff;
+    height: 1.6rem;
+    padding:0.3rem;
+    width:100%;
+    .student_bind {
+      color:#fff;
+      display: flex;
+       .left_mess {
+         width:5rem;
+         .name {
+           font-size:0.34rem;
+           font-weight: bold;
+           padding-bottom:0.1rem;
+         }
+         .grade {
+           color:rgba(255, 255, 255, 0.6);
+           font-size:0.26rem;
+         }
+       }
+       .right_btn {
+         flex:1;
+         .con {
+           margin-top:0.2rem;
+           width:1.28rem;
+           height:0.48rem;
+           text-align:center;
+           line-height:0.48rem;
+           background:rgba(255, 255, 255, 0.5);
+           border-radius:0.24rem;
+         }
+       }
     }
-    .radio {
-      flex:1;
-      clear: both;
-      overflow: hidden;
-      .select_btn {
-        margin-right:0.2rem;
-        float:left;
-        display: flex;
-        align-items: center;
+  }
+  .model_list {
+    border-radius:0.2rem;
+    background: #fff;
+    margin:-0.3rem 0.3rem 0.3rem 0.3rem;
+    ul {
+      display: flex;
+      li {
+        flex:1;
+        padding: 0.2rem;
+        box-sizing:border-box;
+        text-align:center;
         img {
-          width:0.64rem;
-          height:0.64rem;
+          border-radius:50%;
+          width: 0.8rem;
+          height: 0.8rem;
         }
-        span {
-          line-height:0.64rem;
+        p {
+          font-size:0.28rem;
+          padding:0.1rem 0;
         }
       }
+    }
+  }
+  .model {
+    padding:0.3rem;
+    h1 {
+      padding:0.1rem 0;
+      font-size:0.32rem;
+      color:#000;
+    }
+    h2 {
+      padding:0.1rem 0 0.2rem;
+      color: rgba(0, 0, 0, 0.4)
+    }
+    .tip {
+      padding-left:0.2rem;
+      padding-top:0.2rem;
+      font-size:0.32rem;
+      color:#000000;
+    }
+    .font {
+      padding-top:0.2rem;
+      padding-left:0.2rem;
+      font-size:0.22rem;
+      color:#999;
+    }
+    .list {
+      display:flex;
+      .bg_same {
+        background:#fff;
+        border-radius:0.2rem;
+        width:3.26rem;
+        position:relative;
+      }
+      .list_left {
+        margin-right:0.16rem;
+        height:3.36rem;
+        img {
+          width:1.84rem;
+          height:1.76rem;
+          position:absolute;
+          bottom:0;
+          right:0;
+        }
+        .bg_same
+      }
+      .list_right{ 
+        .right_top {
+          height:1.5rem;
+          margin-bottom:0.36rem;
+          img {
+            width: 1.12rem;
+            height: 0.64rem;
+            position:absolute;
+            right:0;
+            bottom:0;
+          }
+          .bg_same
+        }
+        .right_bottom {
+          height:1.5rem;
+          img {
+            width: 1.22rem;
+            height: 1.22rem;
+            position:absolute;
+            right:0;
+            bottom:0;
+          }
+          .bg_same
+        }
+      }
+      
+    }
+    .list1 {
+      height:1.76rem;
+      background:#fff;
+      border-radius:0.2rem;
+      width:6.88rem;
+      position:relative;
+      margin-top:0.16rem;
+      img {
+        width:1.52rem;
+        height:1.52rem;
+        position:absolute;
+        bottom:0;
+        right:0;
+      }
+    }
+  }
+  .mask {
+    padding:0.3rem;
+    background:#fff;
+    h1 {
+      padding:0.1rem 0;
+      font-size:0.32rem;
+      color:#000;
+    }
+    h2 {
+      padding:0.1rem 0 0.2rem;
+      color: rgba(0, 0, 0, 0.4)
+    }
+    img {
+      width:100%;
     }
     
-    input {
-      flex: 1;
-    }
-    .input {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      input {
-        flex: 1;
-      }
-      span {
-        width: 1.4rem;
-        text-align: center;
-        color: #fff;
-        padding: 0.1rem;
-        border: 0.02rem #ddd solid;
-        border-radius: 0.18rem;
-      }
-    }
-  }
-  // .student_mess {
-  //   background: #fff;
-  //   padding: 0.2rem 0;
-  //   .list {
-  //     .list_same;
-  //   }
-  // }
-  // .parents_mess {
-  //   background: #fff;
-  //   margin-top: 0.2rem;
-  //   .list {
-  //     .list_same;
-  //   }
-  // }
-  .btn {
-    margin: 0.4rem 0;
-    .btn_con {
-      background: #25a7f7;
-      color: #fff;
-      width: 3rem;
-      height: 0.8rem;
-      text-align: center;
-      line-height: 0.8rem;
-      border-radius: 0.16rem;
-      margin: 0 auto;
-    }
-  }
-  .tip {
-    color: #25a7f7;
-    text-align: right;
-    margin-right: 0.3rem;
   }
 }
 </style>

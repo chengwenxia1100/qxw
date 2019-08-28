@@ -3,6 +3,7 @@
     "pages/demo/main",
     "pages/home/main",
     "pages/user/main",
+    
     "pages/auth/main",
     "pages/wrongTitle/main",
     "pages/errorRegister/main",

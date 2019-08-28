@@ -106,6 +106,8 @@ export default {
             sex: 1,
             school: '请输入就读学校(必填)',
             grade: '请输入就读年级(必填)',
+            gradeVal: '',
+            schoolVal:'',
             classNum: ''
         }
     },
