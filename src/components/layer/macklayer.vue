@@ -74,15 +74,17 @@ export default {
           paper_id: this.paper_id,
           score: this.studentMark
       })
-      const url = "@/pages/paperAnaly/paperRegister/main?paper_id=" + paper_id
-      wx.navigateTo({ url })
+      wx.showToast({ title: '保存成功', icon: 'none' })
+      setTimeout(() => {
+        const url = "../../pages/paperAnaly/paperRegister/main?paper_id=" + this.paper_id
+        wx.navigateTo({ url })
+      }, 100)
     },
     close () {
       this.macklayerStatus = false;
       this.$emit('macklayerStatus', this.macklayerStatus)
     },
     confirm () {
-      console.log(this.studentMark);
       if (this.studentMark) {
         if (this.studentMark > this.mask){
           wx.showToast({ title: '输入分数不能高于总分', icon: 'none' })

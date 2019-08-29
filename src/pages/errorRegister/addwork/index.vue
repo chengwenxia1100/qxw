@@ -96,7 +96,7 @@ export default {
       this.worksData.forEach((item,index,arr)=>{
         if (index === i) {
           addBook({
-            data: { book_id: book_id }
+            book_id: book_id 
           }).then(res => {
             this.loading = false
              item.status = 1

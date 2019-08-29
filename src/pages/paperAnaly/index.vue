@@ -53,7 +53,7 @@ export default {
   },
   data () {
     return {
-      // listStatus: false,
+      listStatus: true,
       macklayerStatus: false, // 弹窗的显示与隐藏
       loading: false,
       tip:false, // 弹窗中未输入考试成绩中的提示
@@ -67,9 +67,9 @@ export default {
     // this.loading = true
   },
   computed: {
-    listStatus () {
-      if (this.paperListData.length > 0) { return true } else { false}
-    }
+    // listStatus () {
+    //   if (this.paperListData.length > 0) { return true } else { false}
+    // }
   },
   watch: {
     subjectVal (val) {
@@ -100,7 +100,8 @@ export default {
         grade: this.gradeVal
       })
       this.loading = false
-      // if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
+      console.log(data.length)
+      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
       console.log(data.length);
       this.paperListData = data
     },

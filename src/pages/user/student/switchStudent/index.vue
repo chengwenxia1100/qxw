@@ -3,8 +3,8 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <div class="slide_con">
-      <div class="slide" v-for="(list, i) in studentListData" :key="i"  @click="switchSlide(list.student_id)">
+    <div class="slide_con" v-if="listdata">
+      <div class="slide" v-for="(list, i) in studentList" :key="i"  @click="switchSlide(list.student_id)">
         <div class="icon">
           <img :src="selectIcon" v-if="list.checked">
           <img :src="noselectIcon" v-else>
@@ -12,7 +12,7 @@
         <div class="mess">
           <div class="li">
             <div><span>学员姓名：</span><span>{{list.s_realname}}</span></div>
-            <div><span>性别：</span><span v-if="list.sex === 1">女</span><span v-if="list.sex === 0">男</span></div>
+            <div><span>性别：</span><span v-if="list.sex === 1">男</span><span v-if="list.sex === 2">女</span></div>
           </div>
           <div class="li">
             <div><span>就读学校: </span><span>{{list.school}}</span></div>
@@ -43,13 +43,14 @@ import { getchange, getStudentList } from '@/api/student';
 export default {
   data () {
     return {
-      studentListData: {},
+      studentList: {},
       bind_id: '',
       lengthMax: false,
+      listdata: false,
       loading: false
     }
   },
-  onLoad () {
+  onShow () {
     this.loading = true
     this.getStudentListData()
   },
@@ -64,19 +65,19 @@ export default {
   methods: {
     async getStudentListData () {
         const data = await getStudentList({})
-        this.student_id = data[0].student_id
-        this.bind_id = data[0].bind_id
-        this.studentListData = data
-
         this.loading = false
+        console.log(data)
+        if (data.length > 0) {
+          this.listdata = true
+          this.studentList = data
+          this.studentList.map((item,index) => {
+            if (item.student_status === 1) { item.checked = true }
+          })
 
-        this.studentListData.map((item,index) => {
-          if (item.student_status === 1) { item.checked = true }
-        })
-
-        if (data.length >= 3) {
-          this.lengthMax = true
-        }
+          if (data.length >= 3) {
+            this.lengthMax = true
+          }
+        }       
     },
     // 点击切换事件
     switchSlide (id) {
@@ -99,6 +100,9 @@ export default {
     update (id, bindId) {
       const url = '../update/main?student_id=' + id + '&bind_id=' + bindId;
       wx.navigateTo({ url })
+    },
+    onUnload () {
+      this.studentList = {}
     }
   }
 }

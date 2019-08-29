@@ -222,7 +222,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .home_container {
   padding-bottom:0.2rem;
   .bg {

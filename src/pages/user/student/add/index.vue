@@ -12,6 +12,7 @@
       @studentNo="studentNo"
     ></student-form>
     <div class="btn" @click="addFinished">完成</div>
+    <div class="tip" @click="gotoVip">内部学员绑定通道></div>
   </div>
 </template>
 
@@ -31,8 +32,12 @@ export default {
       studentGradeVal: '请输入就读年级',
       studentClassVal: '',
       student_no: 0,
-      loading: false
+      loading: false,
+      mess: {}
     }
+  },
+  onLoad (option) {
+    this.mess = option
   },
   methods: {
     // 接收子组件的传值
@@ -71,6 +76,17 @@ export default {
         })
         this.loading = false
         wx.reLaunch({ url: '../switchStudent/main' })
+    },
+    // 内部学员通道
+    gotoVip () {
+      wx.navigateTo({ url: '/pages/bind/vipbind/main' })
+    }
+  },
+  onUnload () {
+    if (this.mess.from === 'home') { 
+      wx.reLaunch({
+        url:'/pages/home/main'
+      })
     }
   }
 }
@@ -91,6 +107,11 @@ page {
     text-align:center;
     border-radius: 0.08rem;
     margin:0.2rem auto;
+  }
+  .tip {
+    color: #25a7f7;
+    text-align: right;
+    margin-right: 0.3rem;
   }
 }
 </style>

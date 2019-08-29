@@ -1,5 +1,8 @@
 <template>
   <div class="home_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <!-- <div class="advice">
       <img src="../../assets/icon/advice_icon.png">
       <span>通知公告</span>
@@ -16,12 +19,6 @@
           <div class="right_btn">
             <div class="con" v-if="studentData.student_status === 0"  @click="jump('bind')">绑定</div>
             <div class="con" v-if="studentData.student_status === 1"  @click="showPicker">切换</div>
-            <mpvue-picker
-              ref="mpvuePicker"
-              :mode="mode"
-              :pickerValueDefault="pickerValueDefault"
-              @onConfirm="onConfirm"
-              :pickerValueArray="pickerValueArray" />
           </div>
       </div>
     </div>
@@ -78,6 +75,10 @@
       <h2>便利分析 直观成绩</h2>
       <img src="../../assets/img/home_bg.png">
     </div>
+    <mpvue-picker
+      ref="mpvuePicker"
+      @onConfirm="onConfirm"
+      :pickerValueArray="pickerValueArray" />
   </div>
 </template>
 
@@ -97,7 +98,8 @@ export default {
       studentData: {},
       loading: false, // 进入页面的弹窗
       studentId: '',
-      dataMess: false
+      dataMess: false,
+      pageData: {}
     }
   },
   computed: {
@@ -114,8 +116,11 @@ export default {
     async getHome () {
       const data = await getHome({})
       this.loading = false
+      
+      this.pageData = data
       this.studentData = data.student_info
       this.studentId = data.student_info.id
+
       if (data.student_info.student_status === 1) { this.getStudentList() }
     },
     // 获取学员列表
@@ -125,7 +130,7 @@ export default {
       this.pickerValueArray.map((item,index) => {
         item.label = item.s_realname
         item.value = item.student_id
-      })   
+      })  
     },
     // 切换学员
     showPicker () {
@@ -162,8 +167,14 @@ export default {
             else { wx.navigateTo({ url: '../paperAnaly/main' }) } // 跳转到错题分析页面
             break
           case 'bind':
-            wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册
-            break
+            if (this.pageData.parent_realename) { 
+              console.log(this.pageData.parent_realename)
+              wx.navigateTo({ url: '/pages/user/student/add/main?from=home' }) // 绑定注册 已经有家长信息
+              break
+             } else {
+              wx.navigateTo({ url: '../bind/bindfirst/main' }) // 绑定注册 无家长信息
+              break
+            }
         }
         if ( type === '4' || type === '5' || type === '6' || type === '7'|| type === '8') {
           wx.showToast({ title: '暂未开通', icon: 'none' })
