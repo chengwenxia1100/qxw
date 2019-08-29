@@ -6,9 +6,12 @@
     </div> -->
     <div class="stundent_info">
       <div class="student_bind">
-          <div class="left_mess">
+          <div class="left_mess" v-if="studentData.student_status === 1">
             <div class="name">{{studentData.s_realname}}</div>
-            <div class="grade"><span>{{studentData.school}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{studentData.grade}}{{studentData.class_id}}</span></div>
+            <div class="grade"><span>{{studentData.school}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span><span>{{studentData.grade}}</span><span v-if="studentData.class_id">{{studentData.class_id}}</span></span></div>
+          </div>
+          <div class="left_mess" v-if="studentData.student_status === 0">
+            <div class="name">暂无绑定过的学员</div>
           </div>
           <div class="right_btn">
             <div class="con" v-if="studentData.student_status === 0"  @click="jump('bind')">绑定</div>
@@ -330,6 +333,7 @@ export default {
   }
   .mask {
     padding:0.3rem;
+    box-sizing:border-box;
     background:#fff;
     h1 {
       padding:0.1rem 0;

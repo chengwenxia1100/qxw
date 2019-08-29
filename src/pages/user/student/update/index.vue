@@ -1,5 +1,8 @@
 <template>
   <div class="update_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <student-form 
       :studentId=student_id 
       @studentName="studentName"
@@ -15,7 +18,7 @@
   </div>
 </template>
 
-<script>
+<script>       
 import studentForm from '@/components/form/studentForm'
 import parentsForm from '@/components/form/parentsSelect'
 import { updataStudent, removeBind } from '../../user.api'
@@ -34,7 +37,8 @@ export default {
       studentGradeVal: '请输入就读年级',
       studentClassVal: '',
       student_no: 0,
-      mess: {}
+      mess: {},
+      loading:false
     }
   },
   onLoad(option) {
@@ -74,6 +78,7 @@ export default {
     },
     // 点击完成
     finished () {
+      this.loading = true
       this.updataStudent()
     },
     // 更新学员接口
@@ -83,12 +88,11 @@ export default {
             s_sex: this.studentSexVal,
             s_grade: this.studentGradeVal,
             s_school: this.studentSchoolVal,
-            // s_class: this.studentClassVal,
-            // student_no: this.student_no,
             class_id: this.studentClassVal,
             relation_type: this.relativeVal,
             student_id: this.student_no
         })
+        this.loading = false
         wx.reLaunch({ url: '../../main' })
     },
     // 解除绑定

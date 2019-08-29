@@ -15,7 +15,7 @@
             <div><span>性别：</span><span v-if="list.sex === 1">女</span><span v-if="list.sex === 0">男</span></div>
           </div>
           <div class="li">
-            <div><span>就读学校:</span><span>{{list.school}}</span></div>
+            <div><span>就读学校: </span><span>{{list.school}}</span></div>
             <div><span>年级：</span><span>{{list.grade}}</span></div>
           </div>
           <div class="li">
