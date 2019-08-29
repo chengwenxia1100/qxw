@@ -27,7 +27,7 @@
 export default {
     data () {
         return {
-            relative: 1
+            relation: 1
         }
     },
     computed: {
@@ -39,9 +39,9 @@ export default {
       }
     },
     watch: {
-        relative: {
+        relation: {
             handler (val) {
-                 this.$emit('relative', val)
+                 this.$emit('relation', val)
             },
             immediate: true
         }

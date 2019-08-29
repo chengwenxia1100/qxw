@@ -1,244 +1,157 @@
 <template>
-  <div class="home_container">
-    <div class="stundent_info">
-      <div class="student_bind">
-          <div class="left_mess">
-            <div class="name">名字</div>
-            <div class="grade"><span>中学</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>五年级二班</span></div>
-          </div>
-          <div class="right_btn">
-            <div class="con">切换</div>
-          </div>
-      </div>
-    </div>
-    <div class="model_list">
-      <ul>
-        <li>
-          <img src="../../assets/icon/home_icon1.png" />
-          <p>每日一题</p>
-        </li>
-        <li>
-          <img src="../../assets/icon/home_icon2.png" />
-          <p>记忆引擎</p>
-        </li>
-        <li>
-          <img src="../../assets/icon/home_icon3.png" />
-          <p>导出记录</p>
-        </li>
-        <li>
-          <img src="../../assets/icon/home_icon4.png" />
-          <p>勤学中心</p>
-        </li>
-      </ul>
-    </div>
-    <div class="model">
-      <h1>错题整理</h1>
-      <h2>每天记一记 分数涨一涨</h2>
-      <div class="list">
-        <div class="list_left">
-          <p class="tip">错题登记</p>
-          <p class="font">快速收集学习数据</p>
-          <img src="../../assets/img/home_img1.png">
+  <div class="register_container">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
+    <!-- 筛选框组件 -->
+    <two-select-books
+      @subject="subjectFun"
+      @grade="gradeFun"
+    ></two-select-books>
+    <!-- 作业本列表 -->
+    <div class="bookList_con">
+      <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
+        <img :src="item.url" v-if="item.url">
+        <div class="middle">
+          <!-- <p>{{item.name}}</p>
+          <p>{{item.semester}}</p>
+          <p>浙江教育出版社</p> -->
         </div>
-        <div class="list_right">
-          <div class="right_top">
-            <p class="tip">试卷分析</p>
-            <p class="font">快速了解学习动态</p>
-            <img src="../../assets/img/home_img2.png">
-          </div>
-          <div class="right_bottom">
-            <p class="tip">错题查看</p>
-            <p class="font">快速生成专属错题本</p>
-            <img src="../../assets/img/home_img3.png" >
-          </div>
+        <!-- <div class="show">
+          <gap-chart></gap-chart> 
+          <p>登记进度</p>
+        </div> -->
+        <div class="show">
+          <img src="../../assets/svg/icon_right.png" class="right">
         </div>
-      </div>
-      <div class="list1">
-        <p class="tip">错题归因</p>
-        <p class="font">快速生成专属错题本</p>
-        <img src="../../assets/img/home_img4.png" >
+       
       </div>
     </div>
-    <div class="mask">
-      <h1>成绩曲线</h1>
-      <h2>便利分析 直观成绩</h2>
-      <img src="../../assets/img/home_bg.jpg" alt="">
+    <!-- 添加作业本按钮 -->
+    <div class="btn" @click="addBook">
+      <img src="../../assets/svg/icon_add.png" alt="">
+      <div class="btn_con">添加作业本</div>
     </div>
   </div>
 </template>
 
 <script>
+import twoSelectBooks from '@/components/select/twoSelectBooks'
+// import gapChart from '@/components/echart/gapChart'
+import { errorBookList } from '@/api/errorRegister'
+
 export default {
+  components: {
+    twoSelectBooks,
+    // gapChart
+  },
   data () {
     return {
-
+      loading: false,
+      subjectVal: '',
+      gradeVal: '',
+      loading: false,
+      listStatus: true, // 有无错题本列表
+      errorBookListData: {}
+    }
+  },
+  onLoad () {
+    this.loading = true
+  },
+  watch: {
+    subjectVal (val) {
+      this.loading = true
+      if (val && this.gradeVal) { this.errorBookList() }
+    },
+    gradeVal (val) {
+      this.loading = true
+      if (val && this.subjectVal) { this.errorBookList() }
+    }
+  },
+  methods: {
+    // 接收科目 年级子组件传值
+    subjectFun (val) {
+      this.subjectVal = val
+    },
+    gradeFun (val) {
+      this.gradeVal = val
+    },
+    async errorBookList () {
+      const data = await errorBookList({
+        subject_id: this.subjectVal,
+        grade: this.gradeVal
+      })
+      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
+      this.errorBookListData = data
+      this.loading = false
+    },
+    // 添加作业本
+    addBook () {
+      wx.navigateTo({ url: '/pages/errorRegister/addwork/main'})
+    },
+    // 跳转到错题登记
+    chapterList (book_id) {
+      wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id  + '&grade=' + this.gradeVal+ '&subject_id=' + this.subjectVal })
     }
   }
 }
 </script>
 
-<style lang='less' scoped>
-.home_container {
-  .stundent_info{ 
-    background:#25A7F7;
-    color:#fff;
-    height: 1.6rem;
-    padding:0.3rem;
-    width:100%;
-    .student_bind {
-      color:#fff;
-      display: flex;
-       .left_mess {
-         width:5rem;
-         .name {
-           font-size:0.34rem;
-           font-weight: bold;
-           padding-bottom:0.1rem;
-         }
-         .grade {
-           color:rgba(255, 255, 255, 0.6);
-           font-size:0.26rem;
-         }
-       }
-       .right_btn {
-         flex:1;
-         .con {
-           margin-top:0.2rem;
-           width:1.28rem;
-           height:0.48rem;
-           text-align:center;
-           line-height:0.48rem;
-           background:rgba(255, 255, 255, 0.5);
-           border-radius:0.24rem;
-         }
-       }
-    }
-  }
-  .model_list {
-    border-radius:0.2rem;
-    background: #fff;
-    margin:-0.3rem 0.3rem 0.3rem 0.3rem;
-    ul {
-      display: flex;
-      li {
-        flex:1;
-        padding: 0.2rem;
-        box-sizing:border-box;
-        text-align:center;
-        img {
-          border-radius:50%;
-          width: 0.8rem;
-          height: 0.8rem;
-        }
-        p {
-          font-size:0.28rem;
-          padding:0.1rem 0;
-        }
-      }
-    }
-  }
-  .model {
-    padding:0.3rem;
-    h1 {
-      padding:0.1rem 0;
-      font-size:0.32rem;
-      color:#000;
-    }
-    h2 {
-      padding:0.1rem 0 0.2rem;
-      color: rgba(0, 0, 0, 0.4)
-    }
-    .tip {
-      padding-left:0.2rem;
-      padding-top:0.2rem;
-      font-size:0.32rem;
-      color:#000000;
-    }
-    .font {
-      padding-top:0.2rem;
-      padding-left:0.2rem;
-      font-size:0.22rem;
-      color:#999;
-    }
+<style lang="less">
+.register_container {
+  .bookList_con {
+    padding-bottom:0.3rem;
     .list {
-      display:flex;
-      .bg_same {
-        background:#fff;
-        border-radius:0.2rem;
-        width:3.26rem;
-        position:relative;
-      }
-      .list_left {
-        margin-right:0.16rem;
-        height:3.36rem;
-        img {
-          width:1.84rem;
-          height:1.76rem;
-          position:absolute;
-          bottom:0;
-          right:0;
-        }
-        .bg_same
-      }
-      .list_right{ 
-        .right_top {
-          height:1.5rem;
-          margin-bottom:0.36rem;
-          img {
-            width: 1.12rem;
-            height: 0.64rem;
-            position:absolute;
-            right:0;
-            bottom:0;
-          }
-          .bg_same
-        }
-        .right_bottom {
-          height:1.5rem;
-          img {
-            width: 1.22rem;
-            height: 1.22rem;
-            position:absolute;
-            right:0;
-            bottom:0;
-          }
-          .bg_same
-        }
-      }
-      
-    }
-    .list1 {
-      height:1.76rem;
+      padding:0.2rem 0.3rem;
+      display: flex;
       background:#fff;
-      border-radius:0.2rem;
-      width:6.88rem;
-      position:relative;
-      margin-top:0.16rem;
       img {
-        width:1.52rem;
-        height:1.52rem;
-        position:absolute;
-        bottom:0;
-        right:0;
+        width:1.5rem;
+        height:2.5rem;
+      }
+      .middle {
+        flex:1;
+        padding:0.1rem 0.2rem;
+        p {
+          padding:0.2rem 0;
+        }
+        p:nth-child(2) {
+          color:#666;
+        }
+        p:nth-child(3) {
+          color:#666;
+        }
+      }
+      .show {
+        width:1.5rem;
+        padding:0.1rem 0;
+        text-align:right;
+        p {
+          color:#666;
+        }
+        img {
+          margin-top:0.6rem;
+          width:0.36rem;
+          height:0.36rem;
+        }
       }
     }
   }
-  .mask {
-    padding:0.3rem;
+  .btn {
     background:#fff;
-    h1 {
-      padding:0.1rem 0;
-      font-size:0.32rem;
-      color:#000;
-    }
-    h2 {
-      padding:0.1rem 0 0.2rem;
-      color: rgba(0, 0, 0, 0.4)
-    }
+    height:0.8rem;
+    padding:0.1rem 0.3rem;
+    display: flex;
+    align-items: center;
     img {
-      width:100%;
+      width:0.32rem;
+      height:0.32rem;
+      margin-right:0.3rem;
     }
-    
+    .btn_con {
+      flex:1;
+      color:#1296db;
+    }
   }
 }
 </style>

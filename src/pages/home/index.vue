@@ -1,119 +1,80 @@
 <template>
-  <div class="home_container"> 
-      <page-loading v-model='loading'>
-        加载中...
-      </page-loading>
-      <div class="login_mess">
-        <div class="left">
-          <div class="slide1">
-            <div><span>学生姓名：</span><span>{{studentData.s_realname}}</span></div>
-            <div><span>性别：</span><span v-if="studentData.sex === 1">女</span><span v-if="studentData.sex === 0">男</span></div>
+  <div class="home_container">
+    <!-- <div class="advice">
+      <img src="../../assets/icon/advice_icon.png">
+      <span>通知公告</span>
+    </div> -->
+    <div class="stundent_info">
+      <div class="student_bind">
+          <div class="left_mess">
+            <div class="name">{{studentData.s_realname}}</div>
+            <div class="grade"><span>{{studentData.school}}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>{{studentData.grade}}{{studentData.class_id}}</span></div>
           </div>
-          <div class="slide2">
-            <span>就读学校: </span><span>{{studentData.school}}</span>
+          <div class="right_btn">
+            <div class="con" v-if="studentData.student_status === 0"  @click="jump('bind')">绑定</div>
+            <div class="con" v-if="studentData.student_status === 1"  @click="showPicker">切换</div>
+            <mpvue-picker
+              ref="mpvuePicker"
+              :mode="mode"
+              :pickerValueDefault="pickerValueDefault"
+              @onConfirm="onConfirm"
+              :pickerValueArray="pickerValueArray" />
           </div>
-          <div class="slide3">
-            <div><span>就读年级：</span><span>{{studentData.grade}}</span></div>
-            <div><span>班级：</span><span>{{studentData.class_id}}</span></div>
-          </div>
-        </div>
-        <div class="right" v-if="studentData.student_status === 0">
-          <div class="bind" @click="jump('bind')">
-            绑定/登录
-          </div>
-        </div>
-        <div class="right" v-if="studentData.student_status === 1">
-          <div class="change" @click="showPicker">
-            <img src="../../assets/svg/icon_change.png" alt="">
-            切换学员
-          </div>
-          <mpvue-picker
-            ref="mpvuePicker"
-            :mode="mode"
-            :pickerValueDefault="pickerValueDefault"
-            @onConfirm="onConfirm"
-            :pickerValueArray="pickerValueArray" />
-        </div>
       </div>
-      <div class="bg"></div>
-      <div class="home_model">
-        <ul>
-          <li @click="jump('1')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon3.png" />
-            </div>
-            <p>错题本</p>
-          </li>
-          <li @click="jump('2')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon1.png" />
-            </div>
-            <p>错题登记</p>
-          </li>
-          <li @click="jump('3')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon2.png" />
-            </div>
-            <p>试卷分析</p>
-          </li>
-          
-          <li @click="jump('4')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon4.png" />
-            </div>
-            <p>错题归因</p>
-          </li>
-          <li @click="jump('5')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon5.png" />
-            </div>
-            <p>每日一题</p>
-          </li>
-          <li @click="jump('6')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon6.png" />
-            </div>
-            <p>记忆引擎</p>
-          </li>
-          <li @click="jump('7')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon7.png" />
-            </div>
-            <p>导出记录</p>
-          </li>
-          <li @click="jump('8')">
-            <div>
-              <img class="home-icon" src="../../assets/svg/home_icon7.png" />
-            </div>
-            <p>勤学中心</p>
-          </li>
-        </ul>
-      </div>
-      <div class="curve">
-        <div class="curve_tit">成绩曲线</div>
-        <div class="curve_con">
-          <p><span>学科: </span><span v-if="studentData.subject">{{studentData.subject}}</span></p>
-          <div class="chart">
-            <!-- <div class="chart_con" v-if="studentData.student_status === 1">
-              <mpvue-echarts :echarts="echarts" :onInit="onInit" canvasId="demo-canvas" />
-            </div> -->
-            <div class="no_chart">
-              暂无数据
-            </div>
+    </div>
+    <div class="model_list">
+      <ul>
+        <li @click="jump('5')">
+          <img src="../../assets/icon/home_icon1.png" />
+          <p>每日一题</p>
+        </li>
+        <li @click="jump('6')">
+          <img src="../../assets/icon/home_icon2.png" />
+          <p>记忆引擎</p>
+        </li>
+        <li @click="jump('7')">
+          <img src="../../assets/icon/home_icon3.png" />
+          <p>导出记录</p>
+        </li>
+        <li @click="jump('8')">
+          <img src="../../assets/icon/home_icon4.png" />
+          <p>勤学中心</p>
+        </li>
+      </ul>
+    </div>
+    <div class="model">
+      <h1>错题整理</h1>
+      <h2>每天记一记 分数涨一涨</h2>
+      <div class="list">
+        <div class="list_left"  @click="jump('2')">
+          <p class="tip">错题登记</p>
+          <p class="font">快速收集学习数据</p>
+          <img src="../../assets/img/home_img1.png">
+        </div>
+        <div class="list_right">
+          <div class="right_top" @click="jump('3')">
+            <p class="tip">试卷分析</p>
+            <p class="font">快速了解学习动态</p>
+            <img src="../../assets/img/home_img2.png">
+          </div>
+          <div class="right_bottom" @click="jump('1')">
+            <p class="tip">错题查看</p>
+            <p class="font">快速生成专属错题本</p>
+            <img src="../../assets/img/home_img3.png" >
           </div>
         </div>
       </div>
-      <div class="advice">
-        <div class="advice_tit">
-          通知公告
-        </div>
-        <div class="advice_con" v-if="studentData.notice">
-          {{studentData.notice}}
-        </div>
-        <div class="advice_con" v-else>
-          暂无公告
-        </div>
+      <div class="list1" @click="jump('4')">
+        <p class="tip">错题归因</p>
+        <p class="font">快速生成专属错题本</p>
+        <img src="../../assets/img/home_img4.png" >
       </div>
+    </div>
+    <div class="mask">
+      <h1>成绩曲线</h1>
+      <h2>便利分析 直观成绩</h2>
+      <img src="../../assets/img/home_bg.png">
+    </div>
   </div>
 </template>
 
@@ -145,18 +106,6 @@ export default {
     this.loading = true
     this.getHome()
   },
-  // watch: {
-  //   token: {
-  //     immediate: true,
-  //     handler (val) {
-  //       if (val) {
-  //         setTimeout(() => {
-  //           this.getHome()
-  //         }, 1000)
-  //       }
-  //     }
-  //   }
-  // },
   methods: {
     // 请求首页接口
     async getHome () {
@@ -222,110 +171,69 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang='less' scoped>
 .home_container {
-  padding-bottom:0.2rem;
-  .bg {
-    height:0.2rem;
-    width:100%;
-    background:#f2f2f2;
-  }
-  .tit{
-    background:#f2f2f2;
-    width:100%;
-    font-size:0.24rem;
-    padding:0.1rem 0;
-  }
-  .login_btn {
-    margin:0.2rem auto;
-    border-radius:0.5rem;
-    font-size:0.32rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    button {
-      background:#fff!important;
-      width:80%;
-      height:0.8rem;
-      background:#fff;
-      border-radius:0.5rem;
-      border:0.02rem #f2f2f2 solid;
+  .advice {
+    display:flex;
+    img {
+      width:0.24rem;
+      height:0.23rem;
     }
-  }
-  .login_mess {
-    display: flex;
-    font-size:0.28rem;
-    background: #fff;
-    .left {
+    span {
       flex:1;
-      .slide_same {
-        padding:0.2rem 0.4rem 0.2rem 0.2rem;
-        clear:both;
-        overflow: hidden;
-        div:first-child {
-          float:left;
-           
-        }
-        div:nth-child(2) {
-          float:right;
-        }
-      }
-      .slide1 {
-        .slide_same
-      }
-      .slide2 {
-        .slide_same
-      }
-      .slide3 {
-        .slide_same
-      }
-    }
-    .right {
-      width:2rem;
-      padding:0.2rem 0;
-      .bind {
-        border:0.02rem #333 solid;
-        width:1.6rem;
-        height:0.8rem;
-        border-radius:0.18rem;
-        text-align: center;
-        line-height: 0.8rem;
-      }
-      .change {
-        text-align:center;
-        display: flex;
-        align-items:center;
-        img {
-          width: 0.32rem;
-          height: 0.32rem;
-          padding-right:0.2rem;
-        }
-      }
+      font-size:0.24rem;
     }
   }
-  .home_model {
+  .stundent_info{ 
+    background:#25A7F7;
+    color:#fff;
+    height: 1.6rem;
+    padding:0.3rem;
+    width:100%;
+    .student_bind {
+      color:#fff;
+      display: flex;
+       .left_mess {
+         width:5rem;
+         .name {
+           font-size:0.34rem;
+           font-weight: bold;
+           padding-bottom:0.1rem;
+         }
+         .grade {
+           color:rgba(255, 255, 255, 0.6);
+           font-size:0.26rem;
+         }
+       }
+       .right_btn {
+         flex:1;
+         .con {
+           margin-top:0.2rem;
+           width:1.28rem;
+           height:0.48rem;
+           text-align:center;
+           line-height:0.48rem;
+           background:rgba(255, 255, 255, 0.5);
+           border-radius:0.24rem;
+         }
+       }
+    }
+  }
+  .model_list {
+    border-radius:0.2rem;
     background: #fff;
+    margin:-0.3rem 0.3rem 0.3rem 0.3rem;
     ul {
-      clear:both;
-      overflow:hidden;
+      display: flex;
       li {
-        width:25%;
-        float:left;
+        flex:1;
         padding: 0.2rem;
         box-sizing:border-box;
         text-align:center;
-        div {
-          background: #666;
+        img {
           border-radius:50%;
-          width: 1.4rem;
-          height: 1.4rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          .home-icon {
-            width: 0.64rem;
-            height: 0.64rem;
-          }
+          width: 0.8rem;
+          height: 0.8rem;
         }
         p {
           font-size:0.28rem;
@@ -334,46 +242,108 @@ export default {
       }
     }
   }
-  .curve {
-    &_tit {
-      .tit
+  .model {
+    padding:0.3rem;
+    h1 {
+      padding:0.1rem 0;
+      font-size:0.32rem;
+      color:#000;
     }
-    &_con {
-      padding:0.2rem 0;
-      p {
-        font-size:0.28rem;
-        span:first-child {
-          font-weight:bold;
+    h2 {
+      padding:0.1rem 0 0.2rem;
+      color: rgba(0, 0, 0, 0.4)
+    }
+    .tip {
+      padding-left:0.2rem;
+      padding-top:0.2rem;
+      font-size:0.32rem;
+      color:#000000;
+    }
+    .font {
+      padding-top:0.2rem;
+      padding-left:0.2rem;
+      font-size:0.22rem;
+      color:#999;
+    }
+    .list {
+      display:flex;
+      .bg_same {
+        background:#fff;
+        border-radius:0.2rem;
+        width:3.26rem;
+        position:relative;
+      }
+      .list_left {
+        margin-right:0.16rem;
+        height:3.36rem;
+        img {
+          width:1.84rem;
+          height:1.76rem;
+          position:absolute;
+          bottom:0;
+          right:0;
+        }
+        .bg_same
+      }
+      .list_right{ 
+        .right_top {
+          height:1.5rem;
+          margin-bottom:0.36rem;
+          img {
+            width: 1.12rem;
+            height: 0.64rem;
+            position:absolute;
+            right:0;
+            bottom:0;
+          }
+          .bg_same
+        }
+        .right_bottom {
+          height:1.5rem;
+          img {
+            width: 1.22rem;
+            height: 1.22rem;
+            position:absolute;
+            right:0;
+            bottom:0;
+          }
+          .bg_same
         }
       }
-      .chart {
-        background:#fff;
-        .chart_con {
-          width:100%;
-          height:5rem;
-        }
-        .no_chart {
-          padding:0.5rem 0;
-          font-size:0.32rem;
-          display:flex;
-          justify-content: center;
-          align-content: center;
-        }
+      
+    }
+    .list1 {
+      height:1.76rem;
+      background:#fff;
+      border-radius:0.2rem;
+      width:6.88rem;
+      position:relative;
+      margin-top:0.16rem;
+      img {
+        width:1.52rem;
+        height:1.52rem;
+        position:absolute;
+        bottom:0;
+        right:0;
       }
     }
   }
-  .advice {
-    &_tit {
-      .tit
-    }
-    &_con {
+  .mask {
+    padding:0.3rem;
+    background:#fff;
+    h1 {
+      padding:0.1rem 0;
       font-size:0.32rem;
-      text-align:center;
-      padding:0.2rem 0;
+      color:#000;
     }
-    .advice_con {
-      background:#fff;
+    h2 {
+      padding:0.1rem 0 0.2rem;
+      color: rgba(0, 0, 0, 0.4)
     }
+    img {
+      width:100%;
+    }
+    
   }
 }
 </style>

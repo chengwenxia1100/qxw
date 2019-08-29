@@ -2,18 +2,18 @@
     <div class="student_mess">
         <div class="list">
             <div class="tit">学生姓名</div>
-            <div class="show" v-if="studentId">{{sName}}</div>
-            <input type="text" placeholder="请输入您孩子的姓名" v-model="sName" v-else>
+            <!-- <div class="show" v-if="studentId">{{sName}}</div> -->
+            <input type="text" placeholder="请输入您孩子的姓名" v-model="sName">
         </div>
         <div class="list">
             <div class="tit">性别</div>
             <div class="radio">
-                <div class="select_btn" @tap="!studentId && sexRadio(1)">
+                <div class="select_btn" @click="sexRadio(1)">
                     <img :src="selectIcon" v-if="sex == 1">
                     <img :src="noselectIcon" v-else>
                     <span>男</span>
                 </div>
-                <div class="select_btn" @tap="!studentId && sexRadio(2)">
+                <div class="select_btn" @click="sexRadio(2)">
                     <img :src="selectIcon" v-if="sex == 2">
                     <img :src="noselectIcon" v-else>
                     <span>女</span>
@@ -22,8 +22,8 @@
         </div>
         <div class="list">
             <div class="tit">就读年级</div>
-            <div class="show" v-if="studentId">{{grade}}</div>
-            <div class="input" v-else @click="showPicker">{{grade}}</div>
+            <!-- <div class="show" v-if="studentId">{{grade}}</div> -->
+            <div class="input" @click="showPicker">{{grade}}</div>
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
@@ -33,8 +33,8 @@
         </div>
         <div class="list">
             <div class="tit">就读学校</div>
-            <div class="show" v-if="studentId">{{school}}</div>
-            <div class="input" @click="showPickerschool" v-else>{{school}}</div>
+            <!-- <div class="show" v-if="studentId">{{school}}</div> -->
+            <div class="input" @click="showPickerschool">{{school}}</div>
             <mpvue-picker
             ref="mpvuePickerschool"
             :mode="mode"

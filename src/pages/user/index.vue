@@ -24,6 +24,9 @@
         <p><span>当前学员： </span><span>{{studentdata.s_realname}}</span></p>
         <p>(点击可切换，添加学员，更新学员信息)</p>
       </div>
+      <div class="icon">
+        <img src="../../assets/icon/icon_right_more.png" class="right">
+      </div>
     </div>
     <div class="list">
       <ul>
@@ -171,6 +174,14 @@ page {
         span:nth-child(2) {
           color:#999;
         }
+      }
+    }
+    .icon {
+      text-align: right;
+      img {
+        margin-top:50%;
+        width:0.36rem;
+        height: 0.36rem;
       }
     }
   }

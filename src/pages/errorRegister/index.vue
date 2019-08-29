@@ -22,7 +22,7 @@
           <p>登记进度</p>
         </div> -->
         <div class="show">
-          <img src="../../assets/svg/icon_right.png" class="right">
+          <img src="../../assets/icon/icon_right_more.png" class="right">
         </div>
        
       </div>
@@ -100,6 +100,7 @@ export default {
 <style lang="less">
 .register_container {
   .bookList_con {
+    padding-bottom:0.3rem;
     .list {
       padding:0.2rem 0.3rem;
       display: flex;
@@ -138,7 +139,6 @@ export default {
   }
   .btn {
     background:#fff;
-    margin-top:0.6rem;
     height:0.8rem;
     padding:0.1rem 0.3rem;
     display: flex;

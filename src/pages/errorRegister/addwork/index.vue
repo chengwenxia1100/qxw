@@ -9,7 +9,7 @@
       @grade="gradeFun"
     ></two-select-books>
     <!---->
-    <div class="bookList_con">
+    <div class="bookList_con" v-if="bookList">
       <div class="list" v-for="(item, i) in worksData" :key="i">
         <img :src="item.url">
         <div class="middle">
@@ -21,6 +21,11 @@
           <img src="../../../assets/icon/icon_click.png" v-if="item.status === 0" @click="selectWork(item.book_id, i)">
           <img src="../../../assets/icon/icon_clicked.png" v-if="item.status === 1">
         </div>
+      </div>
+    </div>
+    <div class="bookList_con" v-else>
+      <div class="no_books">
+        该年级下暂无该科目的作业本
       </div>
     </div>
   </div>
@@ -39,11 +44,17 @@ export default {
       loading: false,
       worksData: {},
       subjectVal: '',
-      gradeVal: '',
+      gradeVal: ''
+      // bookList: false
     }
   },
   onLoad () {
     this.loading = true
+  },
+  computed: {
+    bookList () {
+      if (this.worksData.length > 0) { return true } else { return false }
+    }
   },
   watch: {
     subjectVal (val) {
@@ -64,6 +75,7 @@ export default {
         grade: this.gradeVal
       })
       this.worksData = data
+      // if (data.length > 0) { this.bookList = true } else { this.bookList = false }
       this.loading = false
     },
     // 添加
@@ -80,7 +92,7 @@ export default {
       this.gradeVal = val
     },
     selectWork (book_id, i) {
-      this.loading = false
+      this.loading = true
       this.worksData.forEach((item,index,arr)=>{
         if (index === i) {
           addBook({
@@ -137,6 +149,14 @@ export default {
         }
       }
     }
+    .no_books {
+      padding:0.5rem 0;
+      margin:0 auto;
+      text-align:center;
+      font-size:0.32rem;
+      color:#666;
+    }
   }
+  
 }
 </style>

@@ -7,10 +7,9 @@
       @studentSchool="studentSchool"
       @studentGrade="studentGrade"
       @studentClass="studentClass"
-      @relative="relative"
       @studentNo="studentNo"
     ></student-form>
-    <parents-form></parents-form>
+    <parents-form @relative="relative"></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
     <div class="btn" @click="finished">完成</div>
   </div>
@@ -28,7 +27,7 @@ export default {
   },
   data () {
     return {
-      relative: 1,
+      relativeVal: 1,
       studentNameVal: '',
       studentSexVal: 0,
       studentSchoolVal: '请输入就读学校',
@@ -50,10 +49,11 @@ export default {
     }
   },
   methods: {
-    // 接收子组件的传值
+    // 接收家长关系子组件的传值
     relative (val) {
-      this.studentNameVal = val
+      this.relativeVal = val
     },
+    //接收学生子组件的传值
     studentName (val) {
       this.studentNameVal = val
     },
@@ -79,8 +79,14 @@ export default {
     // 更新学员接口
     async updataStudent () {
         const data = await updataStudent({
+            s_realname: this.studentNameVal,
+            s_sex: this.studentSexVal,
+            s_grade: this.studentGradeVal,
+            s_school: this.studentSchoolVal,
+            // s_class: this.studentClassVal,
+            // student_no: this.student_no,
             class_id: this.studentClassVal,
-            relation_type: this.relative,
+            relation_type: this.relativeVal,
             student_id: this.student_no
         })
         wx.reLaunch({ url: '../../main' })
@@ -128,12 +134,12 @@ page {
     width:90%;
     text-align:right;
     font-size:0.28rem;
-    color:#EA5A49;
+    color:#25A7F7;
     padding:0.2rem 0;
   }
   .btn {
     color:#fff;
-    background:#EA5A49;
+    background:#25A7F7;
     width: 1.6rem;
     height: 0.6rem;
     line-height:0.6rem;
