@@ -18,8 +18,8 @@
           <p>浙江教育出版社</p>
         </div>
         <div class="status">
-          <img src="../../../assets/icon/icon_click.png" v-if="item.status === 0" @click="selectWork(item.book_id, i)">
-          <img src="../../../assets/icon/icon_clicked.png" v-if="item.status === 1">
+          <img src="../../../assets/icon/icon_click.png" v-if="item.status === 0" @click="addWork(item.book_id, i)">
+          <img src="../../../assets/icon/icon_clicked.png" v-if="item.status === 1" @click="removeWork(item.book_id, i)">
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@ export default {
     gradeFun (val) {
       this.gradeVal = val
     },
-    selectWork (book_id, i) {
+    addWork (book_id, i) {
       this.loading = true
       this.worksData.forEach((item,index,arr)=>{
         if (index === i) {
@@ -100,10 +100,20 @@ export default {
           }).then(res => {
             this.loading = false
              item.status = 1
-          }).catch(err => {
-            if (err.code === 1701) {
-              this.loading = false
-            }
+          })
+        }
+			})
+      // this.addBook(book_id)
+    },
+    removeWork (book_id, i) {
+      this.loading = true
+      this.worksData.forEach((item,index,arr)=>{
+        if (index === i) {
+          addBook({
+            book_id: book_id 
+          }).then(res => {
+            this.loading = false
+             item.status = 0
           })
         }
 			})

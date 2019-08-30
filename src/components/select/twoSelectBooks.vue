@@ -68,10 +68,10 @@ export default {
       if (data.length > 0) {
         this.gradeListNo = true
         this.gradeList = data
-        this.gradeValue = data[0].value
         for(let i of data) {
           if(i.status === 1) {
             this.grade = i.label
+            this.gradeValue = data[i].value
           }
         }
       } else {

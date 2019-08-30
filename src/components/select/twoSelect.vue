@@ -120,8 +120,9 @@ export default {
 .main_box {
   .navTab {
     height:0.6rem;
-    background:#c9c7c7;
+    background:#fff;
     padding:0.1rem 0;
+    color:#25A7F7;
     ul {
       display:flex;
       li {

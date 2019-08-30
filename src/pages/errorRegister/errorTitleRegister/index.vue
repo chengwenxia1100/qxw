@@ -7,15 +7,14 @@
     <div class="list_con" v-for="(list, i) in chapterListData" :key="i">
       <div class="tit">
         <span>{{list.book_list_name}}</span>
-        <span>登记进度</span>
-        <span>正确率</span>
+        <!-- <span>登记进度</span>
+        <span>正确率</span> -->
       </div>
       <div class="con">
         <ul>
-          <li v-for="(item, j) in chapterListData[i].child" :key="j"
-          @click="gotodetail(item.book_list_id, list.book_list_name, item.book_list_name)">
+          <li v-for="(item, j) in chapterListData[i].child" :key="j" @click="gotodetail(item.book_list_id, list.book_list_name, item.book_list_name)">
             <span>{{item.book_list_name}}</span>
-            <span>{{item.register_rate}}%</span>
+            <span v-if="item.register_rate === 0" style="color:#FE0000;">暂无登记</span><span v-else style="color:#068BFF;">{{item.register_rate}}%</span>
             <span>{{item.right_rate}}%</span>
           </li>
         </ul>
@@ -32,7 +31,7 @@ export default {
     return {
       chapterListData: {},
       message: {},
-      // book_id: 16,
+      book_id: 16,
       loading: false
     }
   },
@@ -72,18 +71,22 @@ export default {
 </script>
 
 <style lang='less'>
+page {
+  background:#F8FBFF;
+}
 .errorTitle_container {
   font-size:0.28rem;
   .tip {
     padding:0.2rem;
-    color:#f00;
+    color:#FE0000;
   }
   .list_con {
     margin-bottom:0.4rem;
     .tit {
-      background:#707070;
       display:flex;
-      color:#fff;
+      color:#333;
+      font-weight:bold;
+      font-size:0.32rem;
       padding:0.2rem;
       span:first-child {
         width:50%;
@@ -98,24 +101,31 @@ export default {
     .con {
       ul {
         li {
+          box-shadow: 0 2px 0 #a6dcfd;
+          margin:0 0.2rem 0.2rem;
+          box-sizing:border-box;
+          background:#fff;
           padding:0.2rem;
           display:flex;
+          border-radius:0.12rem;
           span:first-child {
             width:50%;
           }
           span:nth-child(2) {
             flex:1;
+            font-size:0.26rem;
           }
           span:last-child {
             flex:1;
+            color:#068BFF;
           }
         }
-        li:nth-of-type(odd) { 
-          background:#fff;
-        }
-        li:nth-of-type(even) { 
-          background:#8a8a8a;
-        }
+        // li:nth-of-type(odd) { 
+        //   background:#fff;
+        // }
+        // li:nth-of-type(even) { 
+        //   background:#8a8a8a;
+        // }
       }
     }
   }

@@ -224,6 +224,7 @@ export default {
     }
   }
   .tab {
+    box-sizing:border-box;
     width:7rem;
     height:0.6rem;
     white-space: nowrap;
@@ -285,11 +286,13 @@ export default {
     padding:0.2rem 0;
     display:flex;
     text-align:center;
+    padding-bottom:0.2rem;
     .btn_con {
       margin-right:0.4rem;
       width:1.6rem;
       height:0.6rem;
-      border:0.02rem #8d8d8d solid;
+      border:0.02rem #25A7F7 solid;
+      color:#25A7F7;
       border-radius:0.08rem;
       line-height:0.6rem;
       text-align:center;
@@ -328,7 +331,7 @@ export default {
       }
       .tip {
         background:#e0b752;
-        color:#f00;
+        color:#FE0000;
         font-size:0.24rem;                                                                                                                                                                                                                                                        
       }
       .con {

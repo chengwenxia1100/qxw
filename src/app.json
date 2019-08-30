@@ -1,8 +1,9 @@
 {
   "pages": [
+    "pages/demo/main",
     "pages/home/main",
     "pages/user/main",
-    "pages/demo/main",
+    
     "pages/auth/main",
     "pages/wrongTitle/main",
     "pages/errorRegister/main",
@@ -24,7 +25,7 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#25A7F7",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "white"
   },

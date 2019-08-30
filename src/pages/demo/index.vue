@@ -1,157 +1,273 @@
 <template>
-  <div class="register_container">
+  <div class="paperRegister_container">
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <!-- 筛选框组件 -->
-    <two-select-books
-      @subject="subjectFun"
-      @grade="gradeFun"
-    ></two-select-books>
-    <!-- 作业本列表 -->
-    <div class="bookList_con">
-      <div class="list" v-for="(item, i) in errorBookListData" :key="i" @click="chapterList(item.book_id)">
-        <img :src="item.url" v-if="item.url">
-        <div class="middle">
-          <!-- <p>{{item.name}}</p>
-          <p>{{item.semester}}</p>
-          <p>浙江教育出版社</p> -->
+    <div class="tit">
+      <span>试卷名称A</span>
+      <span>单元自测卷  总分：150</span>
+      <span>我的得分：100</span>
+    </div>
+    <div class="register" v-for="(list, i) in paperList" :key="i">
+      <div class="register_tit" @click="slideTab(i)">
+        <div class="left">第一部分 {{list.chapter_name}}（共{{list.score_total}}分）</div>
+        <div class="right">我的得分：{{list.student_score_total}}</div>
+        <div class="img">
+          <img src="../../assets/icon/icon_up.png" v-if="list.conFlag">
+          <img src="../../assets/icon/icon_down.png" v-else>
         </div>
-        <!-- <div class="show">
-          <gap-chart></gap-chart> 
-          <p>登记进度</p>
-        </div> -->
-        <div class="show">
-          <img src="../../assets/svg/icon_right.png" class="right">
+      </div>
+      <div class="register_con" v-if="list.conFlag">
+        <div class="box">
+          <div class="row tit"> 
+            <div class="cell">题号</div> 
+            <div class="cell">题目及答案</div> 
+            <div class="cell">作答情况</div>
+            <div class="cell">分值</div>
+            <div class="cell">得分</div>
+          </div>
+          <div class="row" v-for="(item, j) in paperList[i].topic_info" :key="j">
+            <div class="cell">{{item.topic_number}}</div> 
+            <div class="cell blue" @click="checkDetail(item.topic_id, item.id)">查看</div> 
+            <div class="cell">
+              <!-- <img src="/assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="item.status = 1">
+              <img src="/assets/icon/icon_answer_quest.png" v-if="item.status == 1"  @click="item.status = 0">
+              <img src="/assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="item.status = 2">
+              <img src="/assets/icon/icon_answer_error.png" v-if="item.status == 2 "  @click="item.status = 0"> -->
+            </div>
+            <div class="cell">{{item.topic_score}}</div>
+            <div class="cell">
+              <input type="text" v-model="item.student_score" 
+              @blur="blur(item.status, item.topic_id, item.student_score, list.chapter_id, list.chapter_name, item.topic_number, list.topic_type, item.topic_score)">
+            </div>
+          </div>
         </div>
-       
       </div>
     </div>
-    <!-- 添加作业本按钮 -->
-    <div class="btn" @click="addBook">
-      <img src="../../assets/svg/icon_add.png" alt="">
-      <div class="btn_con">添加作业本</div>
+    <div class="btn">
+      <div class="btn_con" @click="submit">提交</div>
     </div>
   </div>
 </template>
 
 <script>
-import twoSelectBooks from '@/components/select/twoSelectBooks'
-// import gapChart from '@/components/echart/gapChart'
-import { errorBookList } from '@/api/errorRegister'
+import { getPaperChapterList, paperTopicRegister } from '@/api/analy';
 
 export default {
-  components: {
-    twoSelectBooks,
-    // gapChart
-  },
   data () {
     return {
-      loading: false,
-      subjectVal: '',
-      gradeVal: '',
-      loading: false,
-      listStatus: true, // 有无错题本列表
-      errorBookListData: {}
+      paper_id: 15,
+      paperList: {},
+      message: {},
+      studentScore: '1', // 孩子分数
+      loading: false, // 进入页面的弹窗
     }
   },
-  onLoad () {
+  onLoad (option) {
     this.loading = true
+    this.message = option
+    this.getPaperChapterList()
+  },
+  computed: {
+    paper_id () {
+      return this.message.paper_id
+    }
   },
   watch: {
-    subjectVal (val) {
-      this.loading = true
-      if (val && this.gradeVal) { this.errorBookList() }
+    questStatus: {
+      handler (val) {
+        if (val) { this.status = 1} else { this.status = 0 }
+      }
     },
-    gradeVal (val) {
-      this.loading = true
-      if (val && this.subjectVal) { this.errorBookList() }
-    }
+    errorStatus: {
+      handler (val) {
+        if (val) { this.status = 2} else { this.status = 0 }
+      }
+    },
   },
   methods: {
-    // 接收科目 年级子组件传值
-    subjectFun (val) {
-      this.subjectVal = val
-    },
-    gradeFun (val) {
-      this.gradeVal = val
-    },
-    async errorBookList () {
-      const data = await errorBookList({
-        subject_id: this.subjectVal,
-        grade: this.gradeVal
+    async getPaperChapterList () {
+      const data = await getPaperChapterList({
+        paper_id: this.paper_id
       })
-      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
-      this.errorBookListData = data
+      this.paperList = data
       this.loading = false
+
+      this.paperList.map((item, index)=>{
+        item.conFlag = false
+      })
     },
-    // 添加作业本
-    addBook () {
-      wx.navigateTo({ url: '/pages/errorRegister/addwork/main'})
+    // 题目打分提交
+    async paperTopicRegister (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type) {
+      const data = await paperTopicRegister({
+        topic_id: topic_id,
+        paper_id: this.paper_id,
+        chapter_id: chapter_id,
+        status: status, // 作答情况
+        score: student_score,
+        topic_number: topic_number,
+        topic_type: chapter_name
+      })
     },
-    // 跳转到错题登记
-    chapterList (book_id) {
-      wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id  + '&grade=' + this.gradeVal+ '&subject_id=' + this.subjectVal })
+    // input失去焦点
+    blur (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
+      if (student_score > topic_score) {
+        wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
+      } else if (status == 0) {
+        wx.showToast({ title: '请选择做答情况～', icon: 'none' })
+      } else if (student_score != topic_score && status == 1) {
+        wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
+      } else if (student_score == topic_score && status == 2) {
+        wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
+      } else {
+        this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+      }
+    },
+    // 查看详情
+    checkDetail (topic_id, id) {
+      const url = '/pages/paperAnaly/paperDetail/main?topic_id=' + topic_id + '&id=' + id
+      wx.navigateTo({ url })
+    },
+    // 提交
+    submit () {
+      wx.showModal({
+        title: '提交登记内容',
+        content: '确认提交登记内容',
+        cancelColor: '#666',
+        confirmText: '确认',
+        confirmColor: '#EA5A49',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ 
+              url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
+            })
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
+    },
+    slideTab (i) {
+      this.paperList.map((item, index)=>{
+        if (index === i) {
+          item.conFlag = !item.conFlag
+        }
+      })
+      this.$forceUpdate();
     }
   }
 }
 </script>
 
-<style lang="less">
-.register_container {
-  .bookList_con {
-    padding-bottom:0.3rem;
-    .list {
-      padding:0.2rem 0.3rem;
-      display: flex;
-      background:#fff;
-      img {
-        width:1.5rem;
-        height:2.5rem;
+<style lang='less'>
+page {
+  background:#F8FBFF;
+}
+.bule {
+  color: #25A7F7;
+}
+.paperRegister_container {
+  font-size:0.24rem;
+  .tit {
+    background:#fff;
+    display: flex;
+    padding:0.2rem;
+    color:#fff;
+    margin:0.4rem 0;
+    span {
+      flex:1;
+    }
+    span:first-child {
+      color:#333;
+    }
+    span:nth-child(2) {
+      color:#666;
+    }
+    span:nth-child(3) {
+      color:#666
+    }
+  }
+  .register {
+    &_tit {
+      color:#fff;
+      // background:rgba(37,167,247);
+      background: #25A7F7;
+      padding:0.2rem;
+      border-bottom:0.02rem #fff solid;
+      display:flex;
+      .left {
+        flex:2;
       }
-      .middle {
+      .right {
+        flex:2;
+      }
+      .img {
         flex:1;
-        padding:0.1rem 0.2rem;
-        p {
-          padding:0.2rem 0;
-        }
-        p:nth-child(2) {
-          color:#666;
-        }
-        p:nth-child(3) {
-          color:#666;
+        text-align:right;
+        img {
+          width:0.32rem;
+          height:0.32rem;
         }
       }
-      .show {
-        width:1.5rem;
+    }
+    &_con {
+      background:#fff;
+      .tit{
+        color:#25A7F7;
+      }
+      .box { 
+        display: table;
+        font-size:0.24rem;
+        text-align:center;
+        width:100%;
+        background:#fff;
+      } 
+      .row { 
+        display: table-row; 
+      } 
+      .cell { 
+        display: table-cell;
+        width: 20%;
+        border: 1px solid #f2f2f2;
         padding:0.1rem 0;
-        text-align:right;
-        p {
-          color:#666;
-        }
         img {
-          margin-top:0.6rem;
-          width:0.36rem;
-          height:0.36rem;
+          width: 0.36rem;
+          height: 0.36rem;
         }
+        img:first-child {
+          margin-right:0.2rem;
+        }
+      }
+      .blue {
+        color:#1296db;
       }
     }
   }
+  .register:last-child {
+    margin-bottom:1.8rem;
+  }
   .btn {
+    box-sizing:border-box;
+    margin:0.3rem 0;
+    padding:0.2rem 0;
+    width:100%;
     background:#fff;
-    height:0.8rem;
-    padding:0.1rem 0.3rem;
-    display: flex;
-    align-items: center;
-    img {
-      width:0.32rem;
-      height:0.32rem;
-      margin-right:0.3rem;
-    }
+    box-shadow: 0 2px 5px #a6dcfd;
+    position:fixed;
+    bottom:0;
+    left:0;
     .btn_con {
-      flex:1;
-      color:#1296db;
+      width:1.8rem;
+      height: 0.6rem;
+      text-align:center;
+      background:#fff;
+      border:0.02rem #25A7F7 solid;
+      border-radius:0.08rem;
+      line-height:0.6rem;
+      color:#25A7F7;
+      margin:0 auto;
     }
   }
 }
+ 
 </style>
