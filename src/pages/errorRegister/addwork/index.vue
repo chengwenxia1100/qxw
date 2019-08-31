@@ -33,7 +33,7 @@
 
 <script>
 import twoSelectBooks from '@/components/select/twoSelectBooks'
-import { addBookList, addBook } from '@/api/errorRegister'
+import { addBookList, addBook, removeBook } from '@/api/errorRegister'
 
 export default {
   components: {
@@ -109,7 +109,7 @@ export default {
       this.loading = true
       this.worksData.forEach((item,index,arr)=>{
         if (index === i) {
-          addBook({
+          removeBook({
             book_id: book_id 
           }).then(res => {
             this.loading = false

@@ -58,8 +58,12 @@ export default {
   onLoad () {
     this.loading = true
   },
+  onShow () {
+    if (this.gradeVal && this.subjectVal) { this.errorBookList() }
+  },
   watch: {
     subjectVal (val) {
+      console.log(val)
       this.loading = true
       if (val && this.gradeVal) { this.errorBookList() }
     },

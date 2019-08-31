@@ -31,7 +31,6 @@ export default {
     return {
       chapterListData: {},
       message: {},
-      book_id: 16,
       loading: false
     }
   },

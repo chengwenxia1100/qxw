@@ -4,16 +4,20 @@
       加载中...
     </page-loading>
     <div class="tit">
-      <span>试卷名称A</span>
-      <span>单元自测卷  总分：150</span>
-      <span>我的得分：100</span>
+      <span>{{paperdata.paper_name}}</span>
+      <span>{{paperdata.paper_name}} </span>
+      <span>总分：{{paperdata.paper_total_score}}   我的得分：{{paperdata.paper_student_score}}</span>
     </div>
     <div class="register" v-for="(list, i) in paperList" :key="i">
-      <div class="register_tit">
+      <div class="register_tit" @click="slideTab(i)">
         <div class="left">第一部分 {{list.chapter_name}}（共{{list.score_total}}分）</div>
         <div class="right">我的得分：{{list.student_score_total}}</div>
+        <div class="img">
+          <img src="../../../assets/icon/icon_up.png" v-if="list.conFlag">
+          <img src="../../../assets/icon/icon_down.png" v-else>
+        </div>
       </div>
-      <div class="register_con">
+      <div class="register_con" v-if="list.conFlag">
         <div class="box">
           <div class="row tit"> 
             <div class="cell">题号</div> 
@@ -26,10 +30,10 @@
             <div class="cell">{{item.topic_number}}</div> 
             <div class="cell blue" @click="checkDetail(item.topic_id, item.id)">查看</div> 
             <div class="cell">
-              <img src="../../../assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="item.status = 1">
-              <img src="../../../assets/icon/icon_answer_quest.png" v-if="item.status == 1"  @click="item.status = 0">
-              <img src="../../../assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="item.status = 2">
-              <img src="../../../assets/icon/icon_answer_error.png" v-if="item.status == 2 "  @click="item.status = 0">
+              <img src="/assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="item.status = 1">
+              <img src="/assets/icon/icon_answer_quest.png" v-if="item.status == 1"  @click="item.status = 0">
+              <img src="/assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="item.status = 2">
+              <img src="/assets/icon/icon_answer_error.png" v-if="item.status == 2 "  @click="item.status = 0">
             </div>
             <div class="cell">{{item.topic_score}}</div>
             <div class="cell">
@@ -55,6 +59,7 @@ export default {
       paper_id: 15,
       paperList: {},
       message: {},
+      paperdata: {},
       studentScore: '1', // 孩子分数
       loading: false, // 进入页面的弹窗
     }
@@ -86,9 +91,13 @@ export default {
       const data = await getPaperChapterList({
         paper_id: this.paper_id
       })
-      this.paperList = data
+      this.paperdata = data
+      this.paperList = data.list
       this.loading = false
-      console.log(data)
+
+      this.paperList.map((item, index)=>{
+        item.conFlag = false
+      })
     },
     // 题目打分提交
     async paperTopicRegister (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type) {
@@ -139,21 +148,35 @@ export default {
           }
         }
       })
+    },
+    slideTab (i) {
+      this.paperList.map((item, index)=>{
+        if (index === i) {
+          item.conFlag = !item.conFlag
+        }
+      })
+      this.$forceUpdate();
     }
   }
 }
 </script>
 
 <style lang='less'>
+page {
+  background:#F8FBFF;
+}
 .bule {
-  color: #1296db;
+  color: #25A7F7;
 }
 .paperRegister_container {
+  margin-bottom:1.2rem;
   font-size:0.24rem;
   .tit {
+    background:#fff;
     display: flex;
     padding:0.2rem;
     color:#fff;
+    margin:0 0 0 0.4rem;
     span {
       flex:1;
     }
@@ -170,21 +193,30 @@ export default {
   .register {
     &_tit {
       color:#fff;
-      background:#707070;
-      clear:both;
-      overflow: hidden;
+      // background:rgba(37,167,247);
+      background: #25A7F7;
       padding:0.2rem;
+      border-bottom:0.02rem #fff solid;
+      display:flex;
       .left {
-        float:left;
+        flex:3;
       }
       .right {
-        float:right;
+        flex:2;
+      }
+      .img {
+        flex:1;
+        text-align:right;
+        img {
+          width:0.32rem;
+          height:0.32rem;
+        }
       }
     }
     &_con {
       background:#fff;
       .tit{
-        background:#8a8a8a;
+        color:#25A7F7;
       }
       .box { 
         display: table;
@@ -215,20 +247,26 @@ export default {
     }
   }
   .btn {
+    box-sizing:border-box;
     margin:0.3rem 0;
+    padding:0.2rem 0;
     width:100%;
+    background:#fff;
+    box-shadow: 0 2px 5px #a6dcfd;
+    position:fixed;
+    bottom:-0.2rem;
+    left:0;
     .btn_con {
       width:1.8rem;
       height: 0.6rem;
       text-align:center;
       background:#fff;
-      border:0.02rem #ddd solid;
+      border:0.02rem #25A7F7 solid;
       border-radius:0.08rem;
       line-height:0.6rem;
-      color:#333;
+      color:#25A7F7;
       margin:0 auto;
     }
   }
 }
- 
 </style>

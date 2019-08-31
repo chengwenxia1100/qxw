@@ -24,6 +24,13 @@ export function addBook (data) {
     data
   })
 }
+// 解绑作业本
+export function removeBook (data) {
+  return request({
+    url: sign('book/unBindMyBookList'),
+    data
+  })
+}
 
 // 章节列表
 export function getChapterList (data) {

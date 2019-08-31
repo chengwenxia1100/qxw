@@ -3,14 +3,17 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <div class="tip"><span class="weight">章节：</span>{{book_list_name}}>{{book_name}}</div>
-    <div class="tab">
-      <span class="round" v-for="(list, i) in chapterListData" :key="i" 
-        :style=" 'color:' + list.fontColor + '; background:' + list.bgColor "
-      >
-        {{list.topic_number}}
-      </span>
+    <div class="top">
+      <div class="tip"><span class="weight">章节：</span>{{book_list_name}}>{{book_name}}</div>
+      <div class="tab">
+        <span class="round" v-for="(list, i) in chapterListData" :key="i" 
+          :style=" 'color:' + list.fontColor + '; background:' + list.bgColor "
+        >
+          {{list.topic_number}}
+        </span>
+      </div>
     </div>
+    
     <div class="title" v-for="(list, i) in chapterListData" :key="i">
       <div class="tit">
         <div class="left">第{{list.topic_number}}题</div>
@@ -72,6 +75,7 @@ export default {
     }
   },
   onLoad (option) {
+    console.log(option)
     this.message = option
     this.bookTopicList()
   },
@@ -216,7 +220,17 @@ export default {
 .registerDetail_container {
   font-size:0.28rem;
   margin-bottom:1rem;
+  margin-top:1.5rem;
+  .top {
+    width:100%;
+    box-sizing:border-box;
+    background:#fff;
+    position:fixed;
+    top:0;
+    left:0;
+  }
   .tip {
+    min-height:0.4rem;
     padding:0.2rem;
     color:#999;
     .weight{
@@ -225,8 +239,8 @@ export default {
   }
   .tab {
     box-sizing:border-box;
-    width:7rem;
-    height:0.6rem;
+    width:100%;
+    height:0.8rem;
     white-space: nowrap;
     overflow-x: scroll;
     padding:0.2rem;

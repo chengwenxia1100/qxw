@@ -27,7 +27,7 @@
             <mpvue-picker
             ref="mpvuePicker"
             :mode="mode"
-            :pickerValueDefault="pickerValueDefault"
+            :pickerValueDefault="pickergradeDefault"
             @onConfirm="onGradeConfirm"
             :pickerValueArray="pickerValueArray" />
         </div>
@@ -38,7 +38,7 @@
             <mpvue-picker
             ref="mpvuePickerschool"
             :mode="mode"
-            :pickerValueDefault="pickerValueDefault"
+            :pickerValueDefault="pickerschoolDefault"
             @onConfirm="onSchoolConfirm"
             :pickerValueArray="pickerValueArrayschool" />
         </div>
@@ -71,6 +71,34 @@ export default {
             mode: 'selector',
             pickerValueArray: [
                 {
+                    label: '一年级',
+                    value: 1
+                },
+                {
+                    label: '二年级',
+                    value: 2
+                },
+                {
+                    label: '三年级',
+                    value: 3
+                },
+                {
+                    label: '四年级',
+                    value: 4
+                },
+                {
+                    label: '一年级',
+                    value: 1
+                },
+                {
+                    label: '五年级',
+                    value: 5
+                },
+                {
+                    label: '六年级',
+                    value: 6
+                },
+                {
                     label: '初一',
                     value: 7
                 },
@@ -96,7 +124,8 @@ export default {
                 }
             ],
             pickerValueArrayschool: [],
-            pickerValueDefault: [3],
+            pickergradeDefault: [1],
+            pickerschoolDefault: [3],
             studentListData: {},
             isClick: true,
             bgcolor: '#f7536a',
@@ -126,12 +155,14 @@ export default {
        },
        schoolVal: {
             handler (val) {
+                this.pickerschoolDefault = val
                 this.$emit('studentSchool', val)
             },
             immediate: true
        },
        gradeVal: {
             handler (val) {
+                this.pickergradeDefault = val
                 this.$emit('studentGrade', val)
             },
             immediate: true

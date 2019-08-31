@@ -25,6 +25,21 @@ export function getAllSubject (data) {
   })
 }
 
+export function mistakeBook (data) {
+  return request({
+    url: sign('book/mistakeBook'),
+    data
+  })
+}
+
+// 获取错题本科目信息
+export function getWrongSubject (data) {
+  return request({
+    url: sign('book/getMistakeSubject'),
+    data
+  })
+}
+
 // 试卷分析列表
 export function PaperList (data) {
   return request({

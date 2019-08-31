@@ -3,41 +3,14 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <!-- <div class="tab"> -->
-      <!-- <tab-slide @tab="tab"></tab-slide>
-      <div class="tab_container">
-        <div>
-          <div class="tit_change">
-            <grade-slide @grade="grade"></grade-slide>
-            <section-slide @section="section"></section-slide>
-          </div>
-          <div class="title_box"  v-if="tabVal===1">
-            <div class="list">
-              <p>1/20</p>
-              <div class="tit" v-html="title"></div>
-              <div class="title_analyse" @click="analyseBtn">试题分析</div>
-            </div>
-            <div class="list">
-              <div class="tit" v-html="title"></div>
-              <div class="title_analyse" @click="analyseBtn">试题分析</div>
-            </div>
-          </div>
-          <div class="title_box" v-else>
-            <div class="list">
-              <p>1/20</p>
-              <div class="tit" v-html="title"></div>
-              <div class="title_analyse" @click="analyseBtn">试题分析</div>
-            </div>
-          </div>
-        </div>
-      </div> -->
       <!-- 筛选框组件 -->
       <div class="tab">
-        <two-select
+        <two-select-wrong
           @subject="subjectFun"
           @grade="gradeFun"
-        ></two-select>
-        <div class="chapter" v-if="total">
+          @chapter="chapterFun"
+        ></two-select-wrong>
+        <!-- <div class="chapter" v-if="total">
           <div class="select_chapter" @click="selectChapter">章节： {{chapter}}</div>
           <mpvue-picker
             ref="mpvuePicker"
@@ -46,13 +19,13 @@
             @onConfirm="onConfirm"
             :pickerValueArray="pickerValueArray"
           />
-        </div>
+        </div> -->
       </div>
       <div class="tab_container">
         <div class="title_box">
           <div class="list" v-for="(item, i) in topicList" :key="i" v-show='total'> 
             <p>{{i+1}}/{{total}}</p>
-            <div class="tit" v-html="item.topic_content"></div>
+            <div class="tit" v-html="item.topic_content" style="line-height:28px;"></div>
             <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
             <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
           </div>
@@ -83,7 +56,7 @@ import sectionSlide from '@/components/paging/sectionSlide'
 import pageSlide from '@/components/paging/pageSlide'
 import errorLayer from '@/components/layer/errorLayer'
 import { mistakeBook } from './wrongtit.api';
-import twoSelect from '@/components/select/twoSelect'
+import twoSelectWrong from '@/components/select/twoSelectWrong'
 
 export default {
   components: {
@@ -93,18 +66,19 @@ export default {
     sectionSlide,
     gradeSlide,
     errorLayer,
-    twoSelect
+    twoSelectWrong
   },
   data () {
     return {
       tabVal: 1, // nav的科目
-      gradeVal: 7, // 年级
-      sectionVal: 1, // 章节
+      // gradeVal: 7, // 年级
+      // sectionVal: 1, // 章节
       // 返回的试题题目
       title: '',
       analyLayer: false, // 点击试题分析弹窗
       subjectVal: '',
       gradeVal: '',
+      chapterVal: '',
       chapter: '请选择章节',
       pickerValueArray: [],
       pickerValueDefault: [1],
@@ -130,6 +104,10 @@ export default {
     gradeVal (val) {
       this.loading = true
       if (val && this.subjectVal) { this.mistakeBook() }
+    },
+    chapterVal (val) {
+      this.loading = true
+      if (val && this.subjectVal) { this.mistakeBook() }
     }
   },
   methods: {
@@ -137,7 +115,7 @@ export default {
       const data = await mistakeBook({
         grade: this.gradeVal,
         subject: this.gradeVal,
-        chapter: this.chapterValue,
+        chapter: this.chapterVal,
         page: this.page
       })
       this.loading = false
@@ -166,6 +144,9 @@ export default {
     },
     gradeFun (val) {
       this.gradeVal = val
+    },
+    chapterFun (val) {
+      this.chapterVal = val
     },
     // 点击试题分析
     analyseBtn (i) {
@@ -203,6 +184,9 @@ export default {
 </script>
 
 <style lang="less">
+page {
+  background:#f2f2f2;
+}
 .user_wrongTitle {
   .layer_box {
     width:100%;
@@ -256,6 +240,7 @@ export default {
   }
   .tab {
     width:100%;
+    z-index:999;
     position:fixed;
     top:0;
     left:0;
@@ -268,25 +253,34 @@ export default {
     }
   }
   .tab_container {
-    background:#fff;
     padding:0.2rem;
-    margin-top:1.6rem;
+    margin-top:0.6rem;
     margin-bottom:0.2rem;
     .title_box {
       .list {
+        margin:0.4rem 0.2rem 0.8rem;
+        padding: 0.1rem 0.3rem 0.6rem 0.3rem;;
+        position:relative;
+        background:#fff;
+        border-radius:0.08rem;
+        box-shadow: 0 4px 4px #a6dcfd;
         p {
           text-align:center;
           padding:0.2rem 0;
         }
         .title_analyse {
+          position:absolute;
+          bottom:-0.3rem;
+          left:50%;
           font-size:0.28rem;
           width:1.8rem;
           height:0.6rem;
           line-height:0.6rem;
-          background:#515151;
+          background:#25A7F7;
           color:#fff;
-          margin:0.4rem;
-          border-radius: 0.08rem;
+          margin-left:-0.9rem;
+          // margin:0.4rem;
+          border-radius: 0.14rem;
           text-align:center;
         }
       }

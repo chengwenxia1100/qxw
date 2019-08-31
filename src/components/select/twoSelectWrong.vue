@@ -12,6 +12,11 @@
           <img src="../../assets/svg/icon_down.png" v-if="upStatus">
           <img src="../../assets/svg/icon_up.png" v-else>
         </li>
+        <li @click="chapterTab">
+          {{chapter}}
+          <img src="../../assets/svg/icon_down.png" v-if="chapterStatus">
+          <img src="../../assets/svg/icon_up.png" v-else>
+        </li>
       </ul>
     </div>
     <div class="con" v-if="!downStatus">
@@ -28,25 +33,37 @@
         </ul>
       </div>
     </div>
+    <div class="con" v-if="!chapterStatus">
+      <div class="slide_con">
+        <ul>
+          <li v-for="(item, i) in chapterList" :key="i"  @click="selectChapter(item.label, item.value)" :class="chapter == item.label ? 'bule' : ''">{{item.label}}</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { getStudentGrade, getPaperSubject } from '@/api/analy'
+import { getStudentGrade, getPaperSubject, mistakeBook } from '@/api/analy'
 
 export default {
   data () {
     return {
       downStatus: true,
       upStatus: true,
+      chapterStatus: true,
       gradeList: {},
       subjectList: {},
+      chapterList: {},
       gradeListNo: false,
       subjectListNo: false,
       grade: '',
       subject:'',
+      chapterValue: '',
+      page: 1,
       subjectValue: 0,
-      gradeValue: 0
+      gradeValue: 0,
+      chapter: '请选择章节'
     }
   },
   onLoad () {
@@ -55,10 +72,15 @@ export default {
   },
   watch: {
     subjectValue (val) {
-        this.$emit('subject', val)
+      if (val && this.gradeValue) { this.mistakeBook() }
+      this.$emit('subject', val)
     },
     gradeValue (val) {
-        this.$emit('grade', val)
+      if (val && this.subjectValue) { this.mistakeBook() }
+      this.$emit('grade', val)
+    },
+    chapterValue (val) {
+      this.$emit('chapter', val)
     }
   },
   methods: {
@@ -94,13 +116,31 @@ export default {
       }
       
     },
+    // 获取
+    async mistakeBook () {
+      const data = await mistakeBook({
+        grade: this.gradeValue,
+        subject: this.subjectValue,
+        chapter: this.chapterValue,
+        page: this.page
+      })
+      this.loading = false
+      this.chapterList = data.list.chapter_name_array
+    },
     subjectTab () {
       this.downStatus = !this.downStatus;
       this.upStatus = true;
+      this.chapterStatus = true;
     },
     gradeTab () {
       this.upStatus = !this.upStatus;
       this.downStatus = true;
+      this.chapterStatus = true;
+    },
+    chapterTab () {
+      this.chapterStatus = !this.chapterStatus;
+      this.downStatus = true;
+      this.upStatus = true;
     },
     // 点击切换时重新赋值
     selectGrade (e, f) {
@@ -112,6 +152,11 @@ export default {
       this.subject = e
       this.subjectValue = f
       this.downStatus = !this.downStatus
+    },
+    selectChapter (e, f) {
+      this.chapter = e
+      this.chapterValue = f
+      this.chapterStatus = !this.chapterStatus;
     }
   }
 }
@@ -129,13 +174,17 @@ export default {
     padding:0.1rem 0;
     box-shadow: 0 2px 5px #a6dcfd;
     border-bottom:0.02rem #a6dcfd solid;
+    z-index:999;
     ul {
       display:flex;
       li {
-        flex:1;
+        flex:3;
         text-align:right;
         line-height:0.6rem;
-        clear:both;
+        border-right:0.02rem #25A7F7 solid;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow:ellipsis;
         img {
           width:0.48rem;
           height:0.48rem;
@@ -144,17 +193,18 @@ export default {
           margin-top:0.06rem;
         }
       }
-      li:first-child{
-        border-right:0.02rem rgb(126, 125, 125) solid;
+      li:last-child {
+        flex:5;
+        border-right:none;
       }
     }
   }
   .con {
     background:#fff;
     width:100%;
-    z-index:99;
+    z-index:999;
     position: fixed;
-    top:1rem;
+    top:0.8rem;
     left:0;
     .slide_con {
       ul {

@@ -36,8 +36,7 @@ export default {
     return {
       mark: '',
       studentMark: '',
-      student_id: '',
-      loading: false
+      student_id: ''
     }
   },
   props: {
@@ -65,6 +64,7 @@ export default {
       immediate: true,
       handler (val) {
         this.studentMark = val
+        this.$emit('studentMark', val)
       }
     }
   },
@@ -75,6 +75,8 @@ export default {
           score: this.studentMark
       })
       wx.showToast({ title: '保存成功', icon: 'none' })
+      this.$emit('mask', this.macklayerStatus)
+      this.macklayerStatus = false;
       setTimeout(() => {
         const url = "../../pages/paperAnaly/paperRegister/main?paper_id=" + this.paper_id
         wx.navigateTo({ url })
@@ -90,8 +92,6 @@ export default {
           wx.showToast({ title: '输入分数不能高于总分', icon: 'none' })
         } else {
           this.macklayerStatus = false;
-          this.loading = true
-          this.$emit('loadingFun', this.loading)
           this.sureMark()
         }
       } else {

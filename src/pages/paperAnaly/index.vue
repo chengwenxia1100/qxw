@@ -36,7 +36,7 @@
       :paper_id="paper_id"
       :macklayerStatus="macklayerStatus" 
       @macklayerStatus="macklayerStatusFun"
-      @loadingFun="loadingFun"
+      @studentMark="studentMark"
     ></mack-layer>
   </div>
 </template>
@@ -60,7 +60,9 @@ export default {
       value: '', // 考试成绩的值
       subjectVal: '',
       gradeVal: '',
-      paperListData: {}
+      paperListData: {},
+      mask: '',
+      studentmaskval: ''
     }
   },
   onLoad () {
@@ -84,8 +86,8 @@ export default {
     macklayerStatusFun (val) {
       this.macklayerStatus = val
     },
-    loadingFun (val) {
-      this.loading = val
+    studentMark (val) {
+      this.studentmaskval = val
     },
     subjectFun (val) {
       this.subjectVal = val
@@ -115,7 +117,7 @@ export default {
         this.paper_id = paper_id
         this.macklayerStatus = true
       } else if (type === 1) {
-        wx.navigateTo({ url: '/pages/paperAnaly/paperRegister/main?paper_id=' + paper_id })
+        wx.navigateTo({ url: '/pages/paperAnaly/paperRegister/main?paper_id=' + paper_id + '&mask=' + score + '&studentmask=' + this.studentmaskval})
       } else if (type === 2) {
         wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
       }

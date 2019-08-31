@@ -68,12 +68,12 @@ export default {
       if (data.length > 0) {
         this.gradeListNo = true
         this.gradeList = data
-        for(let i of data) {
-          if(i.status === 1) {
-            this.grade = i.label
-            this.gradeValue = data[i].value
+        this.gradeList.map((item, index) => {
+          if(item.status === 1) {
+            this.grade = item.label
+            this.gradeValue = item.value
           }
-        }
+        })
       } else {
         this.grade = '暂无年级'
         this.gradeValue = 0
@@ -117,15 +117,18 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .bule {
-  color: #1296db
+  color: #25A7F7;
 }
 .main_box {
   .navTab {
+    color: #25A7F7;
     height:0.6rem;
-    background:#c9c7c7;
+    background:#fff;
     padding:0.1rem 0;
+    box-shadow: 0 2px 5px #a6dcfd;
+    border-bottom:0.02rem #a6dcfd solid;
     ul {
       display:flex;
       li {
@@ -147,18 +150,18 @@ export default {
     }
   }
   .con {
-    background:#c9c7c7;
+    background:#fff;
     width:100%;
     z-index:99;
     position: fixed;
-    top:0.8rem;
+    top:1rem;
     left:0;
     .slide_con {
       ul {
         li {
           padding:0.2rem 0;
           text-align:center;
-          border-bottom:0.02rem #fff solid;
+          border-bottom:0.02rem #a6dcfd solid;
         }
       }
     }
