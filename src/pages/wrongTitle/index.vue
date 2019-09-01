@@ -24,16 +24,25 @@
       <div class="tab_container">
         <div class="title_box">
           <div class="list" v-for="(item, i) in topicList" :key="i" v-show='total'> 
-            <p>{{i+1}}/{{total}}</p>
+            <p>{{page}}/{{total}}</p>
             <div class="tit" v-html="item.topic_content" style="line-height:28px;"></div>
             <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
             <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
           </div>
-          <div class="no_books" v-if="total == ''">该学员暂无错题本</div>
+          <!-- <div class="no_books" v-if="total == ''">该学员暂无错题本</div> -->
         </div>
       </div>
       <!-- 分页 -->
       <!-- <page-slide></page-slide> -->
+      <div class="page_slide"  v-if='total > 1'>
+        <div class="prev" @click="prev">上一页</div>
+        <div class="slide_con">
+          <ul>
+            <li v-for="(list, i) in numlist" :key="i" @click="clickPage(list)" :class="{ 'checked': list === page ? true : false}">{{list}}</li>
+          </ul>
+        </div>
+        <div class="next" @click="next">下一页</div>
+      </div>
     <!-- </div> -->
     <!-- 点击试题分析 出现弹窗 -->
     <error-layer 
@@ -90,7 +99,8 @@ export default {
       page: 1,
       topic_answer_content: '',
       from:'',
-      difficult_level: ''
+      difficult_level: '',
+      numlist: []
     }
   },
   onLoad () {
@@ -123,6 +133,34 @@ export default {
       this.topicList = data.list.topic
       // this.chapter = data.list.chapter_name_array[0].label
       this.pickerValueArray = data.list.chapter_name_array
+      this.numlist = data.num
+      this.total.forEach((item,index,arr) => {
+        console.log(index)
+      })
+    },
+    //
+    clickPage (page) {
+      this.loading = true
+      this.page = page
+      this.mistakeBook()
+    },
+    next () {
+      if (this.page < this.total) {
+        this.loading = true
+        this.page = this.page + 1
+        this.mistakeBook()
+      } else {
+        wx.showToast({ title: '没有更多了', icon: 'none' })
+      }
+    },
+    prev () {
+      if(this.page > 1) {
+        this.loading = true
+        this.page -= this.page
+        this.mistakeBook()
+      } else {
+        wx.showToast({ title: '没有更多了', icon: 'none' })
+      }
     },
     // 接收子组件传值
     tab (val) {
@@ -188,6 +226,7 @@ page {
   background:#f2f2f2;
 }
 .user_wrongTitle {
+  margin-bottom:1rem;
   .layer_box {
     width:100%;
     height:100%;
@@ -292,81 +331,58 @@ page {
       }
     }
   }
-  // .tab {
-  //   width: 100%;
-  //   .nav {
-  //     padding: 0 20rpx;
-  //     height: 80rpx;
-  //     color: #999;
-  //     display: flex;
-  //     .title {
-  //       flex: 1;
-  //       text-align: center;
-  //     }
-  //     .selected {
-  //       color: #333;
-  //       border-bottom:0.02rem #515151 solid;
-  //     }
-  //     // .default:first-child {
-  //     //   border-right: 1px solid #cdcdcd;
-  //     // }
-  //     .default{
-  //       margin: 0.2rem 0 0 0; 
-  //     }
-  //   }
-  // }
-  // .tab_container {
-  //   .tit_change {
-  //     padding:0.1rem 0.2rem;
-  //     clear:both;
-  //     overflow:hidden;
-  //     div {
-  //       .change {
-  //         background:#f2f2f2;
-  //         float:left;
-  //         margin-right:0.2rem;
-  //         padding:0.1rem 0.4rem;
-  //         display: flex;
-  //         align-items: center;
-  //         background:#ddd;
-  //         img {
-  //           width: 0.32rem;
-  //           height: 0.32rem;
-  //           margin-top: 0.1rem;
-  //           padding-right:0.1rem;
-  //         }
-  //       }
-  //     }
-  //     div {
-  //       .select {
-  //         background:#f2f2f2;
-  //         float:left;
-  //         width:4rem;
-  //         display: flex;
-  //         align-items: center;
-  //         padding:0 0.4rem;
-  //         img {
-  //           width: 0.64rem;
-  //           height: 0.64rem;
-  //           padding-right:0.1rem;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   .title_box {
-  //     padding:0.2rem;
-  //     .title_analyse {
-  //       font-size:0.28rem;
-  //       width:1.8rem;
-  //       height:0.6rem;
-  //       line-height:0.6rem;
-  //       background:#515151;
-  //       color:#fff;
-  //       margin:0.4rem;
-  //       border-radius: 0.08rem;
-  //       text-align:center;
-  //     }
-  //   }
-  // }
+  .page_slide {
+    width:100%;
+    box-sizing:border-box;
+    padding:0.5rem 0.3rem;
+    display: flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    .same_btn {
+      width:1.4rem;
+      height:0.6rem;
+      font-size:0.24rem;
+      border-radius: 0.08rem;
+      background:#25A7F7;
+      color:#fff;
+      text-align: center;
+      line-height: 0.6rem;
+    }
+    .prev {
+      .same_btn
+    }
+    .slide_con {
+      flex:1;
+      white-space: nowrap;
+      overflow-x: scroll;
+      text-align:center;
+      padding: 0.1rem 0.2rem;
+      height:0.4rem;
+      ul {
+        white-space: nowrap;
+        li {
+          display: inline-block;
+          border-radius:50%;
+          border:0.02rem #25A7F7 solid;
+          color:#25A7F7;
+          width:0.4rem;
+          height:0.4rem;
+          font-size:0.2rem;
+          text-align:center;
+          line-height:0.4rem;
+          margin-right:0.2rem;
+          
+        }
+        .checked {
+          color:#fff;
+          background:#25A7F7;
+        }
+      }
+    }
+    .next {
+      .same_btn
+    }
+  }
 }
 </style>

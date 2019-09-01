@@ -65,6 +65,9 @@ export default {
       console.log(book_list_id)
       wx.navigateTo({ url: '/pages/errorRegister/registerDetail/main?book_list_id=' + book_list_id + '&book_list_name=' + book_list_name + '&book_name=' + book_name + '&book_id=' + this.book_id + '&grade=' + this.grade + '&subject_id=' + this.subject_id })
     }
+  },
+  onUnload () {
+    this.chapterListData = {}
   }
 }
 </script>

@@ -53,11 +53,11 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .layer_box {
   width:100%;
   height:100%;
-  background:rgba(100,100,100, 0.3);
+  // background:rgba(100,100,100, 0.3);
   position: fixed;
   top:0;
   left:0;
@@ -72,7 +72,7 @@ export default {
       height:0.8rem;
       text-align:center;
       line-height:0.8rem;
-      background:rgb(180, 178, 178);
+      background:#25A7F7;
       color:#fff;
       img {
         width: 0.36rem;

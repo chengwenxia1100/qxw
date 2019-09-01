@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { getStudentGrade, getPaperSubject, mistakeBook } from '@/api/analy'
+import { getStudentGrade, getWrongSubject, mistakeBook } from '@/api/analy'
 
 export default {
   data () {
@@ -68,7 +68,7 @@ export default {
   },
   onLoad () {
     this.getStudentGrade()
-    this.getAllSubject()
+    this.getWrongSubject()
   },
   watch: {
     subjectValue (val) {
@@ -103,8 +103,8 @@ export default {
       
     },
     // 获取科目
-    async getAllSubject () {
-      const data = await getPaperSubject({})
+    async getWrongSubject () {
+      const data = await getWrongSubject({})
       if (data.length > 0) {
         this.subjectListNo = true
         this.subjectList = data

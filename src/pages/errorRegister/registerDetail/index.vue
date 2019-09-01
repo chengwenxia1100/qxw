@@ -6,10 +6,11 @@
     <div class="top">
       <div class="tip"><span class="weight">章节：</span>{{book_list_name}}>{{book_name}}</div>
       <div class="tab">
-        <span class="round" v-for="(list, i) in chapterListData" :key="i" 
+        <span class="round" v-for="(list, i) in numlist" :key="i" 
           :style=" 'color:' + list.fontColor + '; background:' + list.bgColor "
+          @click="cahpter(i,list.topic_num)"
         >
-          {{list.topic_number}}
+          {{list.topic_num}}
         </span>
       </div>
     </div>
@@ -18,9 +19,9 @@
       <div class="tit">
         <div class="left">第{{list.topic_number}}题</div>
         <div class="right">
-          <span @click="ststus1(i)" :style="'background:' + list.bgColor1">答对了</span>
-          <span @click="ststus2(i)" :style="'background:' + list.bgColor2">答错了</span>
-          <span @click="ststus3(i)" :style="'background:' + list.bgColor3">暂未做</span>
+          <span @click="ststus1(list.topic_number)" :style="'background:' + list.bgColor1">答对了</span>
+          <span @click="ststus2(list.topic_number)" :style="'background:' + list.bgColor2">答错了</span>
+          <span @click="ststus3(list.topic_number)" :style="'background:' + list.bgColor3">暂未做</span>
         </div>
       </div>
       <div class="title_con">
@@ -33,20 +34,20 @@
     </div>
     <div class="btn">
       <div class="btn_con" @click="allRegister">批量登记</div>
-      <div class="btn_con">保存</div>
+      <div class="btn_con" @click="save">保存</div>
     </div>
     <div class="layer_registr" v-if="showLayer">
       <div class="layer">
         <div class="tit">批量登记<img src="../../../assets/svg/close.png" @click="close"></div>
         <div class="tip">批量登记时候，所有题目默认为正确题目，点击一次批改成错，再次点击变为未登记：蓝色 未登记 绿色 正确 红色 错误</div>
         <div class="con">
-          <div class="title">{{book_list_name}}>{{book_name}}</div>
-          <div class="list">
+          <div class="layer_title">{{book_list_name}}>{{book_name}}</div>
+          <div class="layer_list">
             <ul>
-              <li v-for="(list, i) in chapterListData" :key="i">
-                <img src="../../../assets/icon/icon_right.png" v-if="list.status == 1" @click="ststus2(i)">
-                <img src="../../../assets/icon/icon_error.png" v-if="list.status == 2" @click="ststus3(i)">
-                <img src="../../../assets/icon/icon_stop.png"  v-if="list.status == 3" @click="ststus1(i)">
+              <li v-for="(list, i) in numlist" :key="i">
+                <img src="../../../assets/icon/icon_right.png" v-if="list.status == 1 || list.status == 0" @click="list.status = 2">
+                <img src="../../../assets/icon/icon_error.png" v-if="list.status == 2" @click="list.status = 3">
+                <img src="../../../assets/icon/icon_stop.png"  v-if="list.status == 3" @click="list.status = 1">
                 <p>{{list.topic_number}}</p>
               </li>
             </ul>
@@ -69,71 +70,93 @@ export default {
       loading: false,
       showLayer: false,
       chapterListData: {},
-      message: {},
+      numlist: []
+,     message: {},
       statusStr: '',
-      topicStr: ''
+      topicStr: '',
+      page: 1,
+      total: 0
     }
   },
   onLoad (option) {
-    console.log(option)
     this.message = option
     this.bookTopicList()
   },
   computed: {
     book_list_id () {
-      return this.message.book_list_id
+       // return 609
+     return this.message.book_list_id
     },
     book_list_name () {
-      return this.message.book_list_name
+      //return '第1章     三角形的初步知识'
+       return this.message.book_list_name
     },
     book_name () {
+      // return '1.1   认识三角形（1）'
       return this.message.book_name
     },
     book_id () {
+      // return 21
       return this.message.book_id
     },
     grade () {
+     //  return 8
       return this.message.grade
     },
     subject_id () {
-      return this.message.subject_id
+      //return 3
+       return this.message.subject_id
     }
-  },
+  }, 
   methods: {
     async bookTopicList () {
       this.loading = true
       const data = await bookTopicList({
-        chapter_id: this.book_list_id
+        chapter_id: this.book_list_id,
+        page: this.page
       })
+      this.total = data.total
       this.loading = false
+      this.numlist = data.num
       this.chapterListData = data.list
-      for (let i of data.list) {
+      this.numlist.map((i, index) => {
         if (i.status === 1) {
-          i.fontColor = '#fff'
-          i.bgColor = '#7ebd0c'
-          i.bgColor1 = '#7ebd0c'
-          i.bgColor2 = '#8d8d8d'
-          i.bgColor3 = '#8d8d8d'
+          i.fontColor = '#21C788'
         } else if (i.status === 2) {
-          i.fontColor = '#fff'
-          i.bgColor = '#d32e0f'
-          i.bgColor2 = '#d32e0f'
-          i.bgColor1 = '#8d8d8d'
-          i.bgColor3 = '#8d8d8d'
+          i.fontColor = '#FE0000'
         } else if(i.status === 3) {
-          i.fontColor = '#fff'
-          i.bgColor = '#1296db'
-          i.bgColor3 = '#1296db'
-          i.bgColor2 = '#8d8d8d'
-          i.bgColor1 = '#8d8d8d'
+          i.fontColor = '#55D8FE'
         } else {
-          i.fontColor = '#1296db'
-          i.bgColor = '#fff'
-          i.bgColor1 = '#8d8d8d'
-          i.bgColor2 = '#8d8d8d'
-          i.bgColor3 = '#8d8d8d'
+          i.bgColor = '#25A7F7'
+          if (i.is_now === 1) {
+            i.fontColor = '#25A7F7'
+          } else {
+            i.fontColor = '#fff'
+          }
         }
-      }
+        if (i.is_now === 1) {
+          i.bgColor = '#fff'
+        }
+      })
+      this.chapterListData.map((i,index) => {
+        if (i.status === 1) {
+          i.bgColor1 = '#3BA707'
+          i.bgColor2 = '#a6dcfd'
+          i.bgColor3 = '#a6dcfd'
+        } else if (i.status === 2) {
+          i.bgColor2 = '#FE0000'
+          i.bgColor1 = '#a6dcfd'
+          i.bgColor3 = '#a6dcfd'
+        } else if(i.status === 3) {
+          i.bgColor3 = '##25A7F7'
+          i.bgColor2 = '#a6dcfd'
+          i.bgColor1 = '#a6dcfd'
+        } else {
+          i.bgColor1 = '#a6dcfd'
+          i.bgColor2 = '#a6dcfd'
+          i.bgColor3 = '#a6dcfd'
+        }
+      })
     },
     async bookTopicRegister (topic_id, status) {
       const data = await bookTopicRegister({
@@ -146,45 +169,69 @@ export default {
       })
       this.paperList = data
       this.loading = false
+      // this.bookTopicList()
+      if (this.page < this.total) {
+        this.page = this.page + 1
+        this.bookTopicList()
+      } else {
+        wx.showToast({ title: '题目已经是最后一题啦～', icon: 'none' })
+      }
     },
     ststus1 (e) {
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
+      this.loading = true
+      this.numlist.forEach((item,index,arr)=>{
+        if (index === (e-1)) {
           item.status = 1
-          item.fontColor = '#fff'
-          item.bgColor = '#7ebd0c'
-          item.bgColor1 = '#7ebd0c'
-          item.bgColor2 = '#8d8d8d'
-          item.bgColor3 = '#8d8d8d'
-          this.bookTopicRegister(item.topic_id, 1)
+          item.fontColor = '#21C788'
         }
-			})
+      })
+      this.chapterListData[0].status = 1
+      this.chapterListData[0].bgColor1 = '#21C788'
+      this.chapterListData[0].bgColor2 = '#a6dcfd'
+      this.chapterListData[0].bgColor3 = '#a6dcfd'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 1)
     },
     ststus2 (e) {
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
+      this.loading = true
+      this.numlist.forEach((item,index,arr)=>{
+        if (index === (e-1)) {
           item.status = 2
-          item.fontColor = '#fff'
-          item.bgColor = '#d32e0f'
-          item.bgColor2 = '#d32e0f'
-          item.bgColor1 = '#8d8d8d'
-          item.bgColor3 = '#8d8d8d'
-          this.bookTopicRegister(item.topic_id, 2)
+          item.fontColor = '#FE0000'
         }
-			})
+      })
+      this.chapterListData[0].status = 1
+      this.chapterListData[0].bgColor1 = '#a6dcfd'
+      this.chapterListData[0].bgColor2 = '#FE0000'
+      this.chapterListData[0].bgColor3 = '#a6dcfd'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 2)
     },
     ststus3 (e) {
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
+      this.loading = true
+      this.numlist.forEach((item,index,arr)=>{
+        if (index === (e-1)) {
           item.status = 3
-          item.fontColor = '#fff'
-          item.bgColor = '#1296db'
-          item.bgColor3 = '#1296db'
-          item.bgColor2 = '#8d8d8d'
-          item.bgColor1 = '#8d8d8d'
-          this.bookTopicRegister(item.topic_id, 3)
+          item.fontColor = '#25A7F7'
+          item.bgColor = '#fff'
+        }
+      })
+      this.chapterListData[0].status = 3
+      this.chapterListData[0].bgColor1 = '#a6dcfd'
+      this.chapterListData[0].bgColor2 = '#a6dcfd'
+      this.chapterListData[0].bgColor3 = '#25A7F7'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 3)
+    },
+    cahpter (e, page) {
+      this.page = page
+      this.numlist.forEach((item,index,arr)=>{
+        if (index === e) {
+          item.fontColor = '#25A7F7'
+          item.bgColor = '#fff'
         }
 			})
+      this.bookTopicList()
     },
     allRegister () {
       this.chapterListData.forEach((item,index,arr)=>{
@@ -194,11 +241,20 @@ export default {
       })
       this.showLayer = true
     },
+    save  () {
+      wx.showToast({ title: '保存成功～', icon: 'none' })
+      setTimeout(() => {
+        wx.navigateBack({
+          delta:1
+        })
+      }, 1000);
+    },
     close () {
       this.showLayer = false
     },
     registerFinish () {
-      this.chapterListData.forEach((item,index,arr)=>{
+      this.numlist.forEach((item,index,arr)=>{
+        if(item.status === 0) { item.status = 1 }
         this.statusStr += item.status + ","
         this.topicStr += item.topic_id + ","
       })
@@ -210,13 +266,15 @@ export default {
     }
   },
   onUnload () {
+    this.chapterListData = {}
+    this.numlist = {}
     this.statusStr = ''
     this.topicStr = ''
   }
 }
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .registerDetail_container {
   font-size:0.28rem;
   margin-bottom:1rem;
@@ -224,7 +282,7 @@ export default {
   .top {
     width:100%;
     box-sizing:border-box;
-    background:#fff;
+    background:#25A7F7;
     position:fixed;
     top:0;
     left:0;
@@ -232,20 +290,19 @@ export default {
   .tip {
     min-height:0.4rem;
     padding:0.2rem;
-    color:#999;
+    color:#92D3FB;
     .weight{
-      color:#333;
+      color:#92D3FB;
     }
   }
   .tab {
     box-sizing:border-box;
     width:100%;
     height:0.8rem;
+    padding:0 0.5rem;
     white-space: nowrap;
     overflow-x: scroll;
-    padding:0.2rem;
     .round {
-      border:0.02rem #1296db solid;
       text-align:center;
       line-height:0.5rem;
       border-radius:50%;
@@ -256,13 +313,18 @@ export default {
     }
   }
   .title {
-    margin-bottom:0.4rem;
+    background:#fff;
+    margin:2.4rem 0.3rem 0.3rem 0.3rem;
+    border-radius:0.08rem;
+    padding:0.2rem;
+    box-shadow: 5px 5px 10px #a6dcfd;
     .tit {
       display: flex;
       padding:0.2rem;
-      border-left:0.1rem #8d8d8d solid;
       .left {
         width:1rem;
+        font-size:0.32rem;
+        color:#333;
       }
       .right {
         flex:1;
@@ -270,17 +332,14 @@ export default {
         span {
           padding:0.1rem 0.2rem;
           color:#fff;
-          font-size:0.24rem;
+          font-size:0.22rem;
           border-radius:0.08rem;
           margin:0 0.1rem;
         }
       }
     }
     .title_con {
-      background:#fff;
-      .con {
-        padding:0.2rem;
-      }
+      padding: 0 0.3rem;
       .answer {
         padding:0.2rem;
         p:first-child {
@@ -296,8 +355,7 @@ export default {
     left:0;
     width:100%;
     height:0.6rem;
-    background:#fff;
-    padding:0.2rem 0;
+    padding:0.2rem 0 0.4rem;
     display:flex;
     text-align:center;
     padding-bottom:0.2rem;
@@ -333,7 +391,7 @@ export default {
         height:0.8rem;
         text-align:center;
         line-height:0.8rem;
-        background:rgb(180, 178, 178);
+        background: #25A7F7;
         color:#fff;
         img {
           width: 0.36rem;
@@ -344,28 +402,32 @@ export default {
         }
       }
       .tip {
-        background:#e0b752;
+        // background:#e0b752;
         color:#FE0000;
         font-size:0.24rem;                                                                                                                                                                                                                                                        
       }
       .con {
         padding:0.2rem;
-        .title {
+        .layer_title {
           padding-top:0.2rem;
         }
-        ul {
-          clear:both;
-          overflow:hidden;
-          li {
-            float:left;
-            width:0.7rem;
-            margin: 0.2rem;
-            img {
-              width: 0.64rem;
-              height: 0.64rem;
-            }
-            p {
-              text-align:center
+        .layer_list {
+          height:3rem;
+          overflow-y: scroll;
+          ul {
+            clear:both;
+            overflow:hidden;
+            li {
+              float:left;
+              width:0.7rem;
+              margin: 0.2rem;
+              img {
+                width: 0.64rem;
+                height: 0.64rem;
+              }
+              p {
+                text-align:center
+              }
             }
           }
         }

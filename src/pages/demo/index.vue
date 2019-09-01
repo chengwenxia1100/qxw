@@ -8,7 +8,7 @@
       <div class="tab">
         <span class="round" v-for="(list, i) in numlist" :key="i" 
           :style=" 'color:' + list.fontColor + '; background:' + list.bgColor "
-          @click="cahpter(i)"
+          @click="cahpter(i,list.topic_num)"
         >
           {{list.topic_num}}
         </span>
@@ -19,9 +19,9 @@
       <div class="tit">
         <div class="left">第{{list.topic_number}}题</div>
         <div class="right">
-          <span @click="ststus1(i)" :style="'background:' + list.bgColor1">答对了</span>
-          <span @click="ststus2(i)" :style="'background:' + list.bgColor2">答错了</span>
-          <span @click="ststus3(i)" :style="'background:' + list.bgColor3">暂未做</span>
+          <span @click="ststus1(list.topic_number)" :style="'background:' + list.bgColor1">答对了</span>
+          <span @click="ststus2(list.topic_number)" :style="'background:' + list.bgColor2">答错了</span>
+          <span @click="ststus3(list.topic_number)" :style="'background:' + list.bgColor3">暂未做</span>
         </div>
       </div>
       <div class="title_con">
@@ -41,13 +41,13 @@
         <div class="tit">批量登记<img src="../../assets/svg/close.png" @click="close"></div>
         <div class="tip">批量登记时候，所有题目默认为正确题目，点击一次批改成错，再次点击变为未登记：蓝色 未登记 绿色 正确 红色 错误</div>
         <div class="con">
-          <div class="title">{{book_list_name}}>{{book_name}}</div>
-          <div class="list">
+          <div class="layer_title">{{book_list_name}}>{{book_name}}</div>
+          <div class="layer_list">
             <ul>
-              <li v-for="(list, i) in chapterListData" :key="i">
-                <img src="../../assets/icon/icon_right.png" v-if="list.status == 1" @click="ststus2(i)">
-                <img src="../../assets/icon/icon_error.png" v-if="list.status == 2" @click="ststus3(i)">
-                <img src="../../assets/icon/icon_stop.png"  v-if="list.status == 3" @click="ststus1(i)">
+              <li v-for="(list, i) in numlist" :key="i">
+                <img src="../../assets/icon/icon_right.png" v-if="list.status == 1 || list.status == 0" @click="list.status = 2">
+                <img src="../../assets/icon/icon_error.png" v-if="list.status == 2" @click="list.status = 3">
+                <img src="../../assets/icon/icon_stop.png"  v-if="list.status == 3" @click="list.status = 1">
                 <p>{{list.topic_number}}</p>
               </li>
             </ul>
@@ -108,18 +108,18 @@ export default {
     }
   },  
   watch: {
-    page: {
-      immediate: true,
-      handler (val) {
-        console.log(val)
-        this.numlist.forEach((item,index,arr)=>{
-          if (index === val) {
-            item.fontColor = '#25A7F7'
-            item.bgColor = '#fff'
-          }
-        })
-      }
-    }
+    // page: {
+    //   immediate: true,
+    //   handler (val) {
+    //     console.log(val)
+    //     this.numlist.forEach((item,index,arr)=>{
+    //       if (index === val) {
+    //         item.fontColor = '#25A7F7'
+    //         item.bgColor = '#fff'
+    //       }
+    //     })
+    //   }
+    // }
   },
   methods: {
     async bookTopicList () {
@@ -139,8 +139,12 @@ export default {
         } else if(i.status === 3) {
           i.fontColor = '#55D8FE'
         } else {
-          i.fontColor = '#fff'
           i.bgColor = '#25A7F7'
+          if (i.is_now === 1) {
+            i.fontColor = '#25A7F7'
+          } else {
+            i.fontColor = '#fff'
+          }
         }
         if (i.is_now === 1) {
           i.bgColor = '#fff'
@@ -180,61 +184,51 @@ export default {
       // this.bookTopicList()
     },
     ststus1 (e) {
+      console.log(e)
       this.numlist.forEach((item,index,arr)=>{
-        if (index === e) {
+        if (index === (e-1)) {
           item.status = 1
           item.fontColor = '#21C788'
-          item.bgColor = '#fff'
         }
-			})
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
-          item.status = 1
-          item.bgColor1 = '#21C788'
-          item.bgColor2 = '#666'
-          item.bgColor3 = '#666'
-          this.bookTopicRegister(item.topic_id, 1)
-        }
-			})
+      })
+      this.chapterListData[0].status = 1
+      this.chapterListData[0].bgColor1 = '#21C788'
+      this.chapterListData[0].bgColor2 = '#666'
+      this.chapterListData[0].bgColor3 = '#666'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 1)
     },
     ststus2 (e) {
       this.numlist.forEach((item,index,arr)=>{
-        if (index === e) {
+        if (index === (e-1)) {
           item.status = 2
           item.fontColor = '#FE0000'
-          item.bgColor = '#fff'
         }
-			})
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
-          item.status = 2
-          item.bgColor2 = '#FE0000'
-          item.bgColor1 = '#666'
-          item.bgColor3 = '#666'
-          this.bookTopicRegister(item.topic_id, 2)
-        }
-			})
+      })
+      this.chapterListData[0].status = 1
+      this.chapterListData[0].bgColor1 = '#666'
+      this.chapterListData[0].bgColor2 = '#FE0000'
+      this.chapterListData[0].bgColor3 = '#666'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 2)
     },
     ststus3 (e) {
       this.numlist.forEach((item,index,arr)=>{
-        if (index === e) {
+        if (index === (e-1)) {
           item.status = 3
-          item.fontColor = '#fff'
-          item.bgColor = '#25A7F7'
+          item.fontColor = '#25A7F7'
+          item.bgColor = '#fff'
         }
-			})
-      this.chapterListData.forEach((item,index,arr)=>{
-        if (index === e) {
-          item.status = 3
-          item.bgColor3 = '#25A7F7'
-          item.bgColor2 = '#666'
-          item.bgColor1 = '#666'
-          this.bookTopicRegister(item.topic_id, 3)
-        }
-			})
+      })
+      this.chapterListData[0].status = 3
+      this.chapterListData[0].bgColor1 = '#666'
+      this.chapterListData[0].bgColor2 = '#666'
+      this.chapterListData[0].bgColor3 = '#25A7F7'
+      this.$forceUpdate();
+      this.bookTopicRegister(this.chapterListData[0].topic_id, 3)
     },
-    cahpter (e) {
-      this.page = e + 1
+    cahpter (e, page) {
+      this.page = page
       this.numlist.forEach((item,index,arr)=>{
         if (index === e) {
           item.fontColor = '#25A7F7'
@@ -255,7 +249,7 @@ export default {
       this.showLayer = false
     },
     registerFinish () {
-      this.chapterListData.forEach((item,index,arr)=>{
+      this.numlist.forEach((item,index,arr)=>{
         this.statusStr += item.status + ","
         this.topicStr += item.topic_id + ","
       })
@@ -312,13 +306,18 @@ export default {
     }
   }
   .title {
-    margin-bottom:0.4rem;
+    background:#fff;
+    margin:2rem 0.3rem 0.3rem 0.3rem;
+    border-radius:0.08rem;
+    padding:0.2rem;
+    box-shadow: 5px 5px 10px #a6dcfd;
     .tit {
       display: flex;
       padding:0.2rem;
-      border-left:0.1rem #8d8d8d solid;
       .left {
         width:1rem;
+        font-size:0.36rem;
+        color:#333;
       }
       .right {
         flex:1;
@@ -326,17 +325,14 @@ export default {
         span {
           padding:0.1rem 0.2rem;
           color:#fff;
-          font-size:0.24rem;
+          font-size:0.22rem;
           border-radius:0.08rem;
           margin:0 0.1rem;
         }
       }
     }
     .title_con {
-      background:#fff;
-      .con {
-        padding:0.2rem;
-      }
+      padding: 0 0.3rem;
       .answer {
         padding:0.2rem;
         p:first-child {
@@ -352,8 +348,7 @@ export default {
     left:0;
     width:100%;
     height:0.6rem;
-    background:#fff;
-    padding:0.2rem 0;
+    padding:0.2rem 0 0.4rem;
     display:flex;
     text-align:center;
     padding-bottom:0.2rem;
@@ -389,7 +384,7 @@ export default {
         height:0.8rem;
         text-align:center;
         line-height:0.8rem;
-        background:rgb(180, 178, 178);
+        background: #25A7F7;
         color:#fff;
         img {
           width: 0.36rem;
@@ -400,28 +395,32 @@ export default {
         }
       }
       .tip {
-        background:#e0b752;
+        // background:#e0b752;
         color:#FE0000;
         font-size:0.24rem;                                                                                                                                                                                                                                                        
       }
       .con {
         padding:0.2rem;
-        .title {
+        .layer_title {
           padding-top:0.2rem;
         }
-        ul {
-          clear:both;
-          overflow:hidden;
-          li {
-            float:left;
-            width:0.7rem;
-            margin: 0.2rem;
-            img {
-              width: 0.64rem;
-              height: 0.64rem;
-            }
-            p {
-              text-align:center
+        .layer_list {
+          height:3rem;
+          overflow-y: scroll;
+          ul {
+            clear:both;
+            overflow:hidden;
+            li {
+              float:left;
+              width:0.7rem;
+              margin: 0.2rem;
+              img {
+                width: 0.64rem;
+                height: 0.64rem;
+              }
+              p {
+                text-align:center
+              }
             }
           }
         }
