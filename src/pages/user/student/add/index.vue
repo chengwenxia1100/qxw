@@ -75,7 +75,8 @@ export default {
           student_id: this.student_no
         })
         this.loading = false
-        wx.reLaunch({ url: '../switchStudent/main' })
+        wx.navigateBack({ delta: 1 })
+        // wx.reLaunch({ url: '../switchStudent/main' })
     },
     // 内部学员通道
     gotoVip () {
