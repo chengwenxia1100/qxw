@@ -270,6 +270,7 @@ export default {
     this.numlist = {}
     this.statusStr = ''
     this.topicStr = ''
+    this.page = 1
   }
 }
 </script>
