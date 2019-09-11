@@ -4,13 +4,13 @@
       <ul>
         <li @click="subjectTab"> 
           {{subject}}
-          <img src="../../assets/svg/icon_down.png" v-if="downStatus">
-          <img src="../../assets/svg/icon_up.png" v-if="!downStatus">
+          <img src="../../assets/svg/icon_down.png" v-if="downStatus && subjectType">
+          <img src="../../assets/svg/icon_up.png" v-if="!downStatus && subjectType">
         </li>
         <li @click="gradeTab">
           {{grade}}
-          <img src="../../assets/svg/icon_down.png" v-if="upStatus">
-          <img src="../../assets/svg/icon_up.png" v-else>
+          <img src="../../assets/svg/icon_down.png" v-if="upStatus && subjectType">
+          <img src="../../assets/svg/icon_up.png" v-if="!upStatus && subjectType">
         </li>
       </ul>
     </div>
@@ -35,6 +35,17 @@
 import { getStudentGrade, getAllSubject } from '@/api/analy'
 
 export default {
+  props: {
+    subjectType: {
+      default: true
+    },
+    subject: {
+      default: ''
+    },
+    subjectValue: {
+      default: 0
+    }
+  },
   data () {
     return {
       downStatus: true,
@@ -44,8 +55,6 @@ export default {
       gradeListNo: false,
       subjectListNo: false,
       grade: '',
-      subject:'',
-      subjectValue: 0,
       gradeValue: 0
     }
   },
@@ -55,10 +64,16 @@ export default {
   },
   watch: {
     subjectValue (val) {
-        this.$emit('subject', val)
+      this.$emit('subject', val)
+    },
+    subject (val) {
+      this.$emit('subjectTit', val)
     },
     gradeValue (val) {
-        this.$emit('grade', val)
+      this.$emit('grade', val)
+    },
+    grade (val) {
+      this.$emit('gradeTit', val)
     }
   },
   methods: {
@@ -68,12 +83,14 @@ export default {
       if (data.length > 0) {
         this.gradeListNo = true
         this.gradeList = data
-        this.gradeList.map((item, index) => {
-          if(item.status === 1) {
-            this.grade = item.label
-            this.gradeValue = item.value
-          }
-        })
+        if(this.subjectType) {
+          this.gradeList.map((item, index) => {
+            if(item.status === 1) {
+              this.grade = item.label
+              this.gradeValue = item.value
+            }
+          })
+        }
       } else {
         this.grade = '暂无年级'
         this.gradeValue = 0
@@ -86,8 +103,10 @@ export default {
       if (data.length > 0) {
         this.subjectListNo = true
         this.subjectList = data
-        this.subject = data[0].label
-        this.subjectValue = data[0].value
+        if(this.subjectType) {
+          this.subject = data[0].label
+          this.subjectValue = data[0].value
+        }
       } else {
         this.subject = '暂无科目'
         this.subjectValue = 0
@@ -95,10 +114,12 @@ export default {
       
     },
     subjectTab () {
+      if (this.subjectType === false) { return }
       this.downStatus = !this.downStatus;
       this.upStatus = true;
     },
     gradeTab () {
+      if (this.subjectType === false) { return }
       this.upStatus = !this.upStatus;
       this.downStatus = true;
     },
@@ -113,6 +134,9 @@ export default {
       this.subjectValue = f
       this.downStatus = !this.downStatus
     }
+  },
+  onUnload () {
+    this.subjectValue = 0
   }
 }
 </script>
@@ -133,7 +157,7 @@ export default {
       display:flex;
       li {
         flex:1;
-        text-align:right;
+        text-align:center;
         line-height:0.6rem;
         clear:both;
         img {

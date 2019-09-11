@@ -87,10 +87,6 @@ export default {
                     value: 4
                 },
                 {
-                    label: '一年级',
-                    value: 1
-                },
-                {
                     label: '五年级',
                     value: 5
                 },

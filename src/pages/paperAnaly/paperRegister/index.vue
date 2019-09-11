@@ -56,7 +56,6 @@ import { getPaperChapterList, paperTopicRegister } from '@/api/analy';
 export default {
   data () {
     return {
-      paper_id: 15,
       paperList: {},
       message: {},
       paperdata: {},

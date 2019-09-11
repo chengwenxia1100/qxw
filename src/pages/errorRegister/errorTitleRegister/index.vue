@@ -3,7 +3,7 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <div class="tip">*点击对应章节进行查看、登记</div>
+    <div class="tip"><span></span><span>登记进度</span><span>正确率</span></div>
     <div class="list_con" v-for="(list, i) in chapterListData" :key="i">
       <div class="tit">
         <span>{{list.book_list_name}}</span>
@@ -62,7 +62,6 @@ export default {
     },
     // 跳转登记详情
     gotodetail (book_list_id, book_list_name, book_name) {
-      console.log(book_list_id)
       wx.navigateTo({ url: '/pages/errorRegister/registerDetail/main?book_list_id=' + book_list_id + '&book_list_name=' + book_list_name + '&book_name=' + book_name + '&book_id=' + this.book_id + '&grade=' + this.grade + '&subject_id=' + this.subject_id })
     }
   },
@@ -80,7 +79,17 @@ page {
   font-size:0.28rem;
   .tip {
     padding:0.2rem;
-    color:#FE0000;
+    color:#333;
+    display: flex;
+    span:first-child {
+      width:50%;
+    }
+    span {
+      flex:1;
+      font-size:0.24rem;
+      text-align:center;
+      line-height:0.3rem;
+    }
   }
   .list_con {
     margin-bottom:0.4rem;

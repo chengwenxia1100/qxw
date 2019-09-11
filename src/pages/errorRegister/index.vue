@@ -7,6 +7,8 @@
     <two-select-books
       @subject="subjectFun"
       @grade="gradeFun"
+      @subjectTit="subjectTitFun"
+      @gradeTit="gradeTitFun"
     ></two-select-books>
     <!-- 作业本列表 -->
     <div class="bookList_con">
@@ -50,6 +52,7 @@ export default {
       loading: false,
       subjectVal: '',
       gradeVal: '',
+      subject: '',
       loading: false,
       listStatus: true, // 有无错题本列表
       errorBookListData: {}
@@ -80,6 +83,13 @@ export default {
     gradeFun (val) {
       this.gradeVal = val
     },
+    subjectTitFun (val) {
+      console.log(val)
+      this.subject = val
+    },
+    gradeTitFun (val) {
+      this.grade = val
+    },
     async errorBookList () {
       const data = await errorBookList({
         subject_id: this.subjectVal,
@@ -91,7 +101,7 @@ export default {
     },
     // 添加作业本
     addBook () {
-      wx.navigateTo({ url: '/pages/errorRegister/addwork/main'})
+      wx.navigateTo({ url: '/pages/errorRegister/addwork/main?subject=' + this.subject +'&subjectValue=' + this.subjectVal +'&grade=' + this.grade +'&gradeValue=' + this.gradeVal })
     },
     // 跳转到错题登记
     chapterList (book_id) {
@@ -129,7 +139,7 @@ export default {
       .show {
         width:1.5rem;
         padding:0.1rem 0;
-        text-align:right;
+        text-align:center;
         p {
           color:#666;
         }

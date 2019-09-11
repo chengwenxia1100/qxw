@@ -39,7 +39,6 @@
     <div class="layer_registr" v-if="showLayer">
       <div class="layer">
         <div class="tit">批量登记<img src="../../../assets/svg/close.png" @click="close"></div>
-        <div class="tip">批量登记时候，所有题目默认为正确题目，点击一次批改成错，再次点击变为未登记：蓝色 未登记 绿色 正确 红色 错误</div>
         <div class="con">
           <div class="layer_title">{{book_list_name}}>{{book_name}}</div>
           <div class="layer_list">
@@ -48,13 +47,14 @@
                 <img src="../../../assets/icon/icon_right.png" v-if="list.status == 1 || list.status == 0" @click="list.status = 2">
                 <img src="../../../assets/icon/icon_error.png" v-if="list.status == 2" @click="list.status = 3">
                 <img src="../../../assets/icon/icon_stop.png"  v-if="list.status == 3" @click="list.status = 1">
-                <p>{{list.topic_number}}</p>
+                <p>{{list.topic_num}}</p>
               </li>
             </ul>
           </div>
           <div class="finish_btn" @click="registerFinish">
             完成
           </div>
+          <div class="tip">*红色表示错误&nbsp;&nbsp; 绿色表示正确 &nbsp;&nbsp;蓝色表示未做</div>
         </div>
       </div>
     </div>
@@ -121,11 +121,11 @@ export default {
       this.chapterListData = data.list
       this.numlist.map((i, index) => {
         if (i.status === 1) {
-          i.fontColor = '#21C788'
+          i.fontColor = '#17f972'
         } else if (i.status === 2) {
           i.fontColor = '#FE0000'
         } else if(i.status === 3) {
-          i.fontColor = '#55D8FE'
+          i.fontColor = '#095889'
         } else {
           i.bgColor = '#25A7F7'
           if (i.is_now === 1) {
@@ -148,7 +148,7 @@ export default {
           i.bgColor1 = '#a6dcfd'
           i.bgColor3 = '#a6dcfd'
         } else if(i.status === 3) {
-          i.bgColor3 = '##25A7F7'
+          i.bgColor3 = '#25A7F7'
           i.bgColor2 = '#a6dcfd'
           i.bgColor1 = '#a6dcfd'
         } else {
@@ -311,6 +311,7 @@ export default {
       width: 0.5rem;
       height: 0.5rem;
       margin-right:0.2rem;
+      border-radius:50%;
     }
   }
   .title {

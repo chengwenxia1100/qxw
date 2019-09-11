@@ -187,6 +187,7 @@ export default {
 
 <style lang='less' scoped>
 .home_container {
+  box-sizing:borde-box;
   .advice {
     display:flex;
     img {
@@ -202,13 +203,15 @@ export default {
     background:#25A7F7;
     color:#fff;
     height: 1.6rem;
-    padding:0.3rem;
+    padding:0.3rem 0;
     width:100%;
+    box-sizing:borde-box;
     .student_bind {
       color:#fff;
       display: flex;
        .left_mess {
-         width:5rem;
+         width:4.5rem;
+         padding-left:0.5rem;
          .name {
            font-size:0.34rem;
            font-weight: bold;
@@ -237,6 +240,7 @@ export default {
     border-radius:0.2rem;
     background: #fff;
     margin:-0.3rem 0.3rem 0.3rem 0.3rem;
+    box-sizing:borde-box;
     ul {
       display: flex;
       li {
@@ -258,6 +262,7 @@ export default {
   }
   .model {
     padding:0.3rem;
+    box-sizing:borde-box;
     h1 {
       padding:0.1rem 0;
       font-size:0.32rem;
@@ -343,16 +348,16 @@ export default {
     }
   }
   .mask {
-    padding:0.3rem;
-    box-sizing:border-box;
+    width:100%;
+    overflow:hidden;
     background:#fff;
     h1 {
-      padding:0.1rem 0;
+      padding:0.1rem 0 0.1rem 0.3rem;
       font-size:0.32rem;
       color:#000;
     }
     h2 {
-      padding:0.1rem 0 0.2rem;
+      padding:0.1rem 0 0.2rem 0.3rem;
       color: rgba(0, 0, 0, 0.4)
     }
     img {
