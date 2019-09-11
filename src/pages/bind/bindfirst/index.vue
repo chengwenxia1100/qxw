@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { gainCode, bindMessSubmit, getSchoolList } from '../bind.api';
+import { gainCode, bindMessSubmit, getSchoolList, setPassword, checkPassword } from '../bind.api';
 import bindParents from '@/components/form/bindParents'
 import studentForm from '@/components/form/studentForm'
 import mpvuePicker from "mpvue-picker";
@@ -46,8 +46,6 @@ export default {
           studentGradeVal: '请输入就读年级',
           studentClassVal: '',
           student_no: 0,
-
-  
           relationVal: 1,
           parentsNameVal: '',
           phoneVal: '',
@@ -87,8 +85,24 @@ export default {
               return
           } else {
             this.loading = true
-            this.bindMessSubmitData()
+            this.setPassword()
           }
+        },
+        // 检测是否第一次绑定
+        async setPassword () {
+          const data = await setPassword({
+              s_realname: this.studentNameVal,
+              s_sex: this.studentSexVal,
+              s_grade: this.studentGradeVal,
+              s_school: this.studentSchoolVal,
+              s_class: this.studentClassVal,
+              student_no: this.student_no,
+              p_realname: this.parentsNameVal,
+              sms_code: this.codeVal,
+              phone: this.phoneVal,
+              relation_type: this.relationVal
+          })
+          
         },
         // 点击提交接口
         async bindMessSubmitData () {

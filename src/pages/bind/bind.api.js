@@ -21,3 +21,17 @@ export function getSchoolList (data) {
     data
   })
 }
+
+export function setPassword (data) {
+  return request({
+    url: sign('home/checkStudentBindPassWord'),
+    data
+  })
+}
+
+export function checkPassword (data) {
+  return request({
+    url: sign('home/setStudentBindPassWord'),
+    data
+  })
+}
