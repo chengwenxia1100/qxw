@@ -23,11 +23,19 @@
       <div class="btn_con" @click="finished">完成</div>
     </div>
     <div class="tip" @click="gotoVip">内部学员绑定通道></div>
+    <!-- 设置密码 -->
+    <password-layer
+    :passwordtip="passwordtip"
+    :passwordLayer="passwordLayer"
+    @passwordLayer="passwordLayerFun"
+    @password="passwordFun"
+  ></password-layer>
   </div>
 </template>
 
 <script>
-import { gainCode, bindMessSubmit, getSchoolList, setPassword, checkPassword } from '../bind.api';
+import { gainCode, bindMessSubmit, getSchoolList, setPassword, checkPassword } from '../bind.api'
+import passwordLayer from '@/components/layer/passwordLayer'
 import bindParents from '@/components/form/bindParents'
 import studentForm from '@/components/form/studentForm'
 import mpvuePicker from "mpvue-picker";
@@ -36,7 +44,8 @@ export default {
     components: {
         mpvuePicker,
         bindParents,
-        studentForm
+        studentForm,
+        passwordLayer
     },
     data () {
         return {
@@ -44,13 +53,17 @@ export default {
           studentSexVal: 0,
           studentSchoolVal: '请输入就读学校',
           studentGradeVal: '请输入就读年级',
+          passwordtip: '请设置密码',
           studentClassVal: '',
           student_no: 0,
+          studentId: 0,
           relationVal: 1,
+          passwordType: 0,
           parentsNameVal: '',
           phoneVal: '',
           codeVal: '',
-          loading: false
+          loading: false,
+          passwordLayer: false
         }
     },
     onLoad () {
@@ -58,7 +71,6 @@ export default {
     methods: {
         // 填完信息提交
         finished () {
-          console.log(this.studentGradeVal)
           if (!this.studentNameVal) {
               wx.showToast({ title: '请输入学生姓名', icon: 'none' })
               return
@@ -70,6 +82,9 @@ export default {
               return
           } else if (!this.studentSchoolVal) {
               wx.showToast({ title: '请输入学校', icon: 'none' })
+              return
+          } else if (!this.studentClass) {
+              wx.showToast({ title: '请输入班级代码', icon: 'none' })
               return
           } else if (!this.parentsNameVal) {
               wx.showToast({ title: '请输入家长姓名', icon: 'none' })
@@ -102,7 +117,26 @@ export default {
               phone: this.phoneVal,
               relation_type: this.relationVal
           })
-          
+          this.studentId = data.student_id
+          this.passwordType = data.password
+          if(data.password == 1) {
+            this.passwordLayer = true
+            this.passwordtip = '设置密码'
+          }else if(data.password == 2) {
+            this.passwordLayer = true
+            this.passwordtip = '确认密码'
+            this.checkPassword()
+          } else {
+            this.bindMessSubmitData
+          }
+        },
+        // 检测密码接口
+        async checkPassword () {
+          const data = await checkPassword({
+            password: this.password,
+            student_id: this.studentId
+          })
+          this.bindMessSubmitData()
         },
         // 点击提交接口
         async bindMessSubmitData () {
@@ -116,9 +150,12 @@ export default {
               p_realname: this.parentsNameVal,
               sms_code: this.codeVal,
               phone: this.phoneVal,
-              relation_type: this.relationVal
+              relation_type: this.relationVal,
+              password: this.password,
+              student_id: this.studentId
           })
           this.loading = false
+          this.passwordLayer = false
           // 跳转到下一页
           const url = '../../home/main'
           wx.reLaunch({url})
@@ -155,6 +192,22 @@ export default {
         },
         code (val) {
             this.codeVal = val
+        },
+        // 接收设置密码子组件返回
+        passwordLayerFun (val) {
+          this.passwordLayer = val
+        },
+        passwordFun (val) {
+          console.log(val)
+          this.password = val
+          if (this.passwordType === 1) {
+            this.bindMessSubmitData()
+            return
+          }
+          if (this.passwordType === 2) {
+            this.checkPassword()
+            return
+          }
         },
         // 内部学员通道
         gotoVip () {

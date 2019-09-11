@@ -44,7 +44,7 @@
         </div>
         <div class="list">
             <div class="tit">班级代码</div>
-            <input type="text" placeholder="请输入班级代码(选填)" v-model="classNum" >
+            <input type="text" placeholder="请输入班级代码" v-model="classNum" >
         </div>
     </div>
 </template>

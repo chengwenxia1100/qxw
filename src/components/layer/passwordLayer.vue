@@ -1,5 +1,5 @@
 <template>
-<div class="password_container">
+<div class="password_container" v-if="passwordLayer">
   <div class='password_input_box'>
     <img src="../../assets/svg/close.png" @click="closeInput" class="close">
     <div class="title">请设置密码</div>
@@ -29,9 +29,9 @@
 <script>
 export default {
 	props: {
-		layerStatus: {
+		passwordLayer: {
 			type: Boolean,
-			default: true
+			default: false
 		},
 		passwordtip: {
 			type: String,
@@ -109,10 +109,10 @@ export default {
 		};
 	},
 	methods: {
-		// close(){
-		// 	this.showKeyBoard = false;
-		// 	this.$emit("close");
-		// },
+		closeInput(){
+      this.passwordLayer = false;
+      this.$emit('passwordLayer', this.passwordLayer)
+		},
 		del() {
 			if (this.numLength[5].numInput !== '') {
         this.numLength[5].numInput = ''
@@ -146,7 +146,6 @@ export default {
         // this.numLength.map((item, index)=>{
         //   let password = item.numInput.concat(item.numInput)
         // })
-        console.log(password);
         this.$emit('password', password)
       }
 		}
@@ -205,9 +204,9 @@ export default {
       }
     }
   }
-  
-
   .key-board {
+    background:#fff;
+    z-index:999;
     position: fixed;
     width: 100%;
     bottom: 0;
@@ -232,7 +231,6 @@ export default {
         border-right: 1px solid #eeeeee;
         box-sizing: border-box;
         font-size: 40rpx;
-        
       }
       .key:nth-child(n + 4) {
         border-top: 1px solid #eeeeee;
