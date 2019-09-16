@@ -175,6 +175,7 @@ export default {
     box-shadow: 0 2px 5px #a6dcfd;
     border-bottom:0.02rem #a6dcfd solid;
     z-index:999;
+    overflow: hidden;
     ul {
       display:flex;
       li {

@@ -2,7 +2,7 @@
 <div class="password_container" v-if="passwordLayer">
   <div class='password_input_box'>
     <img src="../../assets/svg/close.png" @click="closeInput" class="close">
-    <div class="title">请设置密码</div>
+    <div class="title">{{passwordtip}}</div>
     <div class='input'>
       <div v-for="(item,i) in numLength" :key="i" class='input_content'>
         <div>{{item.numInput}}</div>
@@ -12,14 +12,18 @@
 
   <div class="key-board">
     <div class="title" @click="closeBoard"> 
-		  <!-- <image src="/static/report/img/2.0/down.png" style="width: 80rpx;height: 60rpx;"></image> -->
+		  <!-- <img src="../../assets/icon/icon_up.png" style="width: 80rpx;height: 60rpx;"/> -->
     </div>
 		<div class="keys">
 			<div class="key button" v-for="num in config.loop" :key="num.key" @click="numList(num.number)">{{num.number}}</div>
-			<div class="key button" style="background: #eeeeee;"></div>
+			<!-- <div class="key button" style="background: #eeeeee;"></div> -->
+      <div class="key button" @click="del" style="background: #eeeeee;">
+			  <img src="../../assets/icon/delete.png" style="width: 50rpx;height: 50rpx;"/>
+			</div>
 			<div class="key button" @click="numList(0)">0</div>
-			<div class="key button" @click="del" style="background: #eeeeee;">
-				<!-- <image src="/static/report/img/2.0/delet.png" style="width: 50rpx;height: 50rpx;"></image> -->
+			<div class="key button" @click="finished" style="background: #eeeeee; font-size:16px;color:#25a7f7;">
+        完成
+			  <!-- <img src="../../assets/icon/delete.png" style="width: 50rpx;height: 50rpx;"/> -->
 			</div>
 		</div>
   </div> 
@@ -127,7 +131,16 @@ export default {
       } else if (this.numLength[0].numInput !== '') {
         this.numLength[0].numInput = ''
       }
-		},
+    },
+    finished () {
+      if (this.numLength[5].numInput !== '') {
+        let password = this.numLength[0].numInput + '' + this.numLength[1].numInput + '' + this.numLength[2].numInput+ '' + this.numLength[3].numInput + '' + this.numLength[4].numInput + '' + this.numLength[5].numInput
+        this.$emit('password', password)
+      } else {
+        this.passwordLayer = false;
+        this.$emit('passwordLayer', this.passwordLayer)
+      }
+    },
 		numList(val) {
       if (this.numLength[0].numInput == '') {
         this.numLength[0].numInput = val

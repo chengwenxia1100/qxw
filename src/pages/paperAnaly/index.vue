@@ -172,7 +172,7 @@ export default {
           width:0.48rem;
           height:0.48rem;
           position:absolute;
-          top: 43%;
+          top: 32%;
           right: 0;
       }
     }

@@ -83,7 +83,7 @@ export default {
           } else if (!this.studentSchoolVal) {
               wx.showToast({ title: '请输入学校', icon: 'none' })
               return
-          } else if (!this.studentClass) {
+          } else if (!this.studentClassVal) {
               wx.showToast({ title: '请输入班级代码', icon: 'none' })
               return
           } else if (!this.parentsNameVal) {

@@ -3,8 +3,24 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <div class="paper">
-      <div class="tit">试题内容</div>
+    <div class="title_container">
+      <div class="title">第{{papermess.topic_number}}题</div>
+      <div class="tit_con" v-html="paperConData.content"></div>
+      <div class="ansow">
+        <div class="tit">试题答案</div>
+        <div class="con">
+          <div class="con_list" v-html="paperConData.answer"></div>
+        </div>
+      </div>
+      <div class="kao">
+        <div class="tit">知识考点</div>
+        <div class="con">
+          <div class="con_list" v-for="(item, i) in paperConData.topic_point" :key="i" v-show="item">{{item}}</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- <div class="paper">
       <div class="con" v-html="paperConData.content"></div>
     </div>
      <div class="paper">
@@ -12,13 +28,13 @@
       <div class="con">
         <div class="con_list">{{paperConData.answer}}</div>
       </div>
-    </div>
-     <div class="paper">
+    </div> -->
+    <!-- <div class="paper">
       <div class="tit">知识考点</div>
       <div class="con">
         <div class="con_list" v-for="(item, i) in paperConData.topic_point" :key="i" v-show="item">{{item}}</div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -29,6 +45,7 @@ export default {
   data () {
     return {
       paperConData: {},
+      papermess: {},
       loading: false, // 进入页面的弹窗
       id: ''
     }
@@ -53,18 +70,35 @@ export default {
       })
       this.loading = false
       this.paperConData = data
+      this.papermess = data.topic_info
     },
   }
 }
 </script>
-
 <style lang="less">
+page {
+  background:#fff;
+}
+</style>
+<style lang="less" scoped>
 .paper_detail_container {
   font-size:0.26rem;
-  .paper {
+  color:#666;
+  .title_container {
+    padding:0.4rem;
+    .title {
+      font-size:0.36rem;
+      color:#333;
+      padding:0.2rem 0;
+    }
+  }
+  .ansow {
+    padding-top:0.4rem;
+  }
+
     .tit {
-      padding:0.2rem;
-      border-left:0.1rem #666 solid;
+      color:#333;
+      font-size:0.36rem;
     }
     .con {
       background:#fff;
@@ -72,6 +106,6 @@ export default {
         padding:0.2rem;
       }
     }
-  }
+  
 }
 </style>

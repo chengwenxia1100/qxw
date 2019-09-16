@@ -24,24 +24,24 @@
       <div class="tab_container">
         <div class="title_box">
           <div class="list" v-for="(item, i) in topicList" :key="i" v-show='total'> 
-            <p>{{page}}/{{total}}</p>
+            <p>{{(i+1) + (10 * page) - 10}}/{{total}}</p>
             <div class="tit" v-html="item.topic_content" style="line-height:28px;"></div>
             <div class="title_analyse" @click="analyseBtn(i)">试题分析</div>
             <div style="background:#f2f2f2;width:100%;height:0.2rem;"></div>
           </div>
-          <!-- <div class="no_books" v-if="total == ''">该学员暂无错题本</div> -->
+          <div class="no_books" v-if="total == ''">该学员暂无错题本</div>
         </div>
       </div>
       <!-- 分页 -->
       <!-- <page-slide></page-slide> -->
       <div class="page_slide"  v-if='total > 1'>
-        <div class="prev" @click="prev">上一页</div>
+        <!-- <div class="prev" @click="prev">上一页</div> -->
         <div class="slide_con">
           <ul>
             <li v-for="(list, i) in numlist" :key="i" @click="clickPage(list)" :class="{ 'checked': list === page ? true : false}">{{list}}</li>
           </ul>
         </div>
-        <div class="next" @click="next">下一页</div>
+        <!-- <div class="next" @click="next">下一页</div> -->
       </div>
     <!-- </div> -->
     <!-- 点击试题分析 出现弹窗 -->
@@ -294,7 +294,7 @@ page {
   .tab_container {
     padding:0.2rem;
     margin-top:0.6rem;
-    margin-bottom:0.2rem;
+    margin-bottom:1.6rem;
     .title_box {
       .list {
         margin:0.4rem 0.2rem 0.8rem;
@@ -339,6 +339,7 @@ page {
     position:fixed;
     bottom:0;
     left:0;
+    background:#fff;
     .same_btn {
       width:1.4rem;
       height:0.6rem;

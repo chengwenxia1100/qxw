@@ -76,6 +76,8 @@ export default {
 
           if (data.length >= 3) {
             this.lengthMax = true
+          } else {
+            this.lengthMax = false
           }
         }       
     },

@@ -4,13 +4,13 @@
       加载中...
     </page-loading>
     <div class="tit">
-      <span>{{paperdata.paper_name}}</span>
-      <span>{{paperdata.paper_name}} </span>
-      <span>总分：{{paperdata.paper_total_score}}   我的得分：{{paperdata.paper_student_score}}</span>
+      <span> {{paperdata.paper_name}} </span>
+      <span>总分：{{paperdata.paper_total_score}}  </span>
+      <span>我的得分：{{paperdata.paper_student_score}}</span>
     </div>
     <div class="register" v-for="(list, i) in paperList" :key="i">
       <div class="register_tit" @click="slideTab(i)">
-        <div class="left">第一部分 {{list.chapter_name}}（共{{list.score_total}}分）</div>
+        <div class="left"> {{list.chapter_name}}（共{{list.score_total}}分）</div>
         <div class="right">我的得分：{{list.student_score_total}}</div>
         <div class="img">
           <img src="../../../assets/icon/icon_up.png" v-if="list.conFlag">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { getPaperChapterList, paperTopicRegister } from '@/api/analy';
+import { getPaperChapterList, paperTopicRegister, checkRegister } from '@/api/analy';
 
 export default {
   data () {
@@ -110,15 +110,40 @@ export default {
         topic_type: chapter_name
       })
     },
+    async checkRegister () {
+      const data = await checkRegister({
+        paper_id: this.paper_id
+      })
+      if (data.success) {
+        wx.showModal({
+          title: '提交登记内容',
+          content: '确认提交登记内容',
+          cancelColor: '#666',
+          confirmText: '确认',
+          confirmColor: '#EA5A49',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({ 
+                url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    },
     // input失去焦点
     blur (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
       if (student_score > topic_score) {
         wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
-      } else if (status == 0) {
-        wx.showToast({ title: '请选择做答情况～', icon: 'none' })
-      } else if (student_score != topic_score && status == 1) {
-        wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
-      } else if (student_score == topic_score && status == 2) {
+      } 
+      // else if (status == 0) {
+      //   wx.showToast({ title: '请选择做答情况～', icon: 'none' })
+      // } else if (student_score != topic_score && status == 1) {
+      //   wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
+      // } 
+      else if (student_score == topic_score && status == 2) {
         wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
       } else {
         this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
@@ -131,22 +156,7 @@ export default {
     },
     // 提交
     submit () {
-      wx.showModal({
-        title: '提交登记内容',
-        content: '确认提交登记内容',
-        cancelColor: '#666',
-        confirmText: '确认',
-        confirmColor: '#EA5A49',
-        success: (res) => {
-          if (res.confirm) {
-            wx.navigateTo({ 
-              url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
-            })
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
+      this.checkRegister()
     },
     slideTab (i) {
       this.paperList.map((item, index)=>{
@@ -155,6 +165,10 @@ export default {
         }
       })
       this.$forceUpdate();
+    },
+    // 正确得分
+    quest () {
+      console.log('123')
     }
   }
 }
@@ -168,16 +182,17 @@ page {
   color: #25A7F7;
 }
 .paperRegister_container {
-  margin-bottom:1.2rem;
+  margin-bottom:2rem;
   font-size:0.24rem;
   .tit {
     background:#fff;
     display: flex;
     padding:0.2rem;
     color:#fff;
-    margin:0 0 0 0.4rem;
+    // margin:0 0 0 0.4rem;
     span {
       flex:1;
+      text-align:center;
     }
     span:first-child {
       color:#333;
@@ -233,8 +248,8 @@ page {
         border: 1px solid #f2f2f2;
         padding:0.1rem 0;
         img {
-          width: 0.36rem;
-          height: 0.36rem;
+          width: 0.48rem;
+          height: 0.48rem;
         }
         img:first-child {
           margin-right:0.2rem;
@@ -244,6 +259,9 @@ page {
         color:#1296db;
       }
     }
+  }
+  .register:last-child {
+    margin-bottom:1.6rem;
   }
   .btn {
     box-sizing:border-box;

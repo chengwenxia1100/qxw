@@ -13,16 +13,25 @@
     ></student-form>
     <div class="btn" @click="addFinished">完成</div>
     <div class="tip" @click="gotoVip">内部学员绑定通道></div>
+    <!-- 设置密码 -->
+    <password-layer
+    :passwordtip="passwordtip"
+    :passwordLayer="passwordLayer"
+    @passwordLayer="passwordLayerFun"
+    @password="passwordFun"
+  ></password-layer>
   </div>
 </template>
 
 <script>
+import passwordLayer from '@/components/layer/passwordLayer'
 import studentForm from '@/components/form/studentForm'
-import { addData } from '../../user.api'
+import { addData, setPassword, checkPassword } from '../../user.api'
 
 export default {
   components: {
-    studentForm
+    studentForm,
+    passwordLayer
   },
   data () {
     return {
@@ -30,10 +39,14 @@ export default {
       studentSexVal: 0,
       studentSchoolVal: '请输入就读学校',
       studentGradeVal: '请输入就读年级',
+      passwordtip: '',
       studentClassVal: '',
       student_no: 0,
+      password: 0, // 密码
       loading: false,
-      mess: {}
+      passwordLayer: false, //设置密码弹窗
+      mess: {},
+      studentId: 0
     }
   },
   onLoad (option) {
@@ -61,8 +74,25 @@ export default {
     },
     // 点击完成
     addFinished () {
-      this.loading = true
-      this.addDataFun()
+      if (!this.studentNameVal) {
+        wx.showToast({ title: '请输入学生姓名', icon: 'none' })
+        return
+      } else if (!this.studentSexVal) {
+        wx.showToast({ title: '请输入学生性别', icon: 'none' })
+        return
+      } else if (!this.studentGradeVal) {
+        wx.showToast({ title: '请输入年级', icon: 'none' })
+        return
+      } else if (!this.studentSchoolVal) {
+        wx.showToast({ title: '请输入学校', icon: 'none' })
+        return
+      } else if (!this.studentClassVal) {
+        wx.showToast({ title: '请输入班级代码', icon: 'none' })
+        return
+      } else {
+          this.loading = true
+          this.setPassword()
+      }
     },
     // 添加学员接口
     async addDataFun () {
@@ -72,15 +102,70 @@ export default {
           grade: this.studentGradeVal,
           school: this.studentSchoolVal,
           class_id: this.studentClassVal,
-          student_id: this.student_no
+          student_id: this.student_no,
+          password: this.password
         })
         this.loading = false
+        this.passwordLayer = false
+        wx.showToast({ title: '添加成功', icon: 'right' })
         wx.navigateBack({ delta: 1 })
         // wx.reLaunch({ url: '../switchStudent/main' })
     },
     // 内部学员通道
     gotoVip () {
       wx.navigateTo({ url: '/pages/bind/vipbind/main' })
+    },
+    // 接收设置密码子组件返回
+    passwordLayerFun (val) {
+      this.passwordLayer = val
+    },
+    passwordFun (val) {
+      this.password = val
+      if (this.passwordType === 1 && val) {
+        this.addDataFun()
+        return
+      }
+      if (this.passwordType === 2 && val)  {
+        this.checkPassword()
+        return
+      }
+    },
+    // 检测是否第一次绑定
+    async setPassword () {
+      const data = await setPassword({
+          s_realname: this.studentNameVal,
+          s_sex: this.studentSexVal,
+          s_grade: this.studentGradeVal,
+          s_school: this.studentSchoolVal,
+          s_class: this.studentClassVal,
+          student_no: this.student_no,
+          p_realname: this.parentsNameVal,
+          sms_code: this.codeVal,
+          phone: this.phoneVal,
+          relation_type: this.relationVal
+      })
+      this.studentId = data.student_id
+      this.passwordType = data.password
+      if(data.password == 1) {
+        this.passwordLayer = true
+        this.passwordtip = '设置密码'
+      }else if(data.password == 2) {
+        this.passwordLayer = true
+        this.passwordtip = '确认密码'
+        // this.checkPassword()
+      } else {
+        this.checkPassword()
+      }
+    },
+    // 确定密码接口
+    async checkPassword () {
+      const data = await checkPassword({
+        password: this.password,
+        student_id: this.studentId
+      })
+      if(data.success) {
+        this.addDataFun()
+      }
     }
   },
   onUnload () {
