@@ -46,21 +46,23 @@ export default {
     return {
       paperConData: {},
       papermess: {},
+      mess: {},
       loading: false, // 进入页面的弹窗
       id: ''
     }
   },
+  onLoad (option) {
+    this.loading = true;
+    this.mess = option
+    this.PaperTopicInfo()
+  },
   computed: {
     topicId () {
-      return this.$root.$mp.query.topic_id
+      return this.mess.topic_id
     },
     id () {
-      if (this.$root.$mp.query.id) { return this.$root.$mp.query.id }
+      if (this.mess.id) { return this.mess.id }
     }
-  },
-  onLoad () {
-    this.loading = true;
-    this.PaperTopicInfo()
   },
   methods: {
     async PaperTopicInfo () {
@@ -72,6 +74,9 @@ export default {
       this.paperConData = data
       this.papermess = data.topic_info
     },
+  },
+  onUnload () {
+    this.paperConData = {}
   }
 }
 </script>

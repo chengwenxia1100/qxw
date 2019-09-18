@@ -29,16 +29,18 @@
           <div class="row" v-for="(item, j) in paperList[i].topic_info" :key="j">
             <div class="cell">{{item.topic_number}}</div> 
             <div class="cell blue" @click="checkDetail(item.topic_id, item.id)">查看</div> 
-            <div class="cell">
-              <img src="/assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="item.status = 1">
-              <img src="/assets/icon/icon_answer_quest.png" v-if="item.status == 1"  @click="item.status = 0">
-              <img src="/assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="item.status = 2">
-              <img src="/assets/icon/icon_answer_error.png" v-if="item.status == 2 "  @click="item.status = 0">
+            <div class="cell icon">
+              <img src="/assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="selectIcon(i,j,1)">
+              <img src="/assets/icon/icon_right.png" v-if="item.status == 1"  @click="item.status = 0">
+              <img src="/assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="selectIcon(i,j,2)">
+              <img src="/assets/icon/icon_error.png" v-if="item.status == 2 "  @click="item.status = 0">
             </div>
             <div class="cell">{{item.topic_score}}</div>
-            <div class="cell">
-              <input type="text" v-model="item.student_score" 
+            <div class="cell input">
+              <img src="../../../assets/icon/icon_less.png" @click="scoreLess(i, j)" v-if="item.status == 2">
+              <input type="text" :style="{'width': (item.status == 2 ? '1.7rem':'100%')}"  v-model="item.student_score" 
               @blur="blur(item.status, item.topic_id, item.student_score, list.chapter_id, list.chapter_name, item.topic_number, list.topic_type, item.topic_score)">
+              <img src="../../../assets/icon/icon_add.png" @click="scoreAdd(i, j)" v-if="item.status == 2">
             </div>
           </div>
         </div>
@@ -66,6 +68,7 @@ export default {
   onLoad (option) {
     this.loading = true
     this.message = option
+    // this.message.paper_id = 16
     this.getPaperChapterList()
   },
   computed: {
@@ -93,9 +96,16 @@ export default {
       this.paperdata = data
       this.paperList = data.list
       this.loading = false
-
+      
       this.paperList.map((item, index)=>{
-        item.conFlag = false
+        if (item.status == 2) {
+          this.width = '65rem'
+        }
+        if (index = 0) {
+          item.conFlag = true
+        } else {
+          item.conFlag = false
+        }
       })
     },
     // 题目打分提交
@@ -135,19 +145,17 @@ export default {
     },
     // input失去焦点
     blur (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
-      if (student_score > topic_score) {
-        wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
-      } 
-      // else if (status == 0) {
+      // if (student_score > topic_score) {
+      //   wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
+      // } else if (status == 0) {
       //   wx.showToast({ title: '请选择做答情况～', icon: 'none' })
       // } else if (student_score != topic_score && status == 1) {
       //   wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
-      // } 
-      else if (student_score == topic_score && status == 2) {
-        wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
-      } else {
+      // }else if (student_score == topic_score && status == 2) {
+      //   wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
+      // } else {
         this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
-      }
+      // }
     },
     // 查看详情
     checkDetail (topic_id, id) {
@@ -162,13 +170,43 @@ export default {
       this.paperList.map((item, index)=>{
         if (index === i) {
           item.conFlag = !item.conFlag
+        } else {
+          item.conFlag = false
         }
       })
       this.$forceUpdate();
     },
     // 正确得分
-    quest () {
-      console.log('123')
+    selectIcon (i,j,status) {
+      this.paperList[i].topic_info[j].status = status
+      let score = this.paperList[i].topic_info[j].topic_score
+      let student_score = this.paperList[i].topic_info[j].student_score
+      let topic_id = this.paperList[i].topic_info[j].topic_id
+      let topic_number = this.paperList[i].topic_info[j].topic_number
+      let chapter_id = this.paperList[i].chapter_id
+      let chapter_name = this.paperList[i].chapter_name
+      let topic_type = this.paperList[i].topic_type
+      
+      if (status == 1) { // 做对
+        this.paperList[i].topic_info[j].student_score = this.paperList[i].topic_info[j].topic_score 
+      } else if (status == 2) { // 做错
+        this.paperList[i].topic_info[j].student_score = 0
+      }
+      this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+    },
+    scoreLess (i, j) {
+      if (this.paperList[i].topic_info[j].student_score > 0) {
+        this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 1
+      } else {
+        wx.showToast({ title: '不能低于0分哦～', icon: 'none' })
+      }
+    },
+    scoreAdd (i, j) {
+      if (this.paperList[i].topic_info[j].student_score < this.paperList[i].topic_info[j].topic_score) {
+        this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) + 1
+      } else {
+        wx.showToast({ title: '不能高于总分哦～', icon: 'none' })
+      }
     }
   }
 }
@@ -244,15 +282,43 @@ page {
       } 
       .cell { 
         display: table-cell;
-        width: 20%;
         border: 1px solid #f2f2f2;
         padding:0.1rem 0;
+        vertical-align:middle;
+      }
+      .cell:first-child {
+        width: 15%;
+      }
+      .cell:nth-child(2) {
+        width: 20%;
+      }
+      .cell:nth-child(3) {
+        width: 25%;
+      }
+      .cell:nth-child(4) {
+        width: 15%;
+      }
+      .cell:nth-child(5) {
+        width: 25%;
+      }
+      .icon {
         img {
           width: 0.48rem;
           height: 0.48rem;
         }
         img:first-child {
           margin-right:0.2rem;
+        }
+      }
+      .input {
+        img {
+          width:0.56rem;
+          height:0.56rem;
+          float:left;
+        }
+        input {
+          float:left;
+          padding-top:0.05rem;
         }
       }
       .blue {
