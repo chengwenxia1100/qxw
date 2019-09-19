@@ -18,16 +18,22 @@
       </div>
     </div>
     <!--扇形图-->
-    <div class="chart_con">
+    <!-- <div class="chart_con">
       <div class="tab">
         <div class="btn" @click="seleceTab(1)" :style="'background:' + bgcolor1 + ';color:' + fontColor1">得分情况</div>
-        <div class="btn" @click="seleceTab(2)" :style="'background:' + bgcolor2 + ';color:' + fontColor2"> 失分情况</div>
+        <div class="btn" @click="seleceTab(2)" :style="'background:' + bgcolor2 + ';color:' + fontColor2">失分情况</div>
         <div class="btn" @click="seleceTab(3)" :style="'background:' + bgcolor3 + ';color:' + fontColor3">得分率</div>
       </div>
-      <div class="con">
-        <!-- <fan-chart></fan-chart> -->
+      <div class="con" v-if="getStatus">
+        <progress-ring-bar :progress="progress"></progress-ring-bar>
       </div>
-    </div>
+      <div class="con" v-if="lostStatus">
+        <progress-ring-bar :progress="progress"></progress-ring-bar>
+      </div>
+      <div class="con" v-if="progressStatus">
+        <progress-ring-bar :progress="progress"></progress-ring-bar>
+      </div>
+    </div> -->
     <!--学生错题列表-->
     <div class="potic">
       <h2>学生错题</h2>
@@ -53,12 +59,12 @@
 </template>
 
 <script>
-// import fanChart from '@/components/echart/fanChart'
+import progressRingBar from '@/components/progress/progressRingBar'
 import { paperAnalysis } from '@/api/analy';
 
 export default {
   components: {
-    // fanChart
+    progressRingBar
   },
   data () {
     return {
@@ -67,6 +73,9 @@ export default {
       value: '', // 考试成绩的值
       on: true,
       loading: false,
+      getStatus: true,
+      lostStatus: true,
+      progressStatus: true,
       paperAnalyData: {},
       paperMess: {},
       getInfo: {},
@@ -78,12 +87,14 @@ export default {
       bgcolor2: '',
       fontColor2: '',
       bgcolor3: '',
-      fontColor3: ''
+      fontColor3: '',
+      progress: 20 // 进度条
     }
   },
   onLoad (option) {
     this.loading = true
-    this.message = option
+    // this.message = option
+    this.message.paper_id = 16
     this.paperAnalysis()
   },
   computed: {
@@ -94,7 +105,7 @@ export default {
   methods: {
     async paperAnalysis () {
       const data = await paperAnalysis({
-        paper_id: this.paper_id
+        paper_id: 16
       })
       setTimeout(() => {
         this.loading = false
@@ -119,7 +130,6 @@ export default {
     },
     confirm () {
       if (this.value) {
-        console.log(this.value)
         this.macklayer = false;
       } else {
         this.tip = true;
@@ -130,22 +140,36 @@ export default {
       this.fontColor = '#fff'
     },
     seleceTab (e) {
-      console.log(e)
       if (e == 1) {
+        this.getStatus = true
+        this.lostStatus = false
+        this.progressStatus = false
+        this.progress = 20
         this.bgcolor1 = '#1296db'
         this.fontColor1 = '#fff'
         this.bgcolor2 = '#fff'
         this.fontColor2 = '#1296db'
         this.bgcolor3 = '#fff'
         this.fontColor3 = '#1296db'
-      } else if (e== 2) {
+      }
+      if (e == 2) {
+        this.lostStatus = true
+        this.getStatus = false
+        this.progressStatus = false
+        this.progress = 30
         this.bgcolor2 = '#1296db'
         this.fontColor2 = '#fff'
         this.bgcolor1 = '#fff'
         this.fontColor1 = '#1296db'
         this.bgcolor3 = '#fff'
         this.fontColor3 = '#1296db'
-      } else {
+        
+      }
+      if (e == 3) {
+        this.progressStatus = true
+        this.lostStatus = false
+        this.getStatus = false
+        this.progress = 40
         this.bgcolor3 = '#1296db'
         this.fontColor3 = '#fff'
         this.bgcolor1 = '#fff'
@@ -229,8 +253,8 @@ export default {
     }
     .type {
       font-size:0.24rem;
-      padding:0.1rem 0.2rem;
-      background:#666;
+      padding:0.2rem;
+      background:#25A7F7;
       color:#fff;
     }
     .box { 

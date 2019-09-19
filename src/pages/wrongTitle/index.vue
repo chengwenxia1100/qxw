@@ -217,6 +217,10 @@ export default {
     //   })
     //   console.log(data)
     // }
+  },
+  onUnload () {
+    this.chapterList = {}
+    this.topicList = {}
   }
 }
 </script>
@@ -226,7 +230,7 @@ page {
   background:#f2f2f2;
 }
 .user_wrongTitle {
-  margin-bottom:1rem;
+  padding-bottom:1rem;
   .layer_box {
     width:100%;
     height:100%;

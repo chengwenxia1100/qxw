@@ -37,10 +37,10 @@
             </div>
             <div class="cell">{{item.topic_score}}</div>
             <div class="cell input">
-              <img src="../../../assets/icon/icon_less.png" @click="scoreLess(i, j)" v-if="item.status == 2">
-              <input type="text" :style="{'width': (item.status == 2 ? '1.7rem':'100%')}"  v-model="item.student_score" 
+              <img src="../../../assets/icon/icon_less.png" @click="selectIcon(i, j, 'less')" v-if="item.status == 2">
+              <input type="number" :style="{'width': (item.status == 2 ? '1.7rem':'100%')}"  v-model="item.student_score" 
               @blur="blur(item.status, item.topic_id, item.student_score, list.chapter_id, list.chapter_name, item.topic_number, list.topic_type, item.topic_score)">
-              <img src="../../../assets/icon/icon_add.png" @click="scoreAdd(i, j)" v-if="item.status == 2">
+              <img src="../../../assets/icon/icon_add.png" @click="selectIcon(i, j, 'add')" v-if="item.status == 2">
             </div>
           </div>
         </div>
@@ -61,6 +61,7 @@ export default {
       paperList: {},
       message: {},
       paperdata: {},
+      status: 0,
       studentScore: '1', // 孩子分数
       loading: false, // 进入页面的弹窗
     }
@@ -120,52 +121,51 @@ export default {
         topic_type: chapter_name
       })
     },
-    async checkRegister () {
-      const data = await checkRegister({
-        paper_id: this.paper_id
-      })
-      if (data.success) {
-        wx.showModal({
-          title: '提交登记内容',
-          content: '确认提交登记内容',
-          cancelColor: '#666',
-          confirmText: '确认',
-          confirmColor: '#EA5A49',
-          success: (res) => {
-            if (res.confirm) {
-              wx.navigateTo({ 
-                url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
-              })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-      }
-    },
+    // async checkRegister () {
+    //   const data = await checkRegister({
+    //     paper_id: this.paper_id
+    //   })
+    //   if (data.success) {
+    //   }
+    // },
     // input失去焦点
     blur (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
-      // if (student_score > topic_score) {
-      //   wx.showToast({ title: '打的分数不能高于题目分值～', icon: 'none' })
-      // } else if (status == 0) {
-      //   wx.showToast({ title: '请选择做答情况～', icon: 'none' })
-      // } else if (student_score != topic_score && status == 1) {
-      //   wx.showToast({ title: '没有满分都算做错哦～', icon: 'none' })
-      // }else if (student_score == topic_score && status == 2) {
-      //   wx.showToast({ title: '满分应该选择答对哦～', icon: 'none' })
-      // } else {
-        this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
-      // }
+      if (student_score > topic_score) {
+        wx.showToast({ title: '不能高于总分', icon: 'none' })
+        return
+      } 
+      this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
     },
     // 查看详情
-    checkDetail (topic_id, id) {
-      const url = '/pages/paperAnaly/paperDetail/main?topic_id=' + topic_id + '&id=' + id
+    checkDetail (topic_id) {
+      const url = '/pages/paperAnaly/paperDetail/main?topic_id=' + topic_id
       wx.navigateTo({ url })
     },
     // 提交
     submit () {
-      this.checkRegister()
+      wx.showModal({
+        title: '提交登记内容',
+        content: '确认提交登记内容',
+        cancelColor: '#666',
+        confirmText: '确认',
+        confirmColor: '#EA5A49',
+        success: (res) => {
+          if (res.confirm) {
+            checkRegister({
+              paper_id: this.paper_id
+            }).then(res => {
+              console.log(res);
+              wx.navigateTo({ 
+                url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
+              })
+            })
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
+        }
+      })
     },
+    // 模块切换
     slideTab (i) {
       this.paperList.map((item, index)=>{
         if (index === i) {
@@ -176,9 +176,8 @@ export default {
       })
       this.$forceUpdate();
     },
-    // 正确得分
+    // 计算分数
     selectIcon (i,j,status) {
-      this.paperList[i].topic_info[j].status = status
       let score = this.paperList[i].topic_info[j].topic_score
       let student_score = this.paperList[i].topic_info[j].student_score
       let topic_id = this.paperList[i].topic_info[j].topic_id
@@ -188,12 +187,42 @@ export default {
       let topic_type = this.paperList[i].topic_type
       
       if (status == 1) { // 做对
-        this.paperList[i].topic_info[j].student_score = this.paperList[i].topic_info[j].topic_score 
-      } else if (status == 2) { // 做错
-        this.paperList[i].topic_info[j].student_score = 0
+        this.status = 1
+        this.paperList[i].topic_info[j].status = 1
+        this.paperList[i].topic_info[j].student_score = this.paperList[i].topic_info[j].topic_score
+        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
       }
-      this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+      if (status == 2) { // 做错
+        this.status = 2
+        this.paperList[i].topic_info[j].status = 2
+        this.paperList[i].topic_info[j].student_score = 0
+        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+      }
+      if (status == 'less') { // 点击减
+        this.status = 2
+        this.paperList[i].topic_info[j].status = 2
+        if (student_score > 0) {
+           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 1
+        } else {
+          wx.showToast({ title: '不能低于0分!', icon: 'none' })
+          return
+        }
+        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+      }
+      if (status == 'add') { // 点击加
+        this.status = 2
+        this.paperList[i].topic_info[j].status = 2
+        this.paperList[i].topic_info[j].student_score
+        if (student_score < score - 1) {
+           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) + 1
+        } else {
+          wx.showToast({ title: '答错的题目等于总分或高于总分', icon: 'none' })
+          return
+        }
+      }
+      this.paperTopicRegister(this.status, topic_id, this.paperList[i].topic_info[j].student_score, chapter_id, chapter_name, topic_number, topic_type)
     },
+    // 
     scoreLess (i, j) {
       if (this.paperList[i].topic_info[j].student_score > 0) {
         this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 1
@@ -220,7 +249,7 @@ page {
   color: #25A7F7;
 }
 .paperRegister_container {
-  margin-bottom:2rem;
+  padding-bottom:2rem;
   font-size:0.24rem;
   .tit {
     background:#fff;

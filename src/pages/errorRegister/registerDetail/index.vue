@@ -260,9 +260,11 @@ export default {
       })
       this.bookTopicRegister(this.topicStr, this.statusStr)
       this.showLayer = false
-      wx.navigateBack({
-        delta:1
-      })
+      setTimeout(() => {
+        wx.navigateBack({
+          delta:1
+        })
+      }, 500);
     }
   },
   onUnload () {

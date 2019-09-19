@@ -3,6 +3,6 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  // WX_API: '"https://cs-api.chuanshui.com/mall/"',
-  WX_API: '"https://www.sgmacwx.top/public/wechat/"',
+  WX_API: '"https://api.zhihuiqinxue.com/public/"',
+  // WX_API: '"https://www.sgmacwx.top/public/wechat/"',
 })

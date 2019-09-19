@@ -77,6 +77,7 @@ export default {
   },
   onUnload () {
     this.paperConData = {}
+    this.papermess = {}
   }
 }
 </script>

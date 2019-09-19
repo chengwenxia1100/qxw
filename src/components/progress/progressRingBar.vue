@@ -7,6 +7,11 @@
 <script>
 
 export default {
+  props: {
+    progress: {
+      default: 10
+    }
+  },
   data() {
     return {
 
@@ -71,7 +76,7 @@ export default {
 
   },
   onLoad() {
-    this.draw('runCanvas', 20);
+    this.draw('runCanvas', this.progress);
   }
 }
 </script>
