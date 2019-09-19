@@ -202,7 +202,7 @@ export default {
         this.status = 2
         this.paperList[i].topic_info[j].status = 2
         if (student_score > 0) {
-           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 1
+           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 0.5
         } else {
           wx.showToast({ title: '不能低于0分!', icon: 'none' })
           return
@@ -213,29 +213,14 @@ export default {
         this.status = 2
         this.paperList[i].topic_info[j].status = 2
         this.paperList[i].topic_info[j].student_score
-        if (student_score < score - 1) {
-           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) + 1
+        if (student_score < score - 0.5) {
+           this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) + 0.5
         } else {
           wx.showToast({ title: '答错的题目等于总分或高于总分', icon: 'none' })
           return
         }
       }
       this.paperTopicRegister(this.status, topic_id, this.paperList[i].topic_info[j].student_score, chapter_id, chapter_name, topic_number, topic_type)
-    },
-    // 
-    scoreLess (i, j) {
-      if (this.paperList[i].topic_info[j].student_score > 0) {
-        this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) - 1
-      } else {
-        wx.showToast({ title: '不能低于0分哦～', icon: 'none' })
-      }
-    },
-    scoreAdd (i, j) {
-      if (this.paperList[i].topic_info[j].student_score < this.paperList[i].topic_info[j].topic_score) {
-        this.paperList[i].topic_info[j].student_score = Number(this.paperList[i].topic_info[j].student_score) + 1
-      } else {
-        wx.showToast({ title: '不能高于总分哦～', icon: 'none' })
-      }
     }
   }
 }

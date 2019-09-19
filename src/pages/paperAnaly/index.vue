@@ -122,6 +122,10 @@ export default {
         wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
       }
     }
+  },
+  onUnload () {
+    this.subjectVal = ''
+    this.gradeVal = ''
   }
 }
 </script>

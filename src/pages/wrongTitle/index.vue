@@ -124,7 +124,7 @@ export default {
     async mistakeBook () {
       const data = await mistakeBook({
         grade: this.gradeVal,
-        subject: this.gradeVal,
+        subject: this.subjectVal,
         chapter: this.chapterVal,
         page: this.page
       })
@@ -221,6 +221,9 @@ export default {
   onUnload () {
     this.chapterList = {}
     this.topicList = {}
+    this.subjectVal = ''
+    this.gradeVal ='',
+    this.chapterVal= ''
   }
 }
 </script>

@@ -75,7 +75,7 @@ export function paperTopicRegister (data) {
 // 试卷全部提交接口
 export function checkRegister (data) {
   return request({
-    url: sign('paper/checkRegister'),
+    url: sign('paper/PaperCommit'),
     data
   })
 }

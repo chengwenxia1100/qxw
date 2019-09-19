@@ -53,14 +53,14 @@ export default {
     this.getStudentGrade()
     this.getAllSubject()
   },
-  watch: {
-    subjectValue (val) {
-        this.$emit('subject', val)
-    },
-    gradeValue (val) {
-        this.$emit('grade', val)
-    }
-  },
+  // watch: {
+  //   subjectValue (val) {
+  //     this.$emit('subject', val)
+  //   },
+  //   gradeValue (val) {
+  //     this.$emit('grade', val)
+  //   }
+  // },
   methods: {
     // 获取年级
     async getStudentGrade () {
@@ -72,11 +72,13 @@ export default {
           if(item.status == 1) {
             this.grade = item.label
             this.gradeValue = item.value
+            this.$emit('grade', item.value)
           }
         })
       } else {
         this.grade = '暂无年级'
         this.gradeValue = 0
+        this.$emit('grade', 0)
       }
       
     },
@@ -88,9 +90,11 @@ export default {
         this.subjectList = data
         this.subject = data[0].label
         this.subjectValue = data[0].value
+        this.$emit('subject', data[0].value)
       } else {
         this.subject = '暂无科目'
         this.subjectValue = 0
+        this.$emit('subject', 0)
       }
       
     },
@@ -106,11 +110,13 @@ export default {
     selectGrade (e, f) {
       this.grade = e
       this.gradeValue = f
+      this.$emit('grade', f)
       this.upStatus = !this.upStatus     
     },
     selectSubject (e, f) {
       this.subject = e
       this.subjectValue = f
+      this.$emit('subject', f)
       this.downStatus = !this.downStatus
     }
   }

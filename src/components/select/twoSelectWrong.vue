@@ -72,16 +72,17 @@ export default {
   },
   watch: {
     subjectValue (val) {
-      if (val && this.gradeValue) { this.mistakeBook() }
-      this.$emit('subject', val)
+      console.log(val)
+      if (val && this.gradeValue) { this.getChapter() }
+      // this.$emit('subject', val)
     },
     gradeValue (val) {
-      if (val && this.subjectValue) { this.mistakeBook() }
-      this.$emit('grade', val)
-    },
-    chapterValue (val) {
-      this.$emit('chapter', val)
+      if (val && this.subjectValue) { this.getChapter() }
+      // this.$emit('subject', val)
     }
+    // chapterValue (val) {
+    //   this.$emit('chapter', val)
+    // }
   },
   methods: {
     // 获取年级
@@ -94,11 +95,13 @@ export default {
           if(item.status == 1) {
             this.grade = item.label
             this.gradeValue = item.value
+            this.$emit('grade', item.value)
           }
         })
       } else {
         this.grade = '暂无年级'
         this.gradeValue = 0
+        this.$emit('grade', 0)
       }
       
     },
@@ -110,19 +113,20 @@ export default {
         this.subjectList = data
         this.subject = data[0].label
         this.subjectValue = data[0].value
+        this.$emit('subject', data[0].value)
       } else {
         this.subject = '暂无科目'
         this.subjectValue = 0
+        this.$emit('subject', 0)
       }
       
     },
     // 获取
-    async mistakeBook () {
+    async getChapter() {
       const data = await mistakeBook({
         grade: this.gradeValue,
         subject: this.subjectValue,
-        chapter: this.chapterValue,
-        page: this.page
+        chapter:''
       })
       this.loading = false
       this.chapterList = data.list.chapter_name_array
@@ -146,17 +150,25 @@ export default {
     selectGrade (e, f) {
       this.grade = e
       this.gradeValue = f
-      this.upStatus = !this.upStatus     
+      this.upStatus = !this.upStatus 
+      this.chapter = '请选择章节'
+      this.$emit('grade', f) 
     },
     selectSubject (e, f) {
+      console.log(f)
       this.subject = e
       this.subjectValue = f
+      this.$emit('subject', f)
       this.downStatus = !this.downStatus
+      this.$emit('subject', f)
+      this.chapter = '请选择章节'
     },
     selectChapter (e, f) {
       this.chapter = e
       this.chapterValue = f
       this.chapterStatus = !this.chapterStatus;
+      this.$emit('chapter', f)
+      if (this.subjectValue && this.gradeValue) { this.getChapter() }
     }
   }
 }
