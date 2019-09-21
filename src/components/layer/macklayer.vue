@@ -121,7 +121,7 @@ export default {
       height:0.8rem;
       text-align:center;
       line-height:0.8rem;
-      background:rgb(180, 178, 178);
+      background:#25A7F7;
       color:#fff;
       img {
         width: 0.36rem;

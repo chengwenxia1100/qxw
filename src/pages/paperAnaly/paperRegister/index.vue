@@ -30,10 +30,10 @@
             <div class="cell">{{item.topic_number}}</div> 
             <div class="cell blue" @click="checkDetail(item.topic_id, item.id)">查看</div> 
             <div class="cell icon">
-              <img src="/assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="selectIcon(i,j,1)">
-              <img src="/assets/icon/icon_right.png" v-if="item.status == 1"  @click="item.status = 0">
-              <img src="/assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="selectIcon(i,j,2)">
-              <img src="/assets/icon/icon_error.png" v-if="item.status == 2 "  @click="item.status = 0">
+              <img src="../../../assets/icon/icon_answer1.png" v-if="item.status == 0 || item.status == 2" @click="selectIcon(i,j,1)">
+              <img src="../../../assets/icon/icon_right.png" v-if="item.status == 1"  @click="item.status = 0">
+              <img src="../../../assets/icon/icon_answer2.png" v-if="item.status == 0 || item.status == 1"  @click="selectIcon(i,j,2)">
+              <img src="../../../assets/icon/icon_error.png" v-if="item.status == 2 "  @click="item.status = 0">
             </div>
             <div class="cell">{{item.topic_score}}</div>
             <div class="cell input">
@@ -346,7 +346,7 @@ page {
   .btn {
     box-sizing:border-box;
     margin:0.3rem 0;
-    padding:0.2rem 0;
+    padding:0.2rem 0 0.5rem;
     width:100%;
     background:#fff;
     box-shadow: 0 2px 5px #a6dcfd;

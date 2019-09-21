@@ -18,10 +18,10 @@
           <p>{{item.category}}</p>
         </div>
         <div class="status">
-          <p v-if="item.status === 0">未登记 &nbsp; &nbsp;</p>
-          <p v-if="item.status === 1">继续登记&nbsp; &nbsp;</p>
-          <p class="mark" v-if="item.status === 2">{{item.student_score}}</p>
-          <img src="../../assets/svg/icon_right.png">
+          <div v-if="item.status === 0"><p>未登记</p><img src="../../assets/svg/icon_right.png"></div>
+          <div v-if="item.status === 1"><p>继续登记</p><img src="../../assets/svg/icon_right.png"></div>
+          <div v-if="item.status === 2"><p class="mark">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
+          <!-- <img src="../../assets/svg/icon_right.png"> -->
         </div>
       </div>
     </div>
@@ -161,24 +161,32 @@ export default {
       padding:0.1rem 0;
       display: flex;
       align-items: center;
-      position:relative;
-      p {
-        font-size:0.38rem;
-        color:#707070;
-        font-weight:bold;
+      div {
         padding-right:0.2rem;
+        display:flex;
+        p {
+          flex:1;
+          font-size:0.38rem;
+          color:#707070;
+          font-weight:bold;
+          padding-right:0.2rem;
+        }
+        img {
+          width:0.48rem;
+          height:0.48rem;
+        }
       }
       .mark {
         font-size:0.64rem;
         color:#e12a22;
       }
-      img {
-          width:0.48rem;
-          height:0.48rem;
-          position:absolute;
-          top: 32%;
-          right: 0;
-      }
+      // img {
+      //     width:0.48rem;
+      //     height:0.48rem;
+      //     position:absolute;
+      //     top: 32%;
+      //     right: 0;
+      // }
     }
   }
   .no_paper {

@@ -111,7 +111,12 @@ export default {
         }
       ] //输入框个数
 		};
-	},
+  },
+  onLoad () {
+    this.numLength.map((item, index)=>{
+      item.numInput = ''
+    })
+  },
 	methods: {
 		closeInput(){
       this.passwordLayer = false;
@@ -154,7 +159,7 @@ export default {
         this.numLength[4].numInput = val
       } else if (this.numLength[5].numInput == '') {
         this.numLength[5].numInput = val
-
+        
         let password = this.numLength[0].numInput + '' + this.numLength[1].numInput + '' + this.numLength[2].numInput+ '' + this.numLength[3].numInput + '' + this.numLength[4].numInput + '' + this.numLength[5].numInput
         // this.numLength.map((item, index)=>{
         //   let password = item.numInput.concat(item.numInput)
