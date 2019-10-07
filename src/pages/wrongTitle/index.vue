@@ -49,11 +49,15 @@
       v-if="analyLayer" 
       :analyLayer="analyLayer" 
       :topic_answer_content = "topic_answer_content"
-      :from = "from"
-      :difficult_level = "difficult_level"
+      :from="from"
+      :difficult_level="difficult_level"
       :topic_point="topic_point"
       @analyLayer="analyLayerFun"
     ></error-layer>
+    <!-- 错题本导出 -->
+    <!-- <div class="dcbtn" @click="exportWorks">
+      导出错题本
+    </div> -->
   </div>
 </template>
 
@@ -162,6 +166,10 @@ export default {
         wx.showToast({ title: '没有更多了', icon: 'none' })
       }
     },
+    // 导出作业本
+    exportWorks () {
+      wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
+    },
     // 接收子组件传值
     tab (val) {
       console.log(val);
@@ -189,9 +197,9 @@ export default {
     // 点击试题分析
     analyseBtn (i) {
       this.analyLayer = true;
-      this.topicList.forEach((item,index,arr)=>{
+      this.topicList.map((item,index)=>{
         if(index === i) {
-          this.topic_answer_content = item.topic_answer[0].topic_answer_content
+          this.topic_answer_content = item.topic_answer.topic_answer_content
           this.from = item.from
           this.difficult_level = item.difficult_level
           this.topic_point = item.topic_point
@@ -219,11 +227,11 @@ export default {
     // }
   },
   onUnload () {
-    this.chapterList = {}
-    this.topicList = {}
-    this.subjectVal = ''
-    this.gradeVal ='',
-    this.chapterVal= ''
+    // this.chapterList = {}
+    // this.topicList = {}
+    // this.subjectVal = ''
+    // this.gradeVal ='',
+    // this.chapterVal= ''
   }
 }
 </script>
@@ -233,7 +241,7 @@ page {
   background:#f2f2f2;
 }
 .user_wrongTitle {
-  padding-bottom:1rem;
+  padding-bottom:2rem;
   .layer_box {
     width:100%;
     height:100%;
@@ -341,10 +349,10 @@ page {
   .page_slide {
     width:100%;
     box-sizing:border-box;
-    padding:0.5rem 0.3rem;
+    padding:0.2rem 0.3rem;
     display: flex;
     position:fixed;
-    bottom:0;
+    bottom:0rem;
     left:0;
     background:#fff;
     .same_btn {
@@ -391,6 +399,17 @@ page {
     .next {
       .same_btn
     }
+  }
+  .dcbtn {
+    height:0.8rem;
+    width:100%;
+    background:#25A7F7;
+    color:#fff;
+    text-align:center;
+    line-height:0.8rem;
+    position:fixed;
+    bottom:0;
+    left:0;
   }
 }
 </style>

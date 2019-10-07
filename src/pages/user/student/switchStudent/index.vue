@@ -4,8 +4,8 @@
       加载中...
     </page-loading>
     <div class="slide_con" v-if="listdata">
-      <div class="slide" v-for="(list, i) in studentList" :key="i"  @click="switchSlide(list.student_id)">
-        <div class="icon">
+      <div class="slide" v-for="(list, i) in studentList" :key="i">
+        <div class="icon" @click="switchSlide(list.student_id)">
           <img :src="selectIcon" v-if="list.checked">
           <img :src="noselectIcon" v-else>
         </div>
@@ -104,6 +104,8 @@ export default {
       wx.navigateTo({ url })
     },
     onUnload () {
+      this.student_id = ''
+      this.bind_id = ''
       this.studentList = {}
     }
   }

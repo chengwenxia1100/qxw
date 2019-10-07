@@ -11,7 +11,7 @@
     <!-- 登记 list 内容 -->
     <div class="paper_list" v-if="listStatus">
       <div class="list" v-for="(item, i) in paperListData" :key="i" @click="goRegister(item.status, item.url, item.name, item.score, item.category, item.paper_id)">
-        <img :src="item.url">
+        <!-- <img :src="item.url"> -->
         <div class="middle">
           <p>{{item.name}}</p>
           <p>总分:{{item.score}}</p>
@@ -20,7 +20,7 @@
         <div class="status">
           <div v-if="item.status === 0"><p>未登记</p><img src="../../assets/svg/icon_right.png"></div>
           <div v-if="item.status === 1"><p>继续登记</p><img src="../../assets/svg/icon_right.png"></div>
-          <div v-if="item.status === 2"><p class="mark">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
+          <div v-if="item.status === 2"><p class="mark" style="color:#f00;">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
           <!-- <img src="../../assets/svg/icon_right.png"> -->
         </div>
       </div>
@@ -157,12 +157,13 @@ export default {
       }
     }
     .status {
-      width:2rem;
+      width:2.4rem;
       padding:0.1rem 0;
       display: flex;
       align-items: center;
+      justify-content: center;
       div {
-        padding-right:0.2rem;
+        // padding-right:0.2rem;
         display:flex;
         p {
           flex:1;

@@ -64,6 +64,8 @@ export default {
   .layer {
     margin:20% 0 0 10%;
     width:80%;
+    // max-height:6rem;
+    // overflow-y:auto;
     background:#fff;
     border-radius:0.04rem;
     .tit {
@@ -86,6 +88,7 @@ export default {
       padding:0.2rem;
       ul {
         li {
+          margin:0.3rem 0;
           span:first-child {
             font-weight:bold;
             font-size:0.26rem;

@@ -14,8 +14,7 @@
         </span>
       </div>
     </div>
-    
-    <div class="title" v-for="(list, i) in chapterListData" :key="i">
+    <div class="title" v-for="(list, i) in chapterListData" :key="i" v-show="chapterListData[0].topic_number">
       <div class="tit">
         <div class="left">第{{list.topic_number}}题</div>
         <div class="right">
@@ -31,6 +30,9 @@
           <p v-html="list.answer.topic_answer_content"></p>
         </div>
       </div>
+    </div>
+    <div v-show="chapterListData == null" class="title">
+      无该题目数据
     </div>
     <div class="btn">
       <div class="btn_con" @click="allRegister">批量登记</div>
@@ -122,39 +124,46 @@ export default {
       this.numlist.map((i, index) => {
         if (i.status === 1) {
           i.fontColor = '#17f972'
+          i.bgColor = '#25A7F7'
         } else if (i.status === 2) {
           i.fontColor = '#FE0000'
+          i.bgColor = '#25A7F7'
         } else if(i.status === 3) {
           i.fontColor = '#095889'
-        } else {
           i.bgColor = '#25A7F7'
-          if (i.is_now === 1) {
-            i.fontColor = '#25A7F7'
-          } else {
-            i.fontColor = '#fff'
-          }
-        }
-        if (i.is_now === 1) {
+        } else {
           i.bgColor = '#fff'
+          // if (i.is_now === 1) {
+            i.fontColor = '#25A7F7'
+          // } else {
+          //   i.fontColor = '#fff'
+          // }
         }
+        // if (i.is_now === 1) {
+        //   i.bgColor = '#fff'
+        // }
       })
       this.chapterListData.map((i,index) => {
         if (i.status === 1) {
           i.bgColor1 = '#3BA707'
           i.bgColor2 = '#a6dcfd'
           i.bgColor3 = '#a6dcfd'
+          i.bgColor = '#25A7F7'
         } else if (i.status === 2) {
           i.bgColor2 = '#FE0000'
           i.bgColor1 = '#a6dcfd'
           i.bgColor3 = '#a6dcfd'
+          i.bgColor = '#25A7F7'
         } else if(i.status === 3) {
           i.bgColor3 = '#25A7F7'
           i.bgColor2 = '#a6dcfd'
           i.bgColor1 = '#a6dcfd'
+          i.bgColor = '#25A7F7'
         } else {
           i.bgColor1 = '#a6dcfd'
           i.bgColor2 = '#a6dcfd'
           i.bgColor3 = '#a6dcfd'
+          i.bgColor = '#fff'
         }
       })
     },

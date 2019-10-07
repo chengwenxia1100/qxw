@@ -17,7 +17,7 @@
         <div class="middle">
           <p>{{item.name}}</p>
           <p>{{item.semester}}</p>
-          <p>浙江教育出版社</p>
+          <p>{{item.subject}}</p>
         </div>
         <!-- <div class="show">
           <gap-chart></gap-chart> 
@@ -120,12 +120,12 @@ export default {
       display: flex;
       background:#fff;
       img {
-        width:1.5rem;
-        height:2.5rem;
+        width:2rem;
+        height:2.6rem;
       }
       .middle {
         flex:1;
-        padding:0.1rem 0.2rem;
+        padding:0rem 0.2rem;
         p {
           padding:0.2rem 0;
         }

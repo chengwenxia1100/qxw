@@ -57,11 +57,6 @@ export default {
     components: {
         mpvuePicker
     },
-    props: {
-        studentId: {
-            default: ''
-        }
-    },
     data () {
         return {
             items: [
@@ -133,7 +128,8 @@ export default {
             grade: '请输入就读年级(必填)',
             gradeVal: '',
             schoolVal:'',
-            classNum: ''
+            classNum: '',
+            student_id: ''
         }
     },
     watch: {
@@ -178,16 +174,17 @@ export default {
         return require('@/assets/svg/radio_noselect.png')
       }
     },
-    onLoad () {
-        if (this.studentId) { 
-            this.updataStudentPage()  
+    onLoad (option) {
+        if (option.student_id) {
+            this.student_id = option.student_id
+            this.updataStudentPage() 
         }
         this.getSchoolList() 
     },
     methods: {
         async updataStudentPage () {
             const data = await updataStudentPage({
-                student_id: this.studentId
+                student_id: this.student_id
             })
             this.$emit('studentNo', data.id)
             this.sName = data.s_realname

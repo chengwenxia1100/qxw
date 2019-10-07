@@ -6,7 +6,7 @@
     <!-- 试卷信息 -->
     <div class="paper_list">
       <div class="list">
-        <img :src="paperMess.url">
+        <!-- <img :src="paperMess.url"> -->
         <div class="middle">
           <p>{{paperMess.name}}</p>
           <p>总分:{{paperMess.score}}</p>

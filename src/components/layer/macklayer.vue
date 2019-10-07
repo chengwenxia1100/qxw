@@ -5,7 +5,7 @@
         <div class="tit">试卷登记<img src="../../assets/svg/close.png" @click="close"></div>
         <div class="con">
           <div class="list">
-            <img :src="img">
+            <!-- <img :src="img"> -->
             <div class="middle">
               <p>{{name}}</p>
               <p>总分:{{mask}}</p>

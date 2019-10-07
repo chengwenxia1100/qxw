@@ -4,7 +4,7 @@
       加载中...
     </page-loading>
     <student-form 
-      :studentId=student_id 
+      :student_id="student_id"
       @studentName="studentName"
       @studentSex="studentSex"
       @studentSchool="studentSchool"
@@ -90,7 +90,7 @@ export default {
             s_school: this.studentSchoolVal,
             class_id: this.studentClassVal,
             relation_type: this.relativeVal,
-            student_id: this.student_no
+            student_id: this.student_id
         })
         this.loading = false
         wx.reLaunch({ url: '../../main' })
@@ -124,6 +124,11 @@ export default {
         }
       })
     }
+  },
+  onUnload () {
+    this.student_id = ''
+    this.bind_id = ''
+    this.mess = {}
   }
 }
 </script>
