@@ -141,24 +141,63 @@ export default {
       if (this.numLength[5].numInput !== '') {
         let password = this.numLength[0].numInput + '' + this.numLength[1].numInput + '' + this.numLength[2].numInput+ '' + this.numLength[3].numInput + '' + this.numLength[4].numInput + '' + this.numLength[5].numInput
         this.$emit('password', password)
+        this.passwordLayer = false;
+        this.$emit('passwordLayer', this.passwordLayer)
       } else {
         this.passwordLayer = false;
         this.$emit('passwordLayer', this.passwordLayer)
+        this.numLength.map((item) => {
+          item.numInput = ''
+        })
       }
     },
 		numList(val) {
-      if (this.numLength[0].numInput == '') {
-        this.numLength[0].numInput = val
-      } else if (this.numLength[1].numInput == '') {
-        this.numLength[1].numInput = val
-      } else if (this.numLength[2].numInput == '') {
-        this.numLength[2].numInput = val
-      } else if (this.numLength[3].numInput == '') {
-        this.numLength[3].numInput = val
-      } else if (this.numLength[4].numInput == '') {
-        this.numLength[4].numInput = val
-      } else if (this.numLength[5].numInput == '') {
-        this.numLength[5].numInput = val
+      if (this.numLength[0].numInput === '') {
+        if (val == 0) {
+          this.numLength[0].numInput = 0
+        } else {
+          this.numLength[0].numInput = val
+        }
+        return
+      } 
+      if (this.numLength[1].numInput === '') {
+        if (val == 0) {
+          this.numLength[1].numInput = 0
+        } else {
+          this.numLength[1].numInput = val
+        }
+        return
+      } 
+      if (this.numLength[2].numInput === '') {
+        if (val == 0) {
+          this.numLength[2].numInput = 0
+        } else {
+          this.numLength[2].numInput = val
+        }
+        return
+      } 
+      if (this.numLength[3].numInput === '') {
+        if (val == 0) {
+          this.numLength[3].numInput = 0
+        } else {
+          this.numLength[3].numInput = val
+        }
+        return
+      } 
+      if (this.numLength[4].numInput === '') {
+        if (val == 0) {
+          this.numLength[4].numInput = 0
+        } else {
+          this.numLength[4].numInput = val
+        }
+        return
+      } 
+      if (this.numLength[5].numInput === '') {
+        if (val == 0) {
+          this.numLength[5].numInput = 0
+        } else {
+          this.numLength[5].numInput = val
+        }
         
         let password = this.numLength[0].numInput + '' + this.numLength[1].numInput + '' + this.numLength[2].numInput+ '' + this.numLength[3].numInput + '' + this.numLength[4].numInput + '' + this.numLength[5].numInput
         // this.numLength.map((item, index)=>{

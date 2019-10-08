@@ -6,7 +6,7 @@
     <div class="tit">
       <span> {{paperdata.paper_name}} </span>
       <span>总分：{{paperdata.paper_total_score}}  </span>
-      <span>我的得分：{{paperdata.paper_student_score}}</span>
+      <span style="line-height:1.5rem;">我的得分：{{paperdata.paper_student_score}}<br/>目前得分：{{paperdata.paper_student_register_score}}</span>
     </div>
     <div class="register" v-for="(list, i) in paperList" :key="i">
       <div class="register_tit" @click="slideTab(i)">
@@ -39,7 +39,7 @@
             <div class="cell input">
               <img src="../../../assets/icon/icon_less.png" @click="selectIcon(i, j, 'less')" v-if="item.status == 2">
               <input type="number" :style="{'width': (item.status == 2 ? '1.7rem':'100%')}"  v-model="item.student_score" 
-              @blur="blur(item.status, item.topic_id, item.student_score, list.chapter_id, list.chapter_name, item.topic_number, list.topic_type, item.topic_score)">
+              @blur="blur(i, item.status, item.topic_id, item.student_score, list.chapter_id, list.chapter_name, item.topic_number, list.topic_type, item.topic_score)">
               <img src="../../../assets/icon/icon_add.png" @click="selectIcon(i, j, 'add')" v-if="item.status == 2">
             </div>
           </div>
@@ -90,19 +90,18 @@ export default {
     },
   },
   methods: {
-    async getPaperChapterList () {
+    async getPaperChapterList (i) {
       const data = await getPaperChapterList({
         paper_id: this.paper_id
       })
       this.paperdata = data
       this.paperList = data.list
       this.loading = false
-      
       this.paperList.map((item, index)=>{
         if (item.status == 2) {
           this.width = '65rem'
         }
-        if (index = 0) {
+        if (index == i) {
           item.conFlag = true
         } else {
           item.conFlag = false
@@ -110,7 +109,7 @@ export default {
       })
     },
     // 题目打分提交
-    async paperTopicRegister (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type) {
+    async paperTopicRegister (i, status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type) {
       const data = await paperTopicRegister({
         topic_id: topic_id,
         paper_id: this.paper_id,
@@ -120,21 +119,15 @@ export default {
         topic_number: topic_number,
         topic_type: chapter_name
       })
+      this.getPaperChapterList(i)
     },
-    // async checkRegister () {
-    //   const data = await checkRegister({
-    //     paper_id: this.paper_id
-    //   })
-    //   if (data.success) {
-    //   }
-    // },
     // input失去焦点
-    blur (status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
+    blur (i, status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type, topic_score) {
       if (student_score > topic_score) {
         wx.showToast({ title: '不能高于总分', icon: 'none' })
         return
       } 
-      this.paperTopicRegister(status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
+      this.paperTopicRegister(i, status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
     },
     // 查看详情
     checkDetail (topic_id) {
@@ -190,13 +183,11 @@ export default {
         this.status = 1
         this.paperList[i].topic_info[j].status = 1
         this.paperList[i].topic_info[j].student_score = this.paperList[i].topic_info[j].topic_score
-        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
       }
       if (status == 2) { // 做错
         this.status = 2
         this.paperList[i].topic_info[j].status = 2
         this.paperList[i].topic_info[j].student_score = 0
-        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
       }
       if (status == 'less') { // 点击减
         this.status = 2
@@ -207,7 +198,6 @@ export default {
           wx.showToast({ title: '不能低于0分!', icon: 'none' })
           return
         }
-        // this.paperTopicRegister(this.status, topic_id, student_score, chapter_id, chapter_name, topic_number, topic_type)
       }
       if (status == 'add') { // 点击加
         this.status = 2
@@ -220,7 +210,7 @@ export default {
           return
         }
       }
-      this.paperTopicRegister(this.status, topic_id, this.paperList[i].topic_info[j].student_score, chapter_id, chapter_name, topic_number, topic_type)
+      this.paperTopicRegister(i, this.status, topic_id, this.paperList[i].topic_info[j].student_score, chapter_id, chapter_name, topic_number, topic_type)
     }
   }
 }
