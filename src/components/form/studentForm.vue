@@ -192,6 +192,9 @@ export default {
             this.school = data.school
             this.grade = data.grade
             this.class = data.class
+            this.classNum = data.class
+            this.gradeVal = data.grade
+            this.schoolVal = data.school
             this.studentListData = data
         },
         // 添加学员接口

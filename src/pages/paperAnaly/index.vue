@@ -20,7 +20,7 @@
         <div class="status">
           <div v-if="item.status === 0"><p>未登记</p><img src="../../assets/svg/icon_right.png"></div>
           <div v-if="item.status === 1"><p>继续登记</p><img src="../../assets/svg/icon_right.png"></div>
-          <div v-if="item.status === 2"><p class="mark" style="color:#f00;">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
+          <div v-if="item.status === 2"><p style="color:#e12a22;font-size:0.64rem;">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
           <!-- <img src="../../assets/svg/icon_right.png"> -->
         </div>
       </div>
@@ -37,6 +37,7 @@
       :macklayerStatus="macklayerStatus" 
       @macklayerStatus="macklayerStatusFun"
       @studentMark="studentMark"
+      @inputMask="inputMask"
     ></mack-layer>
   </div>
 </template>
@@ -82,9 +83,22 @@ export default {
     }
   },
   methods: {
-    // 接收弹窗的子组件传值
+    async PaperList () {
+      this.loading = true
+      const data = await PaperList({
+        subject_id: this.subjectVal,
+        grade: this.gradeVal
+      })
+      this.loading = false
+      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
+      this.paperListData = data
+    },
+     // 接收弹窗的子组件传值
     macklayerStatusFun (val) {
       this.macklayerStatus = val
+    },
+    inputMask (val) {
+      if (val) { this.PaperList() }
     },
     studentMark (val) {
       this.studentmaskval = val
@@ -94,18 +108,6 @@ export default {
     },
     gradeFun (val) {
       this.gradeVal = val
-    },
-    async PaperList () {
-      this.loading = true
-      const data = await PaperList({
-        subject_id: this.subjectVal,
-        grade: this.gradeVal
-      })
-      this.loading = false
-      console.log(data.length)
-      if (data.length > 0) { this.listStatus = true } else { this.listStatus = false }
-      console.log(data.length);
-      this.paperListData = data
     },
     // 去登记
     goRegister (type, url, name, score, category, paper_id) {
@@ -124,6 +126,7 @@ export default {
     }
   },
   onUnload () {
+    this.macklayerStatus = false
     this.subjectVal = ''
     this.gradeVal = ''
   }
@@ -176,10 +179,6 @@ export default {
           width:0.48rem;
           height:0.48rem;
         }
-      }
-      .mark {
-        font-size:0.64rem;
-        color:#e12a22;
       }
       // img {
       //     width:0.48rem;

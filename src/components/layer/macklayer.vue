@@ -75,23 +75,21 @@ export default {
           score: this.studentMark
       })
       wx.showToast({ title: '保存成功', icon: 'none' })
-      this.$emit('mask', this.macklayerStatus)
-      this.macklayerStatus = false;
+      this.$emit('inputMask', true)
       setTimeout(() => {
         const url = "../../pages/paperAnaly/paperRegister/main?paper_id=" + this.paper_id
         wx.navigateTo({ url })
-      }, 100)
+      }, 200)
     },
     close () {
-      this.macklayerStatus = false;
-      this.$emit('macklayerStatus', this.macklayerStatus)
+      this.$emit('macklayerStatus', false)
     },
     confirm () {
       if (this.studentMark) {
         if (this.studentMark > this.mask){
           wx.showToast({ title: '输入分数不能高于总分', icon: 'none' })
         } else {
-          this.macklayerStatus = false;
+          this.$emit('macklayerStatus', false)
           this.sureMark()
         }
       } else {
