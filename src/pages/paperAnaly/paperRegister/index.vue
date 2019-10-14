@@ -171,6 +171,7 @@ export default {
     },
     // 计算分数
     selectIcon (i,j,status) {
+      this.loading = false
       let score = this.paperList[i].topic_info[j].topic_score
       let student_score = this.paperList[i].topic_info[j].student_score
       let topic_id = this.paperList[i].topic_info[j].topic_id

@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/home/main",
-    "pages/user/student/add/main",
     "pages/user/main",
     "pages/demo/main",
     "pages/auth/main",
@@ -18,7 +17,7 @@
     "pages/user/student/update/main",
     "pages/user/about/main",
     "pages/user/instruction/main",
-    
+    "pages/user/student/add/main",
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
     "pages/bind/vipbind/main"

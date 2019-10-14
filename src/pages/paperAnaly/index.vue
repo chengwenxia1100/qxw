@@ -20,7 +20,7 @@
         <div class="status">
           <div v-if="item.status === 0"><p>未登记</p><img src="../../assets/svg/icon_right.png"></div>
           <div v-if="item.status === 1"><p>继续登记</p><img src="../../assets/svg/icon_right.png"></div>
-          <div v-if="item.status === 2"><p style="color:#e12a22;font-size:0.64rem;">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png"></div>
+          <div v-if="item.status === 2"><p style="color:#e12a22;font-size:26px;">{{item.student_score}}</p><img src="../../assets/svg/icon_right.png" style="margin-top:6px;"></div>
           <!-- <img src="../../assets/svg/icon_right.png"> -->
         </div>
       </div>

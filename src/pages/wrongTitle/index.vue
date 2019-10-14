@@ -98,7 +98,7 @@ export default {
       chapterList: {},
       topicList: {},
       loading: false,
-      total: '',
+      total: 0,
       chapterValue: '',
       page: 1,
       topic_answer_content: '',

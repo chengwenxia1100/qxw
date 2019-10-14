@@ -178,6 +178,11 @@ export default {
         this.fontColor2 = '#1296db'
       }
     }
+  },
+  onUnload () {
+    wx.reLaunch({
+      url: '/pages/paperAnaly/main'
+    })
   }
 }
 </script>

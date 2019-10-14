@@ -136,7 +136,7 @@ export default {
     }
   },
   onUnload () {
-    this.subjectValue = 0
+    this.subjectValue = this.subjectValue
   }
 }
 </script>

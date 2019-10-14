@@ -26,10 +26,10 @@
             <div class="input" @click="showPicker">{{grade}}</div>
             <mpvue-picker
             ref="mpvuePicker"
-            :mode="mode"
+            :mode="mode1"
             :pickerValueDefault="pickergradeDefault"
             @onConfirm="onGradeConfirm"
-            :pickerValueArray="pickerValueArray" />
+            :pickerValueArray="gradearray" />
         </div>
         <div class="list">
             <div class="tit">就读学校</div>
@@ -37,7 +37,7 @@
             <div class="input" @click="showPickerschool">{{school}}</div>
             <mpvue-picker
             ref="mpvuePickerschool"
-            :mode="mode"
+            :mode="mode2"
             :pickerValueDefault="pickerschoolDefault"
             @onConfirm="onSchoolConfirm"
             :pickerValueArray="pickerValueArrayschool" />
@@ -64,7 +64,7 @@ export default {
                 {name: '1', value: '女'}
             ],
             mode: 'selector',
-            pickerValueArray: [
+            gradearray: [
                 {
                     label: '一年级',
                     value: 1
@@ -129,7 +129,7 @@ export default {
             gradeVal: '',
             schoolVal:'',
             classNum: '',
-            student_id: ''
+            student_id: '',
         }
     },
     watch: {
@@ -156,6 +156,9 @@ export default {
             handler (val) {
                 this.pickergradeDefault = val
                 this.$emit('studentGrade', val)
+                this.school = '请输入就读学校(必填)'
+                this.pickerValueArrayschool = []
+                this.getSchoolList()
             },
             immediate: true
        },
@@ -191,16 +194,20 @@ export default {
             this.sex = data.sex
             this.school = data.school
             this.grade = data.grade
-            this.class = data.class
-            this.classNum = data.class
-            this.gradeVal = data.grade
-            this.schoolVal = data.school
+            this.class = data.class_id
+            this.classNum = data.class_id
+            this.$emit('schoolValdata', data.schoolVal)
+            this.$emit('gradeValdata', data.gradeVal)
             this.studentListData = data
         },
         // 添加学员接口
         async getSchoolList () {
-            const data = await getSchoolList({})
+            const data = await getSchoolList({
+                grade: this.gradeVal
+            })
             this.pickerValueArrayschool = data
+            console.log(this.this.pickerValueArrayschool )
+            this.$forceUpdate();
         },
         // 单选框选择
         sexRadio (value) {
@@ -213,13 +220,16 @@ export default {
             this.$refs.mpvuePickerschool.show()
         },
         onGradeConfirm (e) {
-            this.grade = e.label
             this.gradeVal = e.value[0]
+            this.grade = e.label
         },
         onSchoolConfirm (e) {
-            this.school = e.label
             this.schoolVal = e.value[0]
+            this.school = e.label
         }
+    },
+    onUnload () {
+        this.pickerValueArrayschool = []
     }
 }
 </script>

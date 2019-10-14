@@ -107,6 +107,9 @@ export default {
     chapterList (book_id) {
       wx.navigateTo({ url: '/pages/errorRegister/errorTitleRegister/main?book_id=' + book_id  + '&grade=' + this.gradeVal+ '&subject_id=' + this.subjectVal })
     }
+  },
+  onUnload () {
+    this.subjectVal = this.subjectVal
   }
 }
 </script>

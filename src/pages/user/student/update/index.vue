@@ -11,6 +11,8 @@
       @studentGrade="studentGrade"
       @studentClass="studentClass"
       @studentNo="studentNo"
+      @schoolValdata="schoolValdata"
+      @gradeValdata="gradeValdata"
     ></student-form>
     <parents-form @relative="relative"></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
@@ -38,7 +40,9 @@ export default {
       studentClassVal: '',
       student_no: 0,
       mess: {},
-      loading:false
+      loading:false,
+      schoolValdataval: '',
+      gradeValdataval: ''
     }
   },
   onLoad(option) {
@@ -76,9 +80,23 @@ export default {
     studentNo (val) {
       this.student_no = val
     },
+    schoolValdata (val) {
+      this.schoolValdataval = val
+    },
+    gradeValdata (val) {
+      this.gradeValdataval = val
+    },
     // 点击完成
     finished () {
       this.loading = true
+      if (!this.studentSchoolVal) {
+        this.studentSchoolVal = this.schoolValdataval
+      }
+      if (!this.studentGradeVal) {
+        
+        this.studentGradeVal = this.gradeValdataval
+        console.log(this.studentGradeVal)
+      }
       this.updataStudent()
     },
     // 更新学员接口

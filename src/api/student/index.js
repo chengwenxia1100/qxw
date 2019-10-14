@@ -33,10 +33,18 @@ export function updataStudentPage (data) {
   })
 }
 
-// 选择班级
+// 选择学校 
 export function getSchoolList (data) {
   return request({
     url: sign('login/getSchoolList'),
     data
   })
 }
+
+// 选择学校 废弃
+// export function getSchoolList (data) {
+//   return request({
+//     url: sign('teaching/school/getSchoolsByGrade'),
+//     data
+//   })
+// }

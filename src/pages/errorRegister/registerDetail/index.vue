@@ -132,16 +132,18 @@ export default {
           i.fontColor = '#095889'
           i.bgColor = '#25A7F7'
         } else {
-          i.bgColor = '#fff'
-          // if (i.is_now === 1) {
+          // i.bgColor = '#fff'
+          if (i.is_now === 1) {
             i.fontColor = '#25A7F7'
-          // } else {
-          //   i.fontColor = '#fff'
-          // }
+            i.fontColor = '#fff'
+          } else {
+            i.fontColor = '#fff'
+          }
         }
-        // if (i.is_now === 1) {
-        //   i.bgColor = '#fff'
-        // }
+        if (i.is_now === 1) {
+          i.bgColor = '#fff'
+          i.fontColor = '#25A7F7'
+        }
       })
       this.chapterListData.map((i,index) => {
         if (i.status === 1) {
@@ -164,6 +166,7 @@ export default {
           i.bgColor2 = '#a6dcfd'
           i.bgColor3 = '#a6dcfd'
           i.bgColor = '#fff'
+          // i.fontColor = '#fff'
         }
       })
     },
