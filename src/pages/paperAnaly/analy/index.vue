@@ -88,24 +88,26 @@ export default {
       fontColor2: '',
       bgcolor3: '',
       fontColor3: '',
+      isShare: false,
       progress: 20 // 进度条
     }
   },
   onLoad (option) {
     this.loading = true
-    // this.message = option
-    this.message.paper_id = 16
+    this.message = option
+    this.paper_id = option.paper_id
+    // this.message.paper_id = 16
     this.paperAnalysis()
   },
   computed: {
-    paper_id () {
-      return this.message.paper_id
-    }
+    // paper_id () {
+    //   return this.message.paper_id
+    // }
   },
   methods: {
     async paperAnalysis () {
       const data = await paperAnalysis({
-        paper_id: 16
+        paper_id: this.paper_id
       })
       setTimeout(() => {
         this.loading = false
@@ -180,9 +182,9 @@ export default {
     }
   },
   onUnload () {
-    wx.reLaunch({
-      url: '/pages/paperAnaly/main'
-    })
+    if (this.message.isShare == '1') {
+      wx.navigateBack({ delta: 3 })
+    }
   }
 }
 </script>

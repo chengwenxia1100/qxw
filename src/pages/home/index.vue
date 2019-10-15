@@ -168,7 +168,6 @@ export default {
             break
           case 'bind':
             if (this.pageData.parent_realename) { 
-              console.log(this.pageData.parent_realename)
               wx.navigateTo({ url: '/pages/user/student/add/main?from=home' }) // 绑定注册 已经有家长信息
               break
              } else {

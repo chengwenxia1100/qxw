@@ -149,7 +149,7 @@ export default {
             }).then(res => {
               console.log(res);
               wx.navigateTo({ 
-                url: '/pages/paperAnaly/analy/main?paper_id=' + this.paper_id
+                url: '/pages/paperAnaly/analy/main?isShare=1&paper_id=' + this.paper_id
               })
             })
           } else if (res.cancel) {

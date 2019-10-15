@@ -74,6 +74,9 @@ export default {
     //   if (this.paperListData.length > 0) { return true } else { false}
     // }
   },
+  onShow () {
+    if(this.subjectVal && this.gradeVal) { this.PaperList() }
+  },
   watch: {
     subjectVal (val) {
       if (val && this.gradeVal) { this.PaperList() }
@@ -119,8 +122,10 @@ export default {
         this.paper_id = paper_id
         this.macklayerStatus = true
       } else if (type === 1) {
+        this.macklayerStatus = false
         wx.navigateTo({ url: '/pages/paperAnaly/paperRegister/main?paper_id=' + paper_id + '&mask=' + score + '&studentmask=' + this.studentmaskval})
       } else if (type === 2) {
+        this.macklayerStatus = false
         wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
       }
     }
