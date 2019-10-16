@@ -129,7 +129,8 @@ export default {
           i.fontColor = '#FE0000'
           i.bgColor = '#25A7F7'
         } else if(i.status === 3) {
-          i.fontColor = '#095889'
+          // i.fontColor = '#095889'
+          i.fontColor = '#fff'
           i.bgColor = '#25A7F7'
         } else {
           // i.bgColor = '#fff'
