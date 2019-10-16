@@ -39,7 +39,7 @@ export default {
         list.value == value ? list.color="#25A7F7" : list.color="#666"
       })
       console.log(label)
-      const arr = { label: label, value: value, status: false }
+      const arr = { label: label, value: value, status: false, type: this.type }
       this.$emit('gradeArr', arr)
     },
     cancel () {

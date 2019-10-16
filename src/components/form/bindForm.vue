@@ -242,9 +242,16 @@ export default {
         // 接收子组件传值
         gradeArr (arr) {
           this.listArray = {}
-          this.grade = arr.label
-          this.gradeVal = arr.value
+          if (arr.type == 1) {
+            this.grade = arr.label
+            this.gradeVal = arr.value
+          }
+          if (arr.type == 2) {
+            this.school = arr.label
+            this.schoolVal = arr.value
+          }
           this.mult = arr.status
+          
         },
         status (val) {
           this.mult = val
