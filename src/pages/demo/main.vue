@@ -13,8 +13,7 @@
     <div style="height:100vh" >
       <swiper class="content" :duration="50"  @change="swiperChange" :current="currentTab" @animationfinish="onAnimationfinish">
         <swiper-item  v-for="(item,index) in tabs" :key="index">    
-          <scroll-view scroll-y  @scrolltolower="loadingMoreData" :style="'height:' + bodyHeight + 'px;'">
-            <!-- <div style="padding:0.6rem 0 0.8rem 0;width:100%; font-size:14px;text-align:center;color:#999;" v-if="upperStatus">正在加载...</div> -->
+          <scroll-view scroll-y  @scrolltolower="loadingMoreData">
             <div class="orderlist_con">
               {{index}}
             </div>

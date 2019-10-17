@@ -14,6 +14,17 @@
       @schoolValdata="schoolValdata"
       @gradeValdata="gradeValdata"
     ></student-form>
+    <!-- <bind-form 
+      :student_id="student_id"
+      @studentName="studentName"
+      @studentSex="studentSex"
+      @studentSchool="studentSchool"
+      @studentGrade="studentGrade"
+      @studentClass="studentClass"
+      @studentNo="studentNo"
+      @schoolValdata="schoolValdata"
+      @gradeValdata="gradeValdata"
+    ></bind-form> -->
     <parents-form @relative="relative"></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
     <div class="btn" @click="finished">完成</div>
@@ -24,11 +35,13 @@
 import studentForm from '@/components/form/studentForm'
 import parentsForm from '@/components/form/parentsSelect'
 import { updataStudent, removeBind } from '../../user.api'
+import bindForm from '@/components/form/bindForm' // 使用下拉组件
 
 export default {
   components: {
     studentForm, 
-    parentsForm
+    parentsForm,
+    bindForm
   },
   data () {
     return {

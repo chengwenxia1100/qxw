@@ -24,6 +24,12 @@ export default {
     },
     type: {
       default: 0
+    },
+    grade: {
+      default: ''
+    },
+    school: {
+      default: ''
     }
   },
   data() {
@@ -32,13 +38,20 @@ export default {
     }
   },
   onLoad () {
+    if (this.grade === '' && this.school === '') { 
+      this.listArray[0].color = "#25A7F7" 
+      return 
+    }
+    this.listArray.map((list, index) => {
+      list.label === this.grade ? list.color="#25A7F7" : list.color="#666"
+      list.label === this.school ? list.color="#25A7F7" : list.color="#666"
+    })
   },
   methods: {
     select (label, value) {
       this.listArray.map((list, index) => {
         list.value == value ? list.color="#25A7F7" : list.color="#666"
       })
-      console.log(label)
       const arr = { label: label, value: value, status: false, type: this.type }
       this.$emit('gradeArr', arr)
     },

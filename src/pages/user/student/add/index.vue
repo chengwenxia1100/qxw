@@ -11,6 +11,14 @@
       @studentClass="studentClass"
       @studentNo="studentNo"
     ></student-form>
+    <!-- <bind-form 
+      @studentName="studentName"
+      @studentSex="studentSex"
+      @studentSchool="studentSchool"
+      @studentGrade="studentGrade"
+      @studentClass="studentClass"
+      @studentNo="studentNo"
+    ></bind-form> -->
     <div class="btn" @click="addFinished">完成</div>
     <div class="tip" @click="gotoVip">内部学员绑定通道></div>
     <!-- 设置密码 -->
@@ -27,11 +35,13 @@
 import passwordLayer from '@/components/layer/passwordLayer'
 import studentForm from '@/components/form/studentForm'
 import { addData, setPassword, checkPassword } from '../../user.api'
+import bindForm from '@/components/form/bindForm' // 使用下拉组件
 
 export default {
   components: {
     studentForm,
-    passwordLayer
+    passwordLayer,
+    bindForm
   },
   data () {
     return {

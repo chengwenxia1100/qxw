@@ -12,6 +12,14 @@
       @studentClass="studentClass"
       @studentNo="studentNo"
     ></student-form>
+     <!-- <bind-form 
+      @studentName="studentName"
+      @studentSex="studentSex"
+      @studentSchool="studentSchool"
+      @studentGrade="studentGrade"
+      @studentClass="studentClass"
+      @studentNo="studentNo"
+    ></bind-form> -->
     <!-- 绑定家长信息 -->
     <bind-parents 
         @parentsName="parentsName" 
@@ -38,6 +46,7 @@ import { gainCode, bindMessSubmit, getSchoolList, setPassword, checkPassword } f
 import passwordLayer from '@/components/layer/passwordLayer'
 import bindParents from '@/components/form/bindParents'
 import studentForm from '@/components/form/studentForm'
+import bindForm from '@/components/form/bindForm' // 使用下拉组件
 import mpvuePicker from "mpvue-picker";
 
 export default {
@@ -45,7 +54,8 @@ export default {
         mpvuePicker,
         bindParents,
         studentForm,
-        passwordLayer
+        passwordLayer,
+        bindForm
     },
     data () {
         return {

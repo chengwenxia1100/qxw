@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="student_mess">
-        <!-- <div class="list">
+        <div class="list">
             <div class="tit">学生姓名</div>
             <input type="text" placeholder="请输入您孩子的姓名" v-model="sName">
         </div>
@@ -19,7 +19,7 @@
                     <span>女</span>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="list" @click="selectPicker()">
           <div class="tit">就读年级</div>
           <div class="input">{{grade}}</div>
@@ -28,16 +28,18 @@
           <div class="tit">就读学校</div>
           <div class="input">{{school}}</div>
         </div>
-        <!-- <div class="list">
+        <div class="list">
             <div class="tit">班级代码</div>
             <input type="text" placeholder="请输入班级代码" v-model="classNum" >
-        </div> -->
+        </div>
     </div>
     <!-- 下拉组件 -->
     <multi-picker 
     v-if="mult"
     :type="type"
     :listArray="listArray"
+    :grade="grade"
+    :school="school"
     @gradeArr="gradeArr"
     @status="status"
     ></multi-picker> 
@@ -60,7 +62,6 @@ export default {
                 {name: '0', value: '男' , checked: 'true'},
                 {name: '1', value: '女'}
             ],
-            // mode: 'selector',
             gradeArray: [
                 {
                     label: '一年级',
@@ -112,9 +113,6 @@ export default {
                 }
             ],
             schoolArray: {},
-            // pickerValueArrayschool: [],
-            // pickergradeDefault: [1],
-            // pickerschoolDefault: [3],
             listArray: {}, // 下拉框的传值
             studentListData: {},
             isClick: true,

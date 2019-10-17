@@ -38,6 +38,7 @@
       <div class="btn_con" @click="allRegister">批量登记</div>
       <div class="btn_con" @click="save">保存</div>
     </div>
+    <!-- 按钮弹窗 -->
     <div class="layer_registr" v-if="showLayer">
       <div class="layer">
         <div class="tit">批量登记<img src="../../../assets/svg/close.png" @click="close"></div>
