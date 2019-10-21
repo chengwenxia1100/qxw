@@ -3,7 +3,7 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <student-form 
+    <!-- <student-form 
       :student_id="student_id"
       @studentName="studentName"
       @studentSex="studentSex"
@@ -13,8 +13,8 @@
       @studentNo="studentNo"
       @schoolValdata="schoolValdata"
       @gradeValdata="gradeValdata"
-    ></student-form>
-    <!-- <bind-form 
+    ></student-form> -->
+    <bind-form 
       :student_id="student_id"
       @studentName="studentName"
       @studentSex="studentSex"
@@ -24,7 +24,7 @@
       @studentNo="studentNo"
       @schoolValdata="schoolValdata"
       @gradeValdata="gradeValdata"
-    ></bind-form> -->
+    ></bind-form>
     <parents-form @relative="relative"></parents-form>
     <div class="remove_tip" @click="removeBind">解除绑定</div>
     <div class="btn" @click="finished">完成</div>

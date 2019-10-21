@@ -212,20 +212,6 @@ export default {
         sexRadio (value) {
           this.sex = value
         },
-        showPicker () {
-            this.$refs.mpvuePicker.show()
-        },
-        showPickerschool () {
-            this.$refs.mpvuePickerschool.show()
-        },
-        onGradeConfirm (e) {
-            this.gradeVal = e.value[0]
-            this.grade = e.label
-        },
-        onSchoolConfirm (e) {
-            this.schoolVal = e.value[0]
-            this.school = e.label
-        },
         // 点击
         selectPicker () {
           this.mult = true
@@ -237,6 +223,7 @@ export default {
           this.type = 2
           this.listArray = this.schoolArray
         },
+        
         // 接收子组件传值
         gradeArr (arr) {
           this.listArray = {}
@@ -257,6 +244,7 @@ export default {
     },
     onUnload () {
         this.pickerValueArrayschool = []
+        this.mult = false
     }
 }
 </script>

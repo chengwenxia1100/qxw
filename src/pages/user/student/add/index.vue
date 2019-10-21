@@ -3,22 +3,22 @@
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
-    <student-form 
+    <!-- <student-form 
       @studentName="studentName"
       @studentSex="studentSex"
       @studentSchool="studentSchool"
       @studentGrade="studentGrade"
       @studentClass="studentClass"
       @studentNo="studentNo"
-    ></student-form>
-    <!-- <bind-form 
+    ></student-form> -->
+    <bind-form 
       @studentName="studentName"
       @studentSex="studentSex"
       @studentSchool="studentSchool"
       @studentGrade="studentGrade"
       @studentClass="studentClass"
       @studentNo="studentNo"
-    ></bind-form> -->
+    ></bind-form>
     <div class="btn" @click="addFinished">完成</div>
     <div class="tip" @click="gotoVip">内部学员绑定通道></div>
     <!-- 设置密码 -->

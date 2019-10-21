@@ -33,7 +33,7 @@ export function updataStudentPage (data) {
   })
 }
 
-// 选择学校 
+// 选择学校
 export function getSchoolList (data) {
   return request({
     url: sign('login/getSchoolList'),
