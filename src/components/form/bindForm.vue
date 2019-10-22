@@ -195,11 +195,13 @@ export default {
             this.grade = data.grade
             this.class = data.class_id
             this.classNum = data.class_id
+            this.gradeVal = data.gradeVal
+            this.schoolVal = data.schoolVal
             this.$emit('schoolValdata', data.schoolVal)
             this.$emit('gradeValdata', data.gradeVal)
             this.studentListData = data
         },
-        // 添加学员接口
+        // 获取学校列表
         async getSchoolList () {
             const data = await getSchoolList({
                 grade: this.gradeVal

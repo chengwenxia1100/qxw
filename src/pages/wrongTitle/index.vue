@@ -109,6 +109,9 @@ export default {
   },
   onLoad () {
     this.loading = true
+    if (this.subjectVal && this.gradeVal) {
+      this.mistakeBook()
+    }
   },
   watch: {
     subjectVal (val) {
@@ -227,11 +230,12 @@ export default {
     // }
   },
   onUnload () {
-    // this.chapterList = {}
-    // this.topicList = {}
+    this.chapterList = {}
+    this.topicList = {}
     // this.subjectVal = ''
     // this.gradeVal ='',
-    // this.chapterVal= ''
+    this.chapter = '请选择章节'
+    this.chapterVal= ''
   }
 }
 </script>

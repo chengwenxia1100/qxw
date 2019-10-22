@@ -64,8 +64,8 @@ export default {
   .layer {
     margin:20% 0 0 10%;
     width:80%;
-    // max-height:6rem;
-    // overflow-y:auto;
+    max-height:6rem;
+    overflow-y:auto;
     background:#fff;
     border-radius:0.04rem;
     .tit {
@@ -77,11 +77,11 @@ export default {
       background:#25A7F7;
       color:#fff;
       img {
-        width: 0.36rem;
-        height: 0.36rem;
+        width: 0.48rem;
+        height: 0.48rem;
         float:right;
         margin-right:0.3rem;
-        margin-top:0.3rem;
+        margin-top:0.2rem;
       }
     }
     .con {

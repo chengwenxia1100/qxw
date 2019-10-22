@@ -430,6 +430,7 @@ export default {
           padding-top:0.2rem;
         }
         .layer_list {
+          padding:0.5rem 0;
           height:3rem;
           overflow-y: scroll;
           ul {

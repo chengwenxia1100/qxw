@@ -54,7 +54,7 @@ export default {
   },
   data () {
     return {
-      listStatus: true,
+      listStatus: false,
       macklayerStatus: false, // 弹窗的显示与隐藏
       loading: false,
       tip:false, // 弹窗中未输入考试成绩中的提示
@@ -131,6 +131,7 @@ export default {
     }
   },
   onUnload () {
+    this.paperListData= {}
     this.macklayerStatus = false
     this.subjectVal = ''
     this.gradeVal = ''
