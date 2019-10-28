@@ -124,6 +124,7 @@ export default {
     },
     chapterVal (val) {
       this.loading = true
+      this.page = 1
       if (val && this.subjectVal) { this.mistakeBook() }
     }
   },
