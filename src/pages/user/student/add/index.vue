@@ -154,6 +154,7 @@ export default {
           phone: this.phoneVal,
           relation_type: this.relationVal
       })
+      this.loading = false
       this.studentId = data.student_id
       this.passwordType = data.password
       if(data.password == 1) {
