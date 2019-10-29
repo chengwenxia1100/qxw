@@ -65,7 +65,6 @@ export default {
     margin:20% 0 0 10%;
     width:80%;
     max-height:6rem;
-    overflow-y:auto;
     background:#fff;
     border-radius:0.04rem;
     .tit {
@@ -86,6 +85,8 @@ export default {
     }
     .con {
       padding:0.2rem;
+      max-height:5rem;
+      overflow-y:auto;
       ul {
         li {
           margin:0.3rem 0;
