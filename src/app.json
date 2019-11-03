@@ -1,10 +1,12 @@
 {
   "pages": [
+    "pages/wrongTitle/exportworks/main",
     "pages/home/main",
     "pages/user/main",
     "pages/demo/main",
     "pages/auth/main",
     "pages/wrongTitle/main",
+    
     "pages/errorRegister/main",
     "pages/errorRegister/registerDetail/main",
     "pages/errorRegister/errorTitleRegister/main",

@@ -10,16 +10,6 @@
           @grade="gradeFun"
           @chapter="chapterFun"
         ></two-select-wrong>
-        <!-- <div class="chapter" v-if="total">
-          <div class="select_chapter" @click="selectChapter">章节： {{chapter}}</div>
-          <mpvue-picker
-            ref="mpvuePicker"
-            :mode="mode"
-            :pickerValueDefault="pickerValueDefault"
-            @onConfirm="onConfirm"
-            :pickerValueArray="pickerValueArray"
-          />
-        </div> -->
       </div>
       <div class="tab_container">
         <div class="title_box">
@@ -55,9 +45,12 @@
       @analyLayer="analyLayerFun"
     ></error-layer>
     <!-- 错题本导出 -->
-    <!-- <div class="dcbtn" @click="exportWorks">
+    <div class="dcbtn" @click="exportWorks">
       导出错题本
-    </div> -->
+    </div>
+    <!-- 错题本导出弹窗 -->
+    <!-- <export-layer
+    :total="total"></export-layer> -->
   </div>
 </template>
 
@@ -68,6 +61,7 @@ import gradeSlide from '@/components/paging/gradeSlide'
 import sectionSlide from '@/components/paging/sectionSlide'
 import pageSlide from '@/components/paging/pageSlide'
 import errorLayer from '@/components/layer/errorLayer'
+import exportLayer from '@/components/layer/exportLayer'
 import { mistakeBook } from './wrongtit.api';
 import twoSelectWrong from '@/components/select/twoSelectWrong'
 
@@ -79,7 +73,8 @@ export default {
     sectionSlide,
     gradeSlide,
     errorLayer,
-    twoSelectWrong
+    twoSelectWrong,
+    exportLayer
   },
   data () {
     return {
