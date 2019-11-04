@@ -167,7 +167,7 @@ export default {
     },
     // 导出作业本
     exportWorks () {
-      wx.navigateTo({ url: '/pages/paperAnaly/analy/main?paper_id=' + paper_id })
+      wx.navigateTo({ url: '/pages/wrongTitle/exportworks/main?gradeVal=' + this.gradeVal + '&subjectVal=' + this.subjectVal + '&chapterVal=' + this.chapterVal + '&total=' + this.total + '&num=' + this.numlist})
     },
     // 接收子组件传值
     tab (val) {
