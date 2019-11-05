@@ -363,7 +363,7 @@ page {
     padding:0.2rem 0.3rem;
     display: flex;
     position:fixed;
-    bottom:0rem;
+    bottom:0.8rem;
     left:0;
     background:#fff;
     .same_btn {
