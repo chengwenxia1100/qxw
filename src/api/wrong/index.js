@@ -7,3 +7,11 @@ export function mistakeBook (data) {
     data
   })
 }
+
+// 错题本导出记录
+export function exportMistakeBook (data) {
+  return request({
+    url: sign('book/exportMistakeBook'),
+    data
+  })
+}

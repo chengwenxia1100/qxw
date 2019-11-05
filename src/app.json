@@ -1,20 +1,11 @@
 {
   "pages": [
-    "pages/wrongTitle/exportworks/main",
     "pages/home/main",
     "pages/user/main",
     "pages/demo/main",
     "pages/auth/main",
     "pages/wrongTitle/main",
-    
-    "pages/errorRegister/main",
-    "pages/errorRegister/registerDetail/main",
-    "pages/errorRegister/errorTitleRegister/main",
-    "pages/errorRegister/addwork/main",
-    "pages/paperAnaly/paperRegister/main",
-    "pages/paperAnaly/paperDetail/main",
-    "pages/paperAnaly/analy/main",
-    "pages/paperAnaly/main",   
+    "pages/wrongTitle/exportworks/main", 
     "pages/user/student/switchStudent/main",   
     "pages/user/student/update/main",
     "pages/user/about/main",
@@ -23,6 +14,26 @@
     "pages/bind/bindfirst/main",
     "pages/bind/vipbindnext/main",  
     "pages/bind/vipbind/main"
+  ],
+  "subPackages": [
+    {
+      "root": "pages/errorRegister",
+      "pages": [
+        "main",
+        "registerDetail/main",
+        "errorTitleRegister/main",
+        "addwork/main"
+      ]
+    },
+    {
+      "root": "pages/paperAnaly",
+      "pages": [
+        "main",
+        "paperDetail/main",
+        "analy/main",
+        "paperRegister/main"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",

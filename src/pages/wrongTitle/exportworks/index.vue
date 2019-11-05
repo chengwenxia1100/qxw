@@ -1,5 +1,8 @@
 <template>
   <div class="export_box">
+    <page-loading v-model='loading'>
+      加载中...
+    </page-loading>
     <div class="tip">
         本次导出{{total}}道题，共计{{num}}页
     </div>
@@ -37,6 +40,7 @@
 
 <script>
 import successLayer from '@/components/layer/successLayer'
+import { exportMistakeBook } from '@/api/wrong'; 
 
 export default {
   components: {
@@ -52,6 +56,7 @@ export default {
       num:0,
       status: false,
       successStatus: false,
+      loading: false,
       bg: require('@/assets/icon/icon_down2.png'),
       emailText: '@qq.com',
       emailList: ['@qq.com','@126.com','@163.com','@139.com','@189.com','@sohu.com','@sina.com','@gmail.com']
@@ -67,11 +72,11 @@ export default {
   methods: {
     switchTab () {
       this.status = !this.status
-      if (this.status) {
-        this.bg =  require('@/assets/icon/icon_up2.png')
-      } else {
-        this.bg =  require('@/assets/icon/icon_down2.png')
-      }
+      // if (this.status) {
+      //   this.bg =  require('@/assets/icon/icon_up2.png')
+      // } else {
+      //   this.bg =  require('@/assets/icon/icon_down2.png')
+      // }
     },
     select (e) {
       this.emailText = e
@@ -82,8 +87,17 @@ export default {
         wx.showToast({ title: '邮箱不能为空', icon: 'none' })
         return
       }
+      this.loading = true
       this.emailName = this.emailValue + this.emailText
-      this.successStatus = true
+      exportMistakeBook({
+        chapter: this.chapterVal,
+        grade: this.gradeVal,
+        subject_id: this.subjectVal,
+        email: this.emailName
+      }).then(data => {
+        this.loading = false
+        this.successStatus = true
+      })
       // wx.showToast({ title: '导出成功', icon: 'none' })
       // setTimeout(() => {
       //   wx.navigateBack({ delta: 1 })

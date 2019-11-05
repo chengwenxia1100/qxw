@@ -1,5 +1,5 @@
 <template>
-  <div class="user_wrongTitle">
+  <div class="user_wrongTitle" :class="{ lock_back: analyLayer }">
     <page-loading v-model='loading'>
       加载中...
     </page-loading>
@@ -62,7 +62,7 @@ import sectionSlide from '@/components/paging/sectionSlide'
 import pageSlide from '@/components/paging/pageSlide'
 import errorLayer from '@/components/layer/errorLayer'
 import exportLayer from '@/components/layer/exportLayer'
-import { mistakeBook } from './wrongtit.api';
+import { mistakeBook } from './wrongtit.api'; 
 import twoSelectWrong from '@/components/select/twoSelectWrong'
 
 export default {
@@ -167,6 +167,10 @@ export default {
     },
     // 导出作业本
     exportWorks () {
+      if (!this.chapterVal) {
+        wx.showToast({ title: '请先选择某一章节导出!', icon: 'none' })
+        return
+      }
       wx.navigateTo({ url: '/pages/wrongTitle/exportworks/main?gradeVal=' + this.gradeVal + '&subjectVal=' + this.subjectVal + '&chapterVal=' + this.chapterVal + '&total=' + this.total + '&num=' + this.numlist})
     },
     // 接收子组件传值
@@ -237,6 +241,13 @@ export default {
 </script>
 
 <style lang="less">
+.lock_back {
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
 page {
   background:#f2f2f2;
 }

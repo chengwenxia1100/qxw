@@ -64,7 +64,7 @@ export default {
   .layer {
     margin:20% 0 0 10%;
     width:80%;
-    max-height:6rem;
+    max-height:7rem;
     background:#fff;
     border-radius:0.04rem;
     .tit {
@@ -85,7 +85,7 @@ export default {
     }
     .con {
       padding:0.2rem;
-      max-height:5rem;
+      max-height:5.5rem;
       overflow-y:auto;
       ul {
         li {

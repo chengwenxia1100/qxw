@@ -4,7 +4,7 @@
       <!-- <img :src="icon" class="icon"> -->
       <div class="con">
         <p class="p">发送成功</p>
-        <div class="tip_txt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本题已发送至邮箱<span>{{emailName}}</span>,请注意查收！</div>
+        <div class="tip_txt">&nbsp;&nbsp;&nbsp;&nbsp;本题已发送至邮箱<span>{{emailName}}</span>,请注意查收！</div>
         <div class="rule_af">
           <p>温馨提示：</p>
           <p>1.导出的错题本不带答案</p>
