@@ -4,13 +4,13 @@
       加载中...
     </page-loading>
     <div class="tip">
-        本次导出{{total}}道题，共计{{num}}页
+        本次导出{{total}}道题
     </div>
     <div class="send_con">
         <p>题目发送至邮箱，打印回家做</p>
         <div class="input">
             <input type="text" placeholder="请输入您的邮箱" v-model="emailValue">
-            <div class="end" :style="'background:url(' + bg + ') no-repeat center right;'" @click="switchTab">
+            <div class="end" v-if="bg" :style="'background:url(' + bg + ') no-repeat center right;'" @click="switchTab">
                <span>{{emailText}}</span> 
             </div>
         </div>
@@ -41,6 +41,7 @@
 <script>
 import successLayer from '@/components/layer/successLayer'
 import { exportMistakeBook } from '@/api/wrong'; 
+import store from '@/store'
 
 export default {
   components: {
@@ -52,12 +53,12 @@ export default {
       subjectVal: '',
       chapterVal: '',
       emailName: '',
+      emailValue: '',
       total:0,
       num:0,
       status: false,
       successStatus: false,
       loading: false,
-      bg: require('@/assets/icon/icon_down2.png'),
       emailText: '@qq.com',
       emailList: ['@qq.com','@126.com','@163.com','@139.com','@189.com','@sohu.com','@sina.com','@gmail.com']
     }
@@ -69,14 +70,28 @@ export default {
     this.total = options.total
     this.num = options.num
   },
+  computed: {
+    email () {
+      return store.state.mess.emailValue
+    },
+    bg () {
+      return require('@/assets/icon/icon_down2.png')
+    }
+  },
+  mounted () {
+    if (this.email) {
+      this.emailValue = this.email
+      console.log(this.emailValue);
+    }
+  },
   methods: {
     switchTab () {
       this.status = !this.status
-      // if (this.status) {
-      //   this.bg =  require('@/assets/icon/icon_up2.png')
-      // } else {
-      //   this.bg =  require('@/assets/icon/icon_down2.png')
-      // }
+      if (this.status) {
+        this.bg =  require('@/assets/icon/icon_up2.png')
+      } else {
+        this.bg =  require('@/assets/icon/icon_down2.png')
+      }
     },
     select (e) {
       this.emailText = e
@@ -89,6 +104,13 @@ export default {
       }
       this.loading = true
       this.emailName = this.emailValue + this.emailText
+      store.commit('set_emailValue', this.emailValue)
+      setTimeout(() => {
+        this.loading = false
+      }, 2000);
+      setTimeout(() => {
+        this.successStatus = true
+      }, 2200);
       exportMistakeBook({
         chapter: this.chapterVal,
         grade: this.gradeVal,
@@ -96,12 +118,7 @@ export default {
         email: this.emailName
       }).then(data => {
         this.loading = false
-        this.successStatus = true
       })
-      // wx.showToast({ title: '导出成功', icon: 'none' })
-      // setTimeout(() => {
-      //   wx.navigateBack({ delta: 1 })
-      // }, 200);
     },
     // 从子组件接收
     successStatusFun (val) {
