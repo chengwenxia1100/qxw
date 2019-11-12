@@ -235,7 +235,6 @@ export default {
     // this.subjectVal = ''
     // this.gradeVal ='',
     this.chapter = '请选择章节'
-    this.chapterVal= ''
   }
 }
 </script>

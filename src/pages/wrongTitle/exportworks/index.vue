@@ -40,7 +40,7 @@
 
 <script>
 import successLayer from '@/components/layer/successLayer'
-import { exportMistakeBook } from '@/api/wrong'; 
+import { exportMistakeBook, exportEmail } from '@/api/wrong'; 
 import store from '@/store'
 
 export default {
@@ -71,20 +71,54 @@ export default {
     this.num = options.num
   },
   computed: {
-    email () {
-      return store.state.mess.emailValue
-    },
+    // email () {
+    //   return store.state.mess.emailValue
+    // },
     bg () {
       return require('@/assets/icon/icon_down2.png')
     }
   },
   mounted () {
-    if (this.email) {
-      this.emailValue = this.email
-      console.log(this.emailValue);
-    }
+    this.exportEmail()
+    // if (this.email) {
+    //   this.emailValue = this.email
+    //   console.log(this.emailValue);
+    // }
   },
   methods: {
+    // 获取邮箱
+    async exportEmail () {
+      const data = await exportEmail({})
+      this.loading = false
+      if (data.email) {
+        this.emailValue = data.email.split('@')[0]
+        this.emailText = '@' + data.email.split('@')[1]
+      } else {
+        this.emailValue = ''
+        this.emailText = '@qq.com'
+      }
+      
+    },
+    // 发送邮件
+    send () {
+      if (!this.emailValue) {
+        wx.showToast({ title: '邮箱不能为空', icon: 'none' })
+        return
+      }
+      this.loading = true
+      this.emailName = this.emailValue + this.emailText
+      // store.commit('set_emailValue', this.emailValue)
+      setTimeout(() => { this.loading = false }, 2000);
+      setTimeout(() => { this.successStatus = true }, 2200);
+      exportMistakeBook({
+        chapter: this.chapterVal,
+        grade: this.gradeVal,
+        subject_id: this.subjectVal,
+        email: this.emailName
+      }).then(data => {
+        this.loading = false
+      })
+    },
     switchTab () {
       this.status = !this.status
       if (this.status) {
@@ -96,29 +130,6 @@ export default {
     select (e) {
       this.emailText = e
       this.switchTab()
-    },
-    send () {
-      if (!this.emailValue) {
-        wx.showToast({ title: '邮箱不能为空', icon: 'none' })
-        return
-      }
-      this.loading = true
-      this.emailName = this.emailValue + this.emailText
-      store.commit('set_emailValue', this.emailValue)
-      setTimeout(() => {
-        this.loading = false
-      }, 2000);
-      setTimeout(() => {
-        this.successStatus = true
-      }, 2200);
-      exportMistakeBook({
-        chapter: this.chapterVal,
-        grade: this.gradeVal,
-        subject_id: this.subjectVal,
-        email: this.emailName
-      }).then(data => {
-        this.loading = false
-      })
     },
     // 从子组件接收
     successStatusFun (val) {

@@ -15,3 +15,11 @@ export function exportMistakeBook (data) {
     data
   })
 }
+
+// 错题本导出邮箱记录
+export function exportEmail (data) {
+  return request({
+    url: sign('book/exportInfo'),
+    data
+  })
+}
