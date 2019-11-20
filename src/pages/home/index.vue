@@ -180,6 +180,13 @@ export default {
         }
       }
     }
+  },
+  onShareAppMessage () {
+    return {
+      title: '掌上勤学',
+      path: '/pages/home/main'
+    //  imageUrl: 'http://upyun3.chuanshui.com/1111/%E5%B7%9D%E6%B0%B4logo.png'
+    }
   }
 }
 </script>
